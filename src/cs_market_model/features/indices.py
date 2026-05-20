@@ -1,0 +1,2 @@
+"""Category index feature placeholders."""
+

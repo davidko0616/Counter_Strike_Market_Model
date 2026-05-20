@@ -1,0 +1,13 @@
+currency: CNY
+venues:
+  steam:
+    buy_fee_bps: 0
+    sell_fee_bps: 1300
+    slippage_bps: 100
+    notes: "Initial conservative placeholder. Replace with venue-specific execution assumptions."
+  csfloat:
+    buy_fee_bps: 0
+    sell_fee_bps: 200
+    slippage_bps: 75
+    notes: "Initial placeholder for listing snapshot features and future cross-venue tests."
+

@@ -1,0 +1,2 @@
+"""Item metadata normalization placeholders."""
+
