@@ -1,0 +1,34 @@
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+.python_deps/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.streamlit/secrets.toml
+
+# Local data and model artifacts
+data/raw/*
+data/interim/*
+data/processed/*
+data/features/*
+data/labels/*
+reports/figures/*
+reports/tables/*
+reports/backtests/*
+models/artifacts/*
+
+# Keep directory placeholders
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+!data/features/.gitkeep
+!data/labels/.gitkeep
+!reports/figures/.gitkeep
+!reports/tables/.gitkeep
+!reports/backtests/.gitkeep

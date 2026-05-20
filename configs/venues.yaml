@@ -1,0 +1,14 @@
+venues:
+  steamdt:
+    base_url: "https://open.steamdt.com"
+    role: "historical_price_bars"
+    default_platform: "STEAM"
+    endpoints:
+      kline: "/open/cs2/item/v1/kline"
+      price_single: "/open/cs2/v1/price/single"
+  csfloat:
+    base_url: "https://csfloat.com"
+    role: "listing_microstructure"
+    endpoints:
+      listings: "/api/v1/listings"
+

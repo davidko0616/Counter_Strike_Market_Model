@@ -1,0 +1,2 @@
+"""CUSUM event sampling placeholder."""
+
