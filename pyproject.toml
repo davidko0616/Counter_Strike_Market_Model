@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cs-market-model"
+version = "0.1.0"
+description = "Net-return-aware Counter-Strike skin market buy-signal research MVP."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "joblib>=1.4",
+  "lightgbm>=4.3",
+  "numpy>=1.26",
+  "pandas>=2.2",
+  "pyarrow>=15.0",
+  "pydantic>=2.7",
+  "python-dotenv>=1.0",
+  "pyyaml>=6.0",
+  "requests>=2.32",
+  "scikit-learn>=1.5",
+  "streamlit>=1.35",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.2",
+  "ruff>=0.4",
+]
+
+[project.scripts]
+csmm-steamdt-probe = "cs_market_model.collectors.steamdt:main"
+csmm-csfloat-probe = "cs_market_model.collectors.csfloat:main"
+csmm-scan-secrets = "cs_market_model.security.scan_secrets:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cs_market_model"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

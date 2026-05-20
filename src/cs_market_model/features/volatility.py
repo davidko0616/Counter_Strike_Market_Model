@@ -1,0 +1,2 @@
+"""Volatility feature placeholders."""
+

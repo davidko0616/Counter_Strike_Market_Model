@@ -1,0 +1,10 @@
+prediction_horizon_days: 14
+top_k: 10
+min_liquidity_score: 0.3
+max_position_fraction: 0.05
+max_category_fraction: 0.25
+embargo_days: 7
+transaction_costs:
+  use_fees_config: true
+  failed_execution_probability: 0.0
+

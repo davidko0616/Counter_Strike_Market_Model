@@ -1,0 +1,2 @@
+"""Price bar normalization placeholders."""
+
