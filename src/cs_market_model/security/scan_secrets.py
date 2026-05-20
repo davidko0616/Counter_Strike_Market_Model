@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import math
 import re
+import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -42,8 +43,6 @@ SKIP_DIRS = {
     "reports",
     "venv",
 }
-
-ALLOWLIST_FILENAMES = {".env.example"}
 
 PATTERNS = [
     (
@@ -89,10 +88,14 @@ def shannon_entropy(value: str) -> float:
 
 
 def is_text_candidate(path: Path) -> bool:
-    return path.suffix.lower() in TEXT_SUFFIXES or path.name in ALLOWLIST_FILENAMES
+    return path.suffix.lower() in TEXT_SUFFIXES or path.name.startswith(".env")
 
 
 def iter_candidate_files(root: Path) -> list[Path]:
+    tracked = iter_git_tracked_files(root)
+    if tracked is not None:
+        return [path for path in tracked if is_text_candidate(path)]
+
     candidates: list[Path] = []
     for path in root.rglob("*"):
         if not path.is_file():
@@ -100,10 +103,9 @@ def iter_candidate_files(root: Path) -> list[Path]:
         relative_parts = set(path.relative_to(root).parts)
         if relative_parts & SKIP_DIRS:
             continue
-        if path.name in ALLOWLIST_FILENAMES:
-            candidates.append(path)
-            continue
-        if path.name.startswith(".env"):
+        if path.name == ".env" or path.name.startswith(".env."):
+            if path.name != ".env.example":
+                continue
             candidates.append(path)
             continue
         if is_text_candidate(path):
@@ -111,11 +113,29 @@ def iter_candidate_files(root: Path) -> list[Path]:
     return sorted(candidates)
 
 
+def iter_git_tracked_files(root: Path) -> list[Path] | None:
+    try:
+        result = subprocess.run(
+            ["git", "ls-files", "--cached", "--others", "--exclude-standard"],
+            cwd=root,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return None
+
+    paths = []
+    for line in result.stdout.splitlines():
+        path = root / line
+        if path.is_file():
+            paths.append(path)
+    return sorted(paths)
+
+
 def scan_line(path: Path, line_number: int, line: str) -> list[Finding]:
     findings: list[Finding] = []
-    if path.name in ALLOWLIST_FILENAMES:
-        return findings
-    if path.name.startswith(".env"):
+    if path.name == ".env" or (path.name.startswith(".env.") and path.name != ".env.example"):
         findings.append(Finding(path, line_number, "local env file must not be committed"))
         return findings
 

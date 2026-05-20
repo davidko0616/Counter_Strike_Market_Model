@@ -10,8 +10,12 @@ def test_expected_project_paths_exist() -> None:
         root / "configs" / "fees.yaml",
         root / "configs" / "backtest.yaml",
         root / "configs" / "universe_mvp.yaml",
+        root / "docs" / "steamdt_kline_schema.md",
+        root / "docs" / "csfloat_api_coverage.md",
         root / "src" / "cs_market_model" / "collectors" / "steamdt.py",
         root / "src" / "cs_market_model" / "collectors" / "csfloat.py",
+        root / "src" / "cs_market_model" / "audit_steamdt_sample.py",
+        root / "src" / "cs_market_model" / "audit_csfloat_sample.py",
         root / "src" / "cs_market_model" / "security" / "scan_secrets.py",
         root / "SECURITY.md",
     ]

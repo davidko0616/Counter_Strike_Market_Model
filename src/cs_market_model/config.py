@@ -5,8 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-import yaml
-
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CONFIG_DIR = PROJECT_ROOT / "configs"
@@ -14,6 +12,8 @@ CONFIG_DIR = PROJECT_ROOT / "configs"
 
 def load_yaml_config(name: str) -> dict[str, Any]:
     """Load a YAML config from the repository configs directory."""
+    import yaml
+
     path = CONFIG_DIR / name
     if not path.exists():
         raise FileNotFoundError(f"Config not found: {path}")
