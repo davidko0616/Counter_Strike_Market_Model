@@ -54,3 +54,4 @@ Both commands save append-only raw JSON under `data/raw/` and do not contain har
 ## Next Step
 
 Day 2 should parse the existing sample K-line JSON, document the raw columns, and write one normalized daily bars parquet file plus `reports/tables/data_audit_mvp.csv`.
+# Counter_Strike_Market_Model
