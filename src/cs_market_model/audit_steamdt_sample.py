@@ -1,4 +1,4 @@
-"""Day 2 audit command for the existing SteamDT K-line sample."""
+"""Day 2 audit command for a local SteamDT K-line sample."""
 
 from __future__ import annotations
 
@@ -7,13 +7,17 @@ from pathlib import Path
 
 import pandas as pd
 
+from cs_market_model.config import PROJECT_ROOT
 from cs_market_model.normalization.prices import parse_and_audit_steamdt_kline
 
-
-DEFAULT_SAMPLE_PATH = Path(
-    r"C:\Users\chung\Desktop\2026-1학기\인공지능기초수학"
-    r"\cs2_price_model\data\raw\kline\AK-47__Redline_Field-Tested_type2.json"
+DEFAULT_SAMPLE_PATH = (
+    PROJECT_ROOT
+    / "data"
+    / "raw"
+    / "kline"
+    / "day2_sample_ak47_slate_field_tested_type2.json"
 )
+DEFAULT_MARKET_HASH_NAME = "AK-47 | Slate (Field-Tested)"
 
 
 def build_day2_outputs(
@@ -45,14 +49,14 @@ def main() -> None:
     parser.add_argument(
         "--bars-output",
         type=Path,
-        default=Path("data/processed/price_bars_ak47_redline_field_tested.parquet"),
+        default=Path("data/processed/price_bars_ak47_slate_field_tested.parquet"),
     )
     parser.add_argument(
         "--column-docs-output",
         type=Path,
         default=Path("reports/tables/steamdt_kline_columns.csv"),
     )
-    parser.add_argument("--market-hash-name", default=None)
+    parser.add_argument("--market-hash-name", default=DEFAULT_MARKET_HASH_NAME)
     args = parser.parse_args()
 
     build_day2_outputs(

@@ -1,8 +1,10 @@
 # SteamDT K-Line Sample Schema
 
-Day 2 uses the existing sibling sample:
+Day 2 uses a local repo-owned sample:
 
-`C:\Users\chung\Desktop\2026-1학기\인공지능기초수학\cs2_price_model\data\raw\kline\AK-47__Redline_Field-Tested_type2.json`
+`data/raw/kline/day2_sample_ak47_slate_field_tested_type2.json`
+
+The sample item is `AK-47 | Slate (Field-Tested)`.
 
 The sample response is a JSON object with a `data` array. Each row in `data` is
 a five-element K-line record.
@@ -15,7 +17,7 @@ a five-element K-line record.
 | 3 | `high` | Highest observed price for the K-line interval. |
 | 4 | `low` | Lowest observed price for the K-line interval. |
 
-The open/close ordering is inferred from the sample continuity: each row's close
+The open/close ordering is inferred from sample continuity: each row's close
 matches the following row's open.
 
 The sample does not include volume, trade count, or explicit currency fields.

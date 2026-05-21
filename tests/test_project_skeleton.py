@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from cs_market_model.security.scan_secrets import scan_line
+
 
 def test_expected_project_paths_exist() -> None:
     root = Path(__file__).resolve().parents[1]
@@ -10,9 +12,12 @@ def test_expected_project_paths_exist() -> None:
         root / "configs" / "fees.yaml",
         root / "configs" / "backtest.yaml",
         root / "configs" / "universe_mvp.yaml",
+        root / "configs" / "universe_day3_first_pull.yaml",
+        root / "configs" / "universe_gun_skins_candidate.yaml",
         root / "docs" / "steamdt_kline_schema.md",
         root / "docs" / "csfloat_api_coverage.md",
         root / "src" / "cs_market_model" / "collectors" / "steamdt.py",
+        root / "src" / "cs_market_model" / "collectors" / "steamdt_batch.py",
         root / "src" / "cs_market_model" / "collectors" / "csfloat.py",
         root / "src" / "cs_market_model" / "audit_steamdt_sample.py",
         root / "src" / "cs_market_model" / "audit_csfloat_sample.py",
@@ -25,8 +30,20 @@ def test_expected_project_paths_exist() -> None:
 
 def test_no_hardcoded_source_api_keys() -> None:
     root = Path(__file__).resolve().parents[1]
-    source_text = "\n".join(path.read_text(encoding="utf-8") for path in (root / "src").rglob("*.py"))
+    source_text = "\n".join(
+        path.read_text(encoding="utf-8") for path in (root / "src").rglob("*.py")
+    )
     assert "STEAMDT_API_KEY" in source_text
     assert "CSFLOAT_API_KEY" in source_text
     assert "paste your" not in source_text.lower()
     assert "replace this" not in source_text.lower()
+
+
+def test_secret_scanner_allows_universe_metadata_keys() -> None:
+    findings = scan_line(
+        Path("configs/universe_day3_first_pull.yaml"),
+        1,
+        "  include_in_day3_first_pull: true",
+    )
+
+    assert findings == []

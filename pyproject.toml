@@ -30,6 +30,7 @@ dev = [
 
 [project.scripts]
 csmm-steamdt-probe = "cs_market_model.collectors.steamdt:main"
+csmm-steamdt-batch = "cs_market_model.collectors.steamdt_batch:main"
 csmm-csfloat-probe = "cs_market_model.collectors.csfloat:main"
 csmm-scan-secrets = "cs_market_model.security.scan_secrets:main"
 

@@ -15,7 +15,6 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-
 TEXT_SUFFIXES = {
     ".cfg",
     ".csv",
@@ -140,7 +139,10 @@ def scan_line(path: Path, line_number: int, line: str) -> list[Finding]:
         return findings
 
     for kind, pattern in PATTERNS:
-        if pattern.search(line):
+        search_text = line
+        if kind == "CSFloat-like token" and ":" in line:
+            search_text = line.split(":", 1)[1]
+        if pattern.search(search_text):
             findings.append(Finding(path, line_number, kind))
 
     for match in re.finditer(r"""["']([A-Za-z0-9_\-+/=]{32,})["']""", line):

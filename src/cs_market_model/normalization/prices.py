@@ -10,7 +10,6 @@ from typing import Any
 
 import pandas as pd
 
-
 STEAMDT_KLINE_COLUMNS = {
     0: {
         "name": "timestamp_epoch_seconds",
@@ -63,10 +62,20 @@ def load_steamdt_kline_json(path: Path) -> dict[str, Any]:
     return payload
 
 
+def unwrap_steamdt_kline_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    """Return the API payload from either a raw response or a saved raw envelope."""
+    raw_json = payload.get("raw_json")
+    if isinstance(raw_json, dict):
+        return raw_json
+    return payload
+
+
 def infer_market_hash_name(path: Path, fallback: str = "AK-47 | Redline (Field-Tested)") -> str:
     """Infer the sample item name from the known Day 2 sample filename."""
     if path.name.startswith("AK-47__Redline_Field-Tested"):
         return "AK-47 | Redline (Field-Tested)"
+    if path.name.startswith("day2_sample_ak47_slate_field_tested"):
+        return "AK-47 | Slate (Field-Tested)"
     return fallback
 
 
@@ -190,7 +199,8 @@ def parse_and_audit_steamdt_kline(
     currency: str = "CNY",
 ) -> SteamDTKlineParseResult:
     """Load, normalize, and audit a SteamDT K-line JSON file."""
-    payload = load_steamdt_kline_json(path)
+    envelope_or_payload = load_steamdt_kline_json(path)
+    payload = unwrap_steamdt_kline_payload(envelope_or_payload)
     resolved_name = market_hash_name or infer_market_hash_name(path)
     bars = parse_steamdt_kline_payload(payload, resolved_name, currency=currency)
     audit = audit_steamdt_kline_payload(payload, bars, path, resolved_name, currency=currency)

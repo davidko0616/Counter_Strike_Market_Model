@@ -1,0 +1,5975 @@
+# Candidate gun-skin universe for the first SteamDT/CSFloat pull.
+# Generated on 2026-05-21 from ByMykel CSGO-API skin catalog plus liquidity heuristics.
+# Scope: normal gun skins only; excludes knives, gloves, cases, stickers, StatTrak, and Souvenir variants.
+# Each weapon has 2 requested slots per rarity tier. Real skins are reserved for their own rarity first;
+# only missing slots are filled from the nearest usable rarity.
+# collections preserves CS collection names; cases contains actual weapon cases only, not Souvenir Packages.
+# rarity_substituted is true only for rows where the selected skin rarity differs from requested_rarity.
+items:
+  - market_hash_name: "AK-47 | Olive Polycam (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AK-47"
+    requested_rarity: "Consumer Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Sport & Field Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.5
+    selection_score: 3
+  - market_hash_name: "AK-47 | Predator (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AK-47"
+    requested_rarity: "Consumer Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Dust Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "AK-47 | Baroque Purple (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AK-47"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Canals Collection"
+    cases: []
+    min_float: 0
+    max_float: 1
+    selection_score: 3
+  - market_hash_name: "AK-47 | Jungle Spray (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AK-47"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Aztec Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "AK-47 | Elite Build (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AK-47"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma 2 Collection"
+    cases:
+      - "Chroma 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "AK-47 | Uncharted (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AK-47"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma Collection"
+    cases:
+      - "Prisma Case"
+    min_float: 0
+    max_float: 0.75
+    selection_score: 268
+  - market_hash_name: "AK-47 | Slate (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AK-47"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Snakebite Collection"
+    cases:
+      - "Snakebite Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "AK-47 | Orbit Mk01 (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AK-47"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Hydra Collection"
+    cases:
+      - "Operation Hydra Case"
+    min_float: 0
+    max_float: 0.55
+    selection_score: 268
+  - market_hash_name: "AK-47 | Cartel (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AK-47"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma Collection"
+    cases:
+      - "Chroma Case"
+    min_float: 0
+    max_float: 0.75
+    selection_score: 318
+  - market_hash_name: "AK-47 | Frontside Misty (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AK-47"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Shadow Collection"
+    cases:
+      - "Shadow Case"
+    min_float: 0.02
+    max_float: 0.87
+    selection_score: 318
+  - market_hash_name: "AK-47 | Aquamarine Revenge (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AK-47"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Falchion Collection"
+    cases:
+      - "Falchion Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "AK-47 | Asiimov (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AK-47"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Danger Zone Collection"
+    cases:
+      - "Danger Zone Case"
+    min_float: 0.05
+    max_float: 0.7
+    selection_score: 318
+  - market_hash_name: "AUG | Colony (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AUG"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Mirage Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "AUG | Commando Company (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AUG"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Boreal Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.65
+    selection_score: 3
+  - market_hash_name: "AUG | Condemned (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AUG"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Safehouse Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "AUG | Spalted Wood (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AUG"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2021 Dust 2 Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.48
+    selection_score: 3
+  - market_hash_name: "AUG | Amber Slipstream (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AUG"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Horizon Collection"
+    cases:
+      - "Horizon Case"
+    min_float: 0
+    max_float: 0.55
+    selection_score: 268
+  - market_hash_name: "AUG | Luxe Trim (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AUG"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gallery Collection"
+    cases:
+      - "Gallery Case"
+    min_float: 0
+    max_float: 0.9
+    selection_score: 268
+  - market_hash_name: "AUG | Arctic Wolf (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AUG"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Shattered Web Collection"
+    cases:
+      - "Shattered Web Case"
+    min_float: 0
+    max_float: 0.7
+    selection_score: 318
+  - market_hash_name: "AUG | Aristocrat (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AUG"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gamma Collection"
+    cases:
+      - "Gamma Case"
+    min_float: 0
+    max_float: 0.66
+    selection_score: 268
+  - market_hash_name: "AUG | Momentum (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AUG"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma Collection"
+    cases:
+      - "Prisma Case"
+    min_float: 0.05
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "AUG | Bengal Tiger (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AUG"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The eSports 2014 Summer Collection"
+    cases:
+      - "eSports 2014 Summer Case"
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 268
+  - market_hash_name: "AUG | Chameleon (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AUG"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Phoenix Collection"
+    cases:
+      - "Operation Phoenix Weapon Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 268
+  - market_hash_name: "AUG | Akihabara Accept (Field-Tested)"
+    category: "rifle"
+    weapon_type: "AUG"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Rising Sun Collection"
+    cases: []
+    min_float: 0
+    max_float: 1
+    selection_score: -117
+  - market_hash_name: "AWP | Arsenic Spill (Field-Tested)"
+    category: "sniper"
+    weapon_type: "AWP"
+    requested_rarity: "Consumer Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Radiant Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.501961
+    selection_score: 3
+  - market_hash_name: "AWP | Black Nile (Field-Tested)"
+    category: "sniper"
+    weapon_type: "AWP"
+    requested_rarity: "Consumer Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Anubis Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.75
+    selection_score: 3
+  - market_hash_name: "AWP | Safari Mesh (Field-Tested)"
+    category: "sniper"
+    weapon_type: "AWP"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Lake Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "AWP | Sun in Leo (Field-Tested)"
+    category: "sniper"
+    weapon_type: "AWP"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Gods and Monsters Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.5
+    selection_score: 3
+  - market_hash_name: "AWP | Capillary (Field-Tested)"
+    category: "sniper"
+    weapon_type: "AWP"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma 2 Collection"
+    cases:
+      - "Prisma 2 Case"
+    min_float: 0.05
+    max_float: 0.7
+    selection_score: 318
+  - market_hash_name: "AWP | Acheron (Field-Tested)"
+    category: "sniper"
+    weapon_type: "AWP"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2018 Nuke Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.83
+    selection_score: 3
+  - market_hash_name: "AWP | Atheris (Field-Tested)"
+    category: "sniper"
+    weapon_type: "AWP"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma Collection"
+    cases:
+      - "Prisma Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "AWP | PAW (Field-Tested)"
+    category: "sniper"
+    weapon_type: "AWP"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Horizon Collection"
+    cases:
+      - "Horizon Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 318
+  - market_hash_name: "AWP | Duality (Field-Tested)"
+    category: "sniper"
+    weapon_type: "AWP"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Revolution Collection"
+    cases:
+      - "Revolution Case"
+    min_float: 0
+    max_float: 0.8
+    selection_score: 318
+  - market_hash_name: "AWP | Elite Build (Field-Tested)"
+    category: "sniper"
+    weapon_type: "AWP"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Wildfire Collection"
+    cases:
+      - "Operation Wildfire Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "AWP | Chromatic Aberration (Field-Tested)"
+    category: "sniper"
+    weapon_type: "AWP"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Recoil Collection"
+    cases:
+      - "Recoil Case"
+    min_float: 0
+    max_float: 0.7
+    selection_score: 318
+  - market_hash_name: "AWP | Containment Breach (Field-Tested)"
+    category: "sniper"
+    weapon_type: "AWP"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Shattered Web Collection"
+    cases:
+      - "Shattered Web Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "FAMAS | Byproduct (Field-Tested)"
+    category: "rifle"
+    weapon_type: "FAMAS"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Harlequin Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.55
+    selection_score: 3
+  - market_hash_name: "FAMAS | Colony (Field-Tested)"
+    category: "rifle"
+    weapon_type: "FAMAS"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Italy Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "FAMAS | CaliCamo (Field-Tested)"
+    category: "rifle"
+    weapon_type: "FAMAS"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2021 Mirage Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "FAMAS | Cyanospatter (Field-Tested)"
+    category: "rifle"
+    weapon_type: "FAMAS"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Lake Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "FAMAS | Crypsis (Field-Tested)"
+    category: "rifle"
+    weapon_type: "FAMAS"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma Collection"
+    cases:
+      - "Prisma Case"
+    min_float: 0
+    max_float: 0.55
+    selection_score: 268
+  - market_hash_name: "FAMAS | Decommissioned (Field-Tested)"
+    category: "rifle"
+    weapon_type: "FAMAS"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The CS20 Collection"
+    cases:
+      - "CS20 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "FAMAS | Valence (Field-Tested)"
+    category: "rifle"
+    weapon_type: "FAMAS"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Wildfire Collection"
+    cases:
+      - "Operation Wildfire Case"
+    min_float: 0
+    max_float: 0.8
+    selection_score: 318
+  - market_hash_name: "FAMAS | Neural Net (Field-Tested)"
+    category: "rifle"
+    weapon_type: "FAMAS"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Falchion Collection"
+    cases:
+      - "Falchion Case"
+    min_float: 0
+    max_float: 0.6
+    selection_score: 268
+  - market_hash_name: "FAMAS | Mecha Industries (Field-Tested)"
+    category: "rifle"
+    weapon_type: "FAMAS"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Glove Collection"
+    cases:
+      - "Glove Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 318
+  - market_hash_name: "FAMAS | Djinn (Field-Tested)"
+    category: "rifle"
+    weapon_type: "FAMAS"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma 2 Collection"
+    cases:
+      - "Chroma 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "FAMAS | Bad Trip (Field-Tested)"
+    category: "rifle"
+    weapon_type: "FAMAS"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Fever Collection"
+    cases:
+      - "Fever Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "FAMAS | Commemoration (Field-Tested)"
+    category: "rifle"
+    weapon_type: "FAMAS"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The CS20 Collection"
+    cases:
+      - "CS20 Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 268
+  - market_hash_name: "G3SG1 | Contractor (Field-Tested)"
+    category: "sniper"
+    weapon_type: "G3SG1"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Baggage Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "G3SG1 | Desert Storm (Field-Tested)"
+    category: "sniper"
+    weapon_type: "G3SG1"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Dust 2 Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "G3SG1 | Ancient Ritual (Field-Tested)"
+    category: "sniper"
+    weapon_type: "G3SG1"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Ancient Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.76
+    selection_score: 3
+  - market_hash_name: "G3SG1 | Arctic Camo (Field-Tested)"
+    category: "sniper"
+    weapon_type: "G3SG1"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Office Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "G3SG1 | Black Sand (Field-Tested)"
+    category: "sniper"
+    weapon_type: "G3SG1"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Shattered Web Collection"
+    cases:
+      - "Shattered Web Case"
+    min_float: 0
+    max_float: 0.8
+    selection_score: 268
+  - market_hash_name: "G3SG1 | Demeter (Field-Tested)"
+    category: "sniper"
+    weapon_type: "G3SG1"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Bravo Collection"
+    cases:
+      - "Operation Bravo Case"
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 268
+  - market_hash_name: "G3SG1 | Dream Glade (Field-Tested)"
+    category: "sniper"
+    weapon_type: "G3SG1"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Dreams & Nightmares Collection"
+    cases:
+      - "Dreams & Nightmares Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "G3SG1 | High Seas (Field-Tested)"
+    category: "sniper"
+    weapon_type: "G3SG1"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Horizon Collection"
+    cases:
+      - "Horizon Case"
+    min_float: 0
+    max_float: 0.7
+    selection_score: 268
+  - market_hash_name: "G3SG1 | Flux (Field-Tested)"
+    category: "sniper"
+    weapon_type: "G3SG1"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Shadow Collection"
+    cases:
+      - "Shadow Case"
+    min_float: 0
+    max_float: 0.9
+    selection_score: 268
+  - market_hash_name: "G3SG1 | The Executioner (Field-Tested)"
+    category: "sniper"
+    weapon_type: "G3SG1"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Revolver Case Collection"
+    cases:
+      - "Revolver Case"
+    min_float: 0.14
+    max_float: 0.85
+    selection_score: 265
+  - market_hash_name: "G3SG1 | Scavenger (Field-Tested)"
+    category: "sniper"
+    weapon_type: "G3SG1"
+    requested_rarity: "Covert"
+    rarity: "Restricted"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Danger Zone Collection"
+    cases:
+      - "Danger Zone Case"
+    min_float: 0
+    max_float: 0.65
+    selection_score: 268
+  - market_hash_name: "G3SG1 | Stinger (Field-Tested)"
+    category: "sniper"
+    weapon_type: "G3SG1"
+    requested_rarity: "Covert"
+    rarity: "Restricted"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Glove Collection"
+    cases:
+      - "Glove Case"
+    min_float: 0
+    max_float: 0.7
+    selection_score: 268
+  - market_hash_name: "Galil AR | Grey Smoke (Field-Tested)"
+    category: "rifle"
+    weapon_type: "Galil AR"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Ascent Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "Galil AR | Hunting Blind (Field-Tested)"
+    category: "rifle"
+    weapon_type: "Galil AR"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Mirage Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "Galil AR | Acid Dart (Field-Tested)"
+    category: "rifle"
+    weapon_type: "Galil AR"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Boreal Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "Galil AR | Cold Fusion (Field-Tested)"
+    category: "rifle"
+    weapon_type: "Galil AR"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2018 Nuke Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.83
+    selection_score: 3
+  - market_hash_name: "Galil AR | Akoben (Field-Tested)"
+    category: "rifle"
+    weapon_type: "Galil AR"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma Collection"
+    cases:
+      - "Prisma Case"
+    min_float: 0
+    max_float: 0.75
+    selection_score: 268
+  - market_hash_name: "Galil AR | Black Sand (Field-Tested)"
+    category: "rifle"
+    weapon_type: "Galil AR"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Glove Collection"
+    cases:
+      - "Glove Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Galil AR | Connexion (Field-Tested)"
+    category: "rifle"
+    weapon_type: "Galil AR"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Fracture Collection"
+    cases:
+      - "Fracture Case"
+    min_float: 0
+    max_float: 0.8
+    selection_score: 268
+  - market_hash_name: "Galil AR | Control (Field-Tested)"
+    category: "rifle"
+    weapon_type: "Galil AR"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Fever Collection"
+    cases:
+      - "Fever Case"
+    min_float: 0
+    max_float: 0.798995
+    selection_score: 268
+  - market_hash_name: "Galil AR | Chromatic Aberration (Field-Tested)"
+    category: "rifle"
+    weapon_type: "Galil AR"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Snakebite Collection"
+    cases:
+      - "Snakebite Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "Galil AR | Sugar Rush (Field-Tested)"
+    category: "rifle"
+    weapon_type: "Galil AR"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Hydra Collection"
+    cases:
+      - "Operation Hydra Case"
+    min_float: 0
+    max_float: 0.55
+    selection_score: 268
+  - market_hash_name: "Galil AR | Chatterbox (Field-Tested)"
+    category: "rifle"
+    weapon_type: "Galil AR"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma Collection"
+    cases:
+      - "Chroma Case"
+    min_float: 0.35
+    max_float: 0.85
+    selection_score: 304
+  - market_hash_name: "Galil AR | Eco (Field-Tested)"
+    category: "rifle"
+    weapon_type: "Galil AR"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma 2 Collection"
+    cases:
+      - "Chroma 2 Case"
+    min_float: 0.1
+    max_float: 0.85
+    selection_score: 265
+  - market_hash_name: "M4A1-S | Mud-Spec (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A1-S"
+    requested_rarity: "Consumer Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Anubis Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.73
+    selection_score: 3
+  - market_hash_name: "M4A1-S | Wash me plz (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A1-S"
+    requested_rarity: "Consumer Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Overpass 2024 Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.58
+    selection_score: 3
+  - market_hash_name: "M4A1-S | Boreal Forest (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A1-S"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Italy Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "M4A1-S | Moss Quartz (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A1-S"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Norse Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.5
+    selection_score: 3
+  - market_hash_name: "M4A1-S | Briefing (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A1-S"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Hydra Collection"
+    cases:
+      - "Operation Hydra Case"
+    min_float: 0
+    max_float: 0.8
+    selection_score: 268
+  - market_hash_name: "M4A1-S | Blood Tiger (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A1-S"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Arms Deal 2 Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.3
+    selection_score: 22
+  - market_hash_name: "M4A1-S | Basilisk (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A1-S"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Vanguard Collection"
+    cases:
+      - "Operation Vanguard Weapon Case"
+    min_float: 0
+    max_float: 0.68
+    selection_score: 268
+  - market_hash_name: "M4A1-S | Emphorosaur-S (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A1-S"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Revolution Collection"
+    cases:
+      - "Revolution Case"
+    min_float: 0
+    max_float: 0.8
+    selection_score: 268
+  - market_hash_name: "M4A1-S | Decimator (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A1-S"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Spectrum Collection"
+    cases:
+      - "Spectrum Case"
+    min_float: 0
+    max_float: 0.85
+    selection_score: 318
+  - market_hash_name: "M4A1-S | Atomic Alloy (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A1-S"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Huntsman Collection"
+    cases:
+      - "Huntsman Weapon Case"
+    min_float: 0
+    max_float: 0.9
+    selection_score: 268
+  - market_hash_name: "M4A1-S | Cyrex (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A1-S"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Breakout Collection"
+    cases:
+      - "Operation Breakout Weapon Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 318
+  - market_hash_name: "M4A1-S | Hyper Beast (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A1-S"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma 2 Collection"
+    cases:
+      - "Chroma 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "M4A4 | Desert Storm (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A4"
+    requested_rarity: "Consumer Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Dust Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "M4A4 | Jungle Tiger (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A4"
+    requested_rarity: "Consumer Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Aztec Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "M4A4 | Aeolian Dark (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A4"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Achroma Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.65
+    selection_score: 3
+  - market_hash_name: "M4A4 | Dark Blossom (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A4"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The St. Marc Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.5
+    selection_score: 3
+  - market_hash_name: "M4A4 | Choppa (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A4"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Fever Collection"
+    cases:
+      - "Fever Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "M4A4 | Faded Zebra (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A4"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The eSports 2013 Collection"
+    cases:
+      - "eSports 2013 Case"
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 268
+  - market_hash_name: "M4A4 | Etch Lord (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A4"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Kilowatt Collection"
+    cases:
+      - "Kilowatt Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "M4A4 | Evil Daimyo (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A4"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Falchion Collection"
+    cases:
+      - "Falchion Case"
+    min_float: 0
+    max_float: 0.52
+    selection_score: 268
+  - market_hash_name: "M4A4 | Desolate Space (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A4"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gamma Collection"
+    cases:
+      - "Gamma Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "M4A4 | Tooth Fairy (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A4"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Fracture Collection"
+    cases:
+      - "Fracture Case"
+    min_float: 0
+    max_float: 0.73
+    selection_score: 318
+  - market_hash_name: "M4A4 | In Living Color (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A4"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Snakebite Collection"
+    cases:
+      - "Snakebite Case"
+    min_float: 0
+    max_float: 0.79
+    selection_score: 318
+  - market_hash_name: "M4A4 | Neo-Noir (Field-Tested)"
+    category: "rifle"
+    weapon_type: "M4A4"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Clutch Collection"
+    cases:
+      - "Clutch Case"
+    min_float: 0
+    max_float: 0.9
+    selection_score: 318
+  - market_hash_name: "SCAR-20 | Contractor (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SCAR-20"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Safehouse Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "SCAR-20 | Sand Mesh (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SCAR-20"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Dust 2 Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "SCAR-20 | Palm (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SCAR-20"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Dust Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "SCAR-20 | Carbon Fiber (Minimal Wear)"
+    category: "sniper"
+    weapon_type: "SCAR-20"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Minimal Wear"
+    source_type: "collection"
+    collections:
+      - "The Train Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.12
+    selection_score: -26
+  - market_hash_name: "SCAR-20 | Blueprint (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SCAR-20"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Spectrum Collection"
+    cases:
+      - "Spectrum Case"
+    min_float: 0
+    max_float: 0.75
+    selection_score: 318
+  - market_hash_name: "SCAR-20 | Assault (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SCAR-20"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The CS20 Collection"
+    cases:
+      - "CS20 Case"
+    min_float: 0
+    max_float: 0.62
+    selection_score: 268
+  - market_hash_name: "SCAR-20 | Enforcer (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SCAR-20"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma 2 Collection"
+    cases:
+      - "Prisma 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "SCAR-20 | Powercore (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SCAR-20"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gamma 2 Collection"
+    cases:
+      - "Gamma 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "SCAR-20 | Cyrex (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SCAR-20"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Huntsman Collection"
+    cases:
+      - "Huntsman Weapon Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 318
+  - market_hash_name: "SCAR-20 | Bloodsport (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SCAR-20"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gamma Collection"
+    cases:
+      - "Gamma Case"
+    min_float: 0
+    max_float: 0.45
+    selection_score: 315
+  - market_hash_name: "SCAR-20 | Cardiac (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SCAR-20"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Vanguard Collection"
+    cases:
+      - "Operation Vanguard Weapon Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "SCAR-20 | Splash Jam (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SCAR-20"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Militia Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: -117
+  - market_hash_name: "SG 553 | Barricade (Field-Tested)"
+    category: "rifle"
+    weapon_type: "SG 553"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Norse Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.65
+    selection_score: 3
+  - market_hash_name: "SG 553 | Bleached (Field-Tested)"
+    category: "rifle"
+    weapon_type: "SG 553"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2021 Dust 2 Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.5
+    selection_score: 3
+  - market_hash_name: "SG 553 | Basket Halftone (Field-Tested)"
+    category: "rifle"
+    weapon_type: "SG 553"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Radiant Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "SG 553 | Candy Apple (Field-Tested)"
+    category: "rifle"
+    weapon_type: "SG 553"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Canals Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.7
+    selection_score: 3
+  - market_hash_name: "SG 553 | Aerial (Field-Tested)"
+    category: "rifle"
+    weapon_type: "SG 553"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gamma Collection"
+    cases:
+      - "Gamma Case"
+    min_float: 0
+    max_float: 0.6
+    selection_score: 268
+  - market_hash_name: "SG 553 | Aloha (Field-Tested)"
+    category: "rifle"
+    weapon_type: "SG 553"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Clutch Collection"
+    cases:
+      - "Clutch Case"
+    min_float: 0
+    max_float: 0.55
+    selection_score: 268
+  - market_hash_name: "SG 553 | Darkwing (Field-Tested)"
+    category: "rifle"
+    weapon_type: "SG 553"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma 2 Collection"
+    cases:
+      - "Prisma 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "SG 553 | Dragon Tech (Field-Tested)"
+    category: "rifle"
+    weapon_type: "SG 553"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Recoil Collection"
+    cases:
+      - "Recoil Case"
+    min_float: 0
+    max_float: 0.7
+    selection_score: 268
+  - market_hash_name: "SG 553 | Cyrex (Field-Tested)"
+    category: "rifle"
+    weapon_type: "SG 553"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Falchion Collection"
+    cases:
+      - "Falchion Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "SG 553 | Colony IV (Field-Tested)"
+    category: "rifle"
+    weapon_type: "SG 553"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Shattered Web Collection"
+    cases:
+      - "Shattered Web Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "SG 553 | Hazard Pay (Field-Tested)"
+    category: "rifle"
+    weapon_type: "SG 553"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2021 Vertigo Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.48
+    selection_score: 3
+  - market_hash_name: "SG 553 | Integrale (Field-Tested)"
+    category: "rifle"
+    weapon_type: "SG 553"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2018 Inferno Collection"
+    cases: []
+    min_float: 0
+    max_float: 1
+    selection_score: 3
+  - market_hash_name: "SSG 08 | Blue Spruce (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SSG 08"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Safehouse Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "SSG 08 | Green Ceramic (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SSG 08"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Boreal Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.75
+    selection_score: 3
+  - market_hash_name: "SSG 08 | Azure Glyph (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SSG 08"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Anubis Collection"
+    cases: []
+    min_float: 0.01
+    max_float: 0.99
+    selection_score: 3
+  - market_hash_name: "SSG 08 | Calligrafaux (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SSG 08"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Harlequin Collection"
+    cases: []
+    min_float: 0
+    max_float: 1
+    selection_score: 3
+  - market_hash_name: "SSG 08 | Abyss (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SSG 08"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Breakout Collection"
+    cases:
+      - "Operation Breakout Weapon Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "SSG 08 | Dezastre (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SSG 08"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Kilowatt Collection"
+    cases:
+      - "Kilowatt Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "SSG 08 | Fever Dream (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SSG 08"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma 2 Collection"
+    cases:
+      - "Prisma 2 Case"
+    min_float: 0
+    max_float: 0.72
+    selection_score: 318
+  - market_hash_name: "SSG 08 | Parallax (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SSG 08"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Broken Fang Collection"
+    cases:
+      - "Operation Broken Fang Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "SSG 08 | Turbo Peek (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SSG 08"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Riptide Collection"
+    cases:
+      - "Operation Riptide Case"
+    min_float: 0
+    max_float: 0.6
+    selection_score: 318
+  - market_hash_name: "SSG 08 | Big Iron (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SSG 08"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Shadow Collection"
+    cases:
+      - "Shadow Case"
+    min_float: 0
+    max_float: 0.64
+    selection_score: 268
+  - market_hash_name: "SSG 08 | Dragonfire (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SSG 08"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Glove Collection"
+    cases:
+      - "Glove Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 318
+  - market_hash_name: "SSG 08 | Blood in the Water (Field-Tested)"
+    category: "sniper"
+    weapon_type: "SSG 08"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Arms Deal 2 Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.2
+    selection_score: 22
+  - market_hash_name: "CZ75-Auto | Framework (Field-Tested)"
+    category: "pistol"
+    weapon_type: "CZ75-Auto"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2021 Vertigo Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "CZ75-Auto | Green Plaid (Field-Tested)"
+    category: "pistol"
+    weapon_type: "CZ75-Auto"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Baggage Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.58
+    selection_score: 3
+  - market_hash_name: "CZ75-Auto | Copper Fiber (Field-Tested)"
+    category: "pistol"
+    weapon_type: "CZ75-Auto"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Train 2025 Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.563291
+    selection_score: 3
+  - market_hash_name: "CZ75-Auto | Midnight Palm (Field-Tested)"
+    category: "pistol"
+    weapon_type: "CZ75-Auto"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2021 Mirage Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.5
+    selection_score: 3
+  - market_hash_name: "CZ75-Auto | Circaetus (Field-Tested)"
+    category: "pistol"
+    weapon_type: "CZ75-Auto"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Snakebite Collection"
+    cases:
+      - "Snakebite Case"
+    min_float: 0
+    max_float: 0.9
+    selection_score: 268
+  - market_hash_name: "CZ75-Auto | Distressed (Field-Tested)"
+    category: "pistol"
+    weapon_type: "CZ75-Auto"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma 2 Collection"
+    cases:
+      - "Prisma 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "CZ75-Auto | Eco (Field-Tested)"
+    category: "pistol"
+    weapon_type: "CZ75-Auto"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Horizon Collection"
+    cases:
+      - "Horizon Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "CZ75-Auto | Pole Position (Field-Tested)"
+    category: "pistol"
+    weapon_type: "CZ75-Auto"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma 2 Collection"
+    cases:
+      - "Chroma 2 Case"
+    min_float: 0
+    max_float: 0.7
+    selection_score: 268
+  - market_hash_name: "CZ75-Auto | Xiangliu (Field-Tested)"
+    category: "pistol"
+    weapon_type: "CZ75-Auto"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Spectrum Collection"
+    cases:
+      - "Spectrum Case"
+    min_float: 0
+    max_float: 0.56
+    selection_score: 268
+  - market_hash_name: "CZ75-Auto | Yellow Jacket (Field-Tested)"
+    category: "pistol"
+    weapon_type: "CZ75-Auto"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Falchion Collection"
+    cases:
+      - "Falchion Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "CZ75-Auto | Victoria (Field-Tested)"
+    category: "pistol"
+    weapon_type: "CZ75-Auto"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Arms Deal 3 Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.75
+    selection_score: 28
+  - market_hash_name: "CZ75-Auto | The Fuschia Is Now (Field-Tested)"
+    category: "pistol"
+    weapon_type: "CZ75-Auto"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Arms Deal 3 Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.4
+    selection_score: 25
+  - market_hash_name: "Desert Eagle | Night (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Desert Eagle"
+    requested_rarity: "Consumer Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Chop Shop Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "Desert Eagle | Tilted (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Desert Eagle"
+    requested_rarity: "Consumer Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Overpass 2024 Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.75
+    selection_score: 3
+  - market_hash_name: "Desert Eagle | Midnight Storm (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Desert Eagle"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Rising Sun Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.75
+    selection_score: 3
+  - market_hash_name: "Desert Eagle | Mudder (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Desert Eagle"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Lake Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "Desert Eagle | Blue Ply (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Desert Eagle"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma 2 Collection"
+    cases:
+      - "Prisma 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Desert Eagle | Bronze Deco (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Desert Eagle"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma 2 Collection"
+    cases:
+      - "Chroma 2 Case"
+    min_float: 0
+    max_float: 0.46
+    selection_score: 268
+  - market_hash_name: "Desert Eagle | Crimson Web (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Desert Eagle"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The eSports 2014 Summer Collection"
+    cases:
+      - "eSports 2014 Summer Case"
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 318
+  - market_hash_name: "Desert Eagle | Light Rail (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Desert Eagle"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma Collection"
+    cases:
+      - "Prisma Case"
+    min_float: 0
+    max_float: 0.9
+    selection_score: 318
+  - market_hash_name: "Desert Eagle | Kumicho Dragon (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Desert Eagle"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Wildfire Collection"
+    cases:
+      - "Operation Wildfire Case"
+    min_float: 0
+    max_float: 0.76
+    selection_score: 318
+  - market_hash_name: "Desert Eagle | Mecha Industries (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Desert Eagle"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Danger Zone Collection"
+    cases:
+      - "Danger Zone Case"
+    min_float: 0
+    max_float: 0.6
+    selection_score: 318
+  - market_hash_name: "Desert Eagle | Code Red (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Desert Eagle"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Horizon Collection"
+    cases:
+      - "Horizon Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "Desert Eagle | Printstream (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Desert Eagle"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Fracture Collection"
+    cases:
+      - "Fracture Case"
+    min_float: 0
+    max_float: 0.8
+    selection_score: 318
+  - market_hash_name: "Dual Berettas | BorDeux (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Dual Berettas"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Radiant Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "Dual Berettas | Colony (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Dual Berettas"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Train Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "Dual Berettas | Drift Wood (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Dual Berettas"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2021 Mirage Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "Dual Berettas | Polished Malachite (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Dual Berettas"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Boreal Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "Dual Berettas | Cartel (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Dual Berettas"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Wildfire Collection"
+    cases:
+      - "Operation Wildfire Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "Dual Berettas | Balance (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Dual Berettas"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Shattered Web Collection"
+    cases:
+      - "Shattered Web Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Dual Berettas | Dezastre (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Dual Berettas"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Broken Fang Collection"
+    cases:
+      - "Operation Broken Fang Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Dual Berettas | Flora Carnivora (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Dual Berettas"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Recoil Collection"
+    cases:
+      - "Recoil Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Dual Berettas | Cobra Strike (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Dual Berettas"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Hydra Collection"
+    cases:
+      - "Operation Hydra Case"
+    min_float: 0
+    max_float: 0.6
+    selection_score: 268
+  - market_hash_name: "Dual Berettas | Melondrama (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Dual Berettas"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Dreams & Nightmares Collection"
+    cases:
+      - "Dreams & Nightmares Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Dual Berettas | Twin Turbo (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Dual Berettas"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2018 Inferno Collection"
+    cases: []
+    min_float: 0
+    max_float: 1
+    selection_score: 3
+  - market_hash_name: "Dual Berettas | Hydro Strike (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Dual Berettas"
+    requested_rarity: "Covert"
+    rarity: "Restricted"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gallery Collection"
+    cases:
+      - "Gallery Case"
+    min_float: 0
+    max_float: 0.801418
+    selection_score: 268
+  - market_hash_name: "Five-SeveN | Autumn Thicket (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Five-SeveN"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Radiant Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.636986
+    selection_score: 3
+  - market_hash_name: "Five-SeveN | Contractor (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Five-SeveN"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Mirage Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "Five-SeveN | Hot Shot (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Five-SeveN"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Cache Collection"
+    cases: []
+    min_float: 0
+    max_float: 1
+    selection_score: 3
+  - market_hash_name: "Five-SeveN | Midnight Paintover (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Five-SeveN"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Overpass 2024 Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.5
+    selection_score: 3
+  - market_hash_name: "Five-SeveN | Capillary (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Five-SeveN"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Spectrum Collection"
+    cases:
+      - "Spectrum Case"
+    min_float: 0
+    max_float: 0.7
+    selection_score: 318
+  - market_hash_name: "Five-SeveN | Flame Test (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Five-SeveN"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Clutch Collection"
+    cases:
+      - "Clutch Case"
+    min_float: 0
+    max_float: 0.65
+    selection_score: 268
+  - market_hash_name: "Five-SeveN | Buddy (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Five-SeveN"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The CS20 Collection"
+    cases:
+      - "CS20 Case"
+    min_float: 0
+    max_float: 0.55
+    selection_score: 268
+  - market_hash_name: "Five-SeveN | Hybrid (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Five-SeveN"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Kilowatt Collection"
+    cases:
+      - "Kilowatt Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Five-SeveN | Fairy Tale (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Five-SeveN"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Broken Fang Collection"
+    cases:
+      - "Operation Broken Fang Case"
+    min_float: 0.02
+    max_float: 0.9
+    selection_score: 268
+  - market_hash_name: "Five-SeveN | Fowl Play (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Five-SeveN"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Breakout Collection"
+    cases:
+      - "Operation Breakout Weapon Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Five-SeveN | Hyper Beast (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Five-SeveN"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Hydra Collection"
+    cases:
+      - "Operation Hydra Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "Five-SeveN | Angry Mob (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Five-SeveN"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma Collection"
+    cases:
+      - "Prisma Case"
+    min_float: 0
+    max_float: 0.7
+    selection_score: 268
+  - market_hash_name: "Glock-18 | Ocean Topo (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Glock-18"
+    requested_rarity: "Consumer Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Ascent Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "Glock-18 | Red Tire (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Glock-18"
+    requested_rarity: "Consumer Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2021 Vertigo Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.55
+    selection_score: 3
+  - market_hash_name: "Glock-18 | Groundwater (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Glock-18"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Mirage Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "Glock-18 | Night (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Glock-18"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Overpass Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "Glock-18 | Bunsen Burner (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Glock-18"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Falchion Collection"
+    cases:
+      - "Falchion Case"
+    min_float: 0
+    max_float: 0.8
+    selection_score: 268
+  - market_hash_name: "Glock-18 | Catacombs (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Glock-18"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma Collection"
+    cases:
+      - "Chroma Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 268
+  - market_hash_name: "Glock-18 | Moonrise (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Glock-18"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Clutch Collection"
+    cases:
+      - "Clutch Case"
+    min_float: 0
+    max_float: 0.65
+    selection_score: 318
+  - market_hash_name: "Glock-18 | Royal Legion (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Glock-18"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Wildfire Collection"
+    cases:
+      - "Operation Wildfire Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "Glock-18 | Snack Attack (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Glock-18"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Riptide Collection"
+    cases:
+      - "Operation Riptide Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "Glock-18 | Vogue (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Glock-18"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Fracture Collection"
+    cases:
+      - "Fracture Case"
+    min_float: 0
+    max_float: 0.75
+    selection_score: 318
+  - market_hash_name: "Glock-18 | Bullet Queen (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Glock-18"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma 2 Collection"
+    cases:
+      - "Prisma 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "Glock-18 | Neo-Noir (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Glock-18"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Broken Fang Collection"
+    cases:
+      - "Operation Broken Fang Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "P2000 | Granite Marbleized (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P2000"
+    requested_rarity: "Consumer Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Italy Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "P2000 | Grassland (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P2000"
+    requested_rarity: "Consumer Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Overpass Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "P2000 | Coach Class (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P2000"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Baggage Collection"
+    cases: []
+    min_float: 0
+    max_float: 1
+    selection_score: 3
+  - market_hash_name: "P2000 | Coral Halftone (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P2000"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Graphic Design Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.52
+    selection_score: 3
+  - market_hash_name: "P2000 | Gnarled (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P2000"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Fracture Collection"
+    cases:
+      - "Fracture Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "P2000 | Ivory (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P2000"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Breakout Collection"
+    cases:
+      - "Operation Breakout Weapon Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "P2000 | Acid Etched (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P2000"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma 2 Collection"
+    cases:
+      - "Prisma 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "P2000 | Handgun (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P2000"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Falchion Collection"
+    cases:
+      - "Falchion Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "P2000 | Imperial Dragon (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P2000"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gamma Collection"
+    cases:
+      - "Gamma Case"
+    min_float: 0
+    max_float: 0.63
+    selection_score: 268
+  - market_hash_name: "P2000 | Wicked Sick (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P2000"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Revolution Collection"
+    cases:
+      - "Revolution Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "P2000 | Fire Elemental (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P2000"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Vanguard Collection"
+    cases:
+      - "Operation Vanguard Weapon Case"
+    min_float: 0
+    max_float: 0.6
+    selection_score: 268
+  - market_hash_name: "P2000 | Corticera (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P2000"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The eSports 2014 Summer Collection"
+    cases:
+      - "eSports 2014 Summer Case"
+    min_float: 0.06
+    max_float: 0.3
+    selection_score: 262
+  - market_hash_name: "P250 | Bone Mask (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P250"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Mirage Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "P250 | Boreal Forest (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P250"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Lake Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "P250 | Contamination (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P250"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Cache Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.83
+    selection_score: 3
+  - market_hash_name: "P250 | Crimson Kimono (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P250"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Rising Sun Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "P250 | Valence (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P250"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma 2 Collection"
+    cases:
+      - "Chroma 2 Case"
+    min_float: 0
+    max_float: 0.8
+    selection_score: 318
+  - market_hash_name: "P250 | Cassette (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P250"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Fracture Collection"
+    cases:
+      - "Fracture Case"
+    min_float: 0
+    max_float: 0.6
+    selection_score: 268
+  - market_hash_name: "P250 | Cyber Shell (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P250"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Snakebite Collection"
+    cases:
+      - "Snakebite Case"
+    min_float: 0
+    max_float: 0.85
+    selection_score: 268
+  - market_hash_name: "P250 | Inferno (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P250"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The CS20 Collection"
+    cases:
+      - "CS20 Case"
+    min_float: 0
+    max_float: 0.68
+    selection_score: 268
+  - market_hash_name: "P250 | Cartel (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P250"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Vanguard Collection"
+    cases:
+      - "Operation Vanguard Weapon Case"
+    min_float: 0
+    max_float: 0.75
+    selection_score: 318
+  - market_hash_name: "P250 | Muertos (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P250"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma Collection"
+    cases:
+      - "Chroma Case"
+    min_float: 0
+    max_float: 0.6
+    selection_score: 318
+  - market_hash_name: "P250 | See Ya Later (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P250"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Spectrum 2 Collection"
+    cases:
+      - "Spectrum 2 Case"
+    min_float: 0
+    max_float: 0.7
+    selection_score: 318
+  - market_hash_name: "P250 | Asiimov (Field-Tested)"
+    category: "pistol"
+    weapon_type: "P250"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma 3 Collection"
+    cases:
+      - "Chroma 3 Case"
+    min_float: 0.1
+    max_float: 1
+    selection_score: 315
+  - market_hash_name: "R8 Revolver | Bone Mask (Field-Tested)"
+    category: "pistol"
+    weapon_type: "R8 Revolver"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Bank Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "R8 Revolver | Canal Spray (Field-Tested)"
+    category: "pistol"
+    weapon_type: "R8 Revolver"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Canals Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "R8 Revolver | Dark Chamber (Field-Tested)"
+    category: "pistol"
+    weapon_type: "R8 Revolver"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Achroma Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.80339
+    selection_score: 3
+  - market_hash_name: "R8 Revolver | Leafhopper (Field-Tested)"
+    category: "pistol"
+    weapon_type: "R8 Revolver"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Boreal Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.65098
+    selection_score: 3
+  - market_hash_name: "R8 Revolver | Crimson Web (Field-Tested)"
+    category: "pistol"
+    weapon_type: "R8 Revolver"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Revolver Case Collection"
+    cases:
+      - "Revolver Case"
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 318
+  - market_hash_name: "R8 Revolver | Bone Forged (Field-Tested)"
+    category: "pistol"
+    weapon_type: "R8 Revolver"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma 2 Collection"
+    cases:
+      - "Prisma 2 Case"
+    min_float: 0
+    max_float: 0.6
+    selection_score: 268
+  - market_hash_name: "R8 Revolver | Banana Cannon (Field-Tested)"
+    category: "pistol"
+    weapon_type: "R8 Revolver"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Revolution Collection"
+    cases:
+      - "Revolution Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "R8 Revolver | Crazy 8 (Field-Tested)"
+    category: "pistol"
+    weapon_type: "R8 Revolver"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Recoil Collection"
+    cases:
+      - "Recoil Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "R8 Revolver | Llama Cannon (Field-Tested)"
+    category: "pistol"
+    weapon_type: "R8 Revolver"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Spectrum 2 Collection"
+    cases:
+      - "Spectrum 2 Case"
+    min_float: 0.03
+    max_float: 0.7
+    selection_score: 268
+  - market_hash_name: "R8 Revolver | Skull Crusher (Field-Tested)"
+    category: "pistol"
+    weapon_type: "R8 Revolver"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma Collection"
+    cases:
+      - "Prisma Case"
+    min_float: 0.25
+    max_float: 0.8
+    selection_score: 254
+  - market_hash_name: "R8 Revolver | Fade (Field-Tested)"
+    category: "pistol"
+    weapon_type: "R8 Revolver"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Revolver Case Collection"
+    cases:
+      - "Revolver Case"
+    min_float: 0
+    max_float: 0.4
+    selection_score: 145
+  - market_hash_name: "R8 Revolver | Amber Fade (Field-Tested)"
+    category: "pistol"
+    weapon_type: "R8 Revolver"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Dust 2 Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.4
+    selection_score: 0
+  - market_hash_name: "Tec-9 | Army Mesh (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Tec-9"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Safehouse Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "Tec-9 | Bamboo Forest (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Tec-9"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Rising Sun Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "Tec-9 | Banana Leaf (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Tec-9"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Harlequin Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "Tec-9 | Citric Acid (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Tec-9"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Radiant Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "Tec-9 | Cracked Opal (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Tec-9"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Spectrum 2 Collection"
+    cases:
+      - "Spectrum 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Tec-9 | Cut Out (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Tec-9"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Hydra Collection"
+    cases:
+      - "Operation Hydra Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Tec-9 | Avalanche (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Tec-9"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Revolver Case Collection"
+    cases:
+      - "Revolver Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Tec-9 | Bamboozle (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Tec-9"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma Collection"
+    cases:
+      - "Prisma Case"
+    min_float: 0
+    max_float: 0.8
+    selection_score: 268
+  - market_hash_name: "Tec-9 | Decimator (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Tec-9"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Shattered Web Collection"
+    cases:
+      - "Shattered Web Case"
+    min_float: 0
+    max_float: 0.75
+    selection_score: 318
+  - market_hash_name: "Tec-9 | Fuel Injector (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Tec-9"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gamma 2 Collection"
+    cases:
+      - "Gamma 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "Tec-9 | Remote Control (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Tec-9"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2018 Nuke Collection"
+    cases: []
+    min_float: 0
+    max_float: 1
+    selection_score: 3
+  - market_hash_name: "Tec-9 | Brother (Field-Tested)"
+    category: "pistol"
+    weapon_type: "Tec-9"
+    requested_rarity: "Covert"
+    rarity: "Restricted"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Fracture Collection"
+    cases:
+      - "Fracture Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "USP-S | Para Green (Field-Tested)"
+    category: "pistol"
+    weapon_type: "USP-S"
+    requested_rarity: "Consumer Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Chop Shop Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "USP-S | Royal Blue (Field-Tested)"
+    category: "pistol"
+    weapon_type: "USP-S"
+    requested_rarity: "Consumer Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Cobblestone Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "USP-S | Desert Tactical (Field-Tested)"
+    category: "pistol"
+    weapon_type: "USP-S"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Anubis Collection"
+    cases: []
+    min_float: 0
+    max_float: 1
+    selection_score: 3
+  - market_hash_name: "USP-S | Forest Leaves (Field-Tested)"
+    category: "pistol"
+    weapon_type: "USP-S"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Safehouse Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "USP-S | Blueprint (Field-Tested)"
+    category: "pistol"
+    weapon_type: "USP-S"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Hydra Collection"
+    cases:
+      - "Operation Hydra Case"
+    min_float: 0
+    max_float: 0.86
+    selection_score: 318
+  - market_hash_name: "USP-S | 27 (Field-Tested)"
+    category: "pistol"
+    weapon_type: "USP-S"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gallery Collection"
+    cases:
+      - "Gallery Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "USP-S | Cyrex (Field-Tested)"
+    category: "pistol"
+    weapon_type: "USP-S"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Glove Collection"
+    cases:
+      - "Glove Case"
+    min_float: 0
+    max_float: 0.55
+    selection_score: 318
+  - market_hash_name: "USP-S | Flashback (Field-Tested)"
+    category: "pistol"
+    weapon_type: "USP-S"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Danger Zone Collection"
+    cases:
+      - "Danger Zone Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 268
+  - market_hash_name: "USP-S | Cortex (Field-Tested)"
+    category: "pistol"
+    weapon_type: "USP-S"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Clutch Collection"
+    cases:
+      - "Clutch Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "USP-S | Jawbreaker (Field-Tested)"
+    category: "pistol"
+    weapon_type: "USP-S"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Kilowatt Collection"
+    cases:
+      - "Kilowatt Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "USP-S | Neo-Noir (Field-Tested)"
+    category: "pistol"
+    weapon_type: "USP-S"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Spectrum Collection"
+    cases:
+      - "Spectrum Case"
+    min_float: 0
+    max_float: 0.7
+    selection_score: 318
+  - market_hash_name: "USP-S | Printstream (Field-Tested)"
+    category: "pistol"
+    weapon_type: "USP-S"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Recoil Collection"
+    cases:
+      - "Recoil Case"
+    min_float: 0
+    max_float: 0.85
+    selection_score: 318
+  - market_hash_name: "MAC-10 | Bronzer (Field-Tested)"
+    category: "smg"
+    weapon_type: "MAC-10"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Radiant Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "MAC-10 | Indigo (Field-Tested)"
+    category: "smg"
+    weapon_type: "MAC-10"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Cobblestone Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "MAC-10 | Acid Hex (Field-Tested)"
+    category: "smg"
+    weapon_type: "MAC-10"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Boreal Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.58
+    selection_score: 3
+  - market_hash_name: "MAC-10 | Calf Skin (Field-Tested)"
+    category: "smg"
+    weapon_type: "MAC-10"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2018 Inferno Collection"
+    cases: []
+    min_float: 0
+    max_float: 1
+    selection_score: 3
+  - market_hash_name: "MAC-10 | Aloha (Field-Tested)"
+    category: "smg"
+    weapon_type: "MAC-10"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Hydra Collection"
+    cases:
+      - "Operation Hydra Case"
+    min_float: 0
+    max_float: 0.65
+    selection_score: 268
+  - market_hash_name: "MAC-10 | Carnivore (Field-Tested)"
+    category: "smg"
+    weapon_type: "MAC-10"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gamma Collection"
+    cases:
+      - "Gamma Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "MAC-10 | Graven (Field-Tested)"
+    category: "smg"
+    weapon_type: "MAC-10"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Bravo Collection"
+    cases:
+      - "Operation Bravo Case"
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 318
+  - market_hash_name: "MAC-10 | Allure (Field-Tested)"
+    category: "smg"
+    weapon_type: "MAC-10"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Fracture Collection"
+    cases:
+      - "Fracture Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "MAC-10 | Disco Tech (Field-Tested)"
+    category: "smg"
+    weapon_type: "MAC-10"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma 2 Collection"
+    cases:
+      - "Prisma 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "MAC-10 | Toybox (Field-Tested)"
+    category: "smg"
+    weapon_type: "MAC-10"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Riptide Collection"
+    cases:
+      - "Operation Riptide Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "MAC-10 | Stalker (Field-Tested)"
+    category: "smg"
+    weapon_type: "MAC-10"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Shattered Web Collection"
+    cases:
+      - "Shattered Web Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "MAC-10 | Neon Rider (Field-Tested)"
+    category: "smg"
+    weapon_type: "MAC-10"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma 2 Collection"
+    cases:
+      - "Chroma 2 Case"
+    min_float: 0
+    max_float: 0.45
+    selection_score: 315
+  - market_hash_name: "MP5-SD | Bamboo Garden (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP5-SD"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The St. Marc Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.55
+    selection_score: 3
+  - market_hash_name: "MP5-SD | Dirt Drop (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP5-SD"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2018 Inferno Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "MP5-SD | Nitro (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP5-SD"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Control Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "MP5-SD | Picnic (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP5-SD"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Harlequin Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.75
+    selection_score: 3
+  - market_hash_name: "MP5-SD | Acid Wash (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP5-SD"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Shattered Web Collection"
+    cases:
+      - "Shattered Web Case"
+    min_float: 0
+    max_float: 0.68
+    selection_score: 268
+  - market_hash_name: "MP5-SD | Condition Zero (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP5-SD"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Broken Fang Collection"
+    cases:
+      - "Operation Broken Fang Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "MP5-SD | Agent (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP5-SD"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The CS20 Collection"
+    cases:
+      - "CS20 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "MP5-SD | Gauss (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP5-SD"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma Collection"
+    cases:
+      - "Prisma Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "MP5-SD | Phosphor (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP5-SD"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Danger Zone Collection"
+    cases:
+      - "Danger Zone Case"
+    min_float: 0
+    max_float: 0.8
+    selection_score: 268
+  - market_hash_name: "MP5-SD | Oxide Oasis (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP5-SD"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2021 Mirage Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.55
+    selection_score: 3
+  - market_hash_name: "MP5-SD | Kitbash (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP5-SD"
+    requested_rarity: "Covert"
+    rarity: "Restricted"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Fracture Collection"
+    cases:
+      - "Fracture Case"
+    min_float: 0
+    max_float: 0.8
+    selection_score: 268
+  - market_hash_name: "MP5-SD | Autumn Twilly (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP5-SD"
+    requested_rarity: "Covert"
+    rarity: "Restricted"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2021 Train Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.58
+    selection_score: 3
+  - market_hash_name: "MP7 | Army Recon (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP7"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Safehouse Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "MP7 | Asterion (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP7"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Gods and Monsters Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.55
+    selection_score: 3
+  - market_hash_name: "MP7 | Astrolabe (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP7"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Graphic Design Collection"
+    cases: []
+    min_float: 0
+    max_float: 1
+    selection_score: 3
+  - market_hash_name: "MP7 | Coral Paisley (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP7"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Harlequin Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.65
+    selection_score: 3
+  - market_hash_name: "MP7 | Akoben (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP7"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Spectrum Collection"
+    cases:
+      - "Spectrum Case"
+    min_float: 0
+    max_float: 0.7
+    selection_score: 268
+  - market_hash_name: "MP7 | Armor Core (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP7"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma 2 Collection"
+    cases:
+      - "Chroma 2 Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 268
+  - market_hash_name: "MP7 | Just Smile (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP7"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Kilowatt Collection"
+    cases:
+      - "Kilowatt Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "MP7 | Neon Ply (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP7"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Shattered Web Collection"
+    cases:
+      - "Shattered Web Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "MP7 | Abyssal Apparition (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP7"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Dreams & Nightmares Collection"
+    cases:
+      - "Dreams & Nightmares Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "MP7 | Nemesis (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP7"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Falchion Collection"
+    cases:
+      - "Falchion Case"
+    min_float: 0
+    max_float: 0.32
+    selection_score: 262
+  - market_hash_name: "MP7 | Bloodsport (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP7"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Clutch Collection"
+    cases:
+      - "Clutch Case"
+    min_float: 0
+    max_float: 0.65
+    selection_score: 318
+  - market_hash_name: "MP7 | Smoking Kills (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP7"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Genesis Collection"
+    cases: []
+    min_float: 0
+    max_float: 1
+    selection_score: 28
+  - market_hash_name: "MP9 | Bee-Tron (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP9"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Harlequin Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.9
+    selection_score: 3
+  - market_hash_name: "MP9 | Buff Blue (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP9"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Ascent Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.7
+    selection_score: 3
+  - market_hash_name: "MP9 | Old Roots (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP9"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2021 Dust 2 Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.5
+    selection_score: 3
+  - market_hash_name: "MP9 | Orange Peel (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP9"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Safehouse Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "MP9 | Capillary (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP9"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Horizon Collection"
+    cases:
+      - "Horizon Case"
+    min_float: 0
+    max_float: 0.7
+    selection_score: 318
+  - market_hash_name: "MP9 | Bioleak (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP9"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma 3 Collection"
+    cases:
+      - "Chroma 3 Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 268
+  - market_hash_name: "MP9 | Goo (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP9"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Spectrum 2 Collection"
+    cases:
+      - "Spectrum 2 Case"
+    min_float: 0
+    max_float: 0.6
+    selection_score: 268
+  - market_hash_name: "MP9 | Mount Fuji (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP9"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Riptide Collection"
+    cases:
+      - "Operation Riptide Case"
+    min_float: 0
+    max_float: 0.55
+    selection_score: 268
+  - market_hash_name: "MP9 | Food Chain (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP9"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Snakebite Collection"
+    cases:
+      - "Snakebite Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "MP9 | Airlock (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP9"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gamma 2 Collection"
+    cases:
+      - "Gamma 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "MP9 | Starlight Protector (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP9"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Dreams & Nightmares Collection"
+    cases:
+      - "Dreams & Nightmares Case"
+    min_float: 0
+    max_float: 0.8
+    selection_score: 318
+  - market_hash_name: "MP9 | Hydra (Field-Tested)"
+    category: "smg"
+    weapon_type: "MP9"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The CS20 Collection"
+    cases:
+      - "CS20 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "P90 | Ancient Earth (Field-Tested)"
+    category: "smg"
+    weapon_type: "P90"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Ancient Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.5
+    selection_score: 3
+  - market_hash_name: "P90 | Blue Tac (Field-Tested)"
+    category: "smg"
+    weapon_type: "P90"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Ascent Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "P90 | Fallout Warning (Field-Tested)"
+    category: "smg"
+    weapon_type: "P90"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Nuke Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "P90 | Leather (Field-Tested)"
+    category: "smg"
+    weapon_type: "P90"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Baggage Collection"
+    cases: []
+    min_float: 0
+    max_float: 1
+    selection_score: 3
+  - market_hash_name: "P90 | Elite Build (Field-Tested)"
+    category: "smg"
+    weapon_type: "P90"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Falchion Collection"
+    cases:
+      - "Falchion Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "P90 | Cocoa Rampage (Field-Tested)"
+    category: "smg"
+    weapon_type: "P90"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Broken Fang Collection"
+    cases:
+      - "Operation Broken Fang Case"
+    min_float: 0
+    max_float: 0.6
+    selection_score: 268
+  - market_hash_name: "P90 | Blind Spot (Field-Tested)"
+    category: "smg"
+    weapon_type: "P90"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The eSports 2013 Winter Collection"
+    cases:
+      - "eSports 2013 Winter Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 268
+  - market_hash_name: "P90 | Chopper (Field-Tested)"
+    category: "smg"
+    weapon_type: "P90"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gamma Collection"
+    cases:
+      - "Gamma Case"
+    min_float: 0
+    max_float: 0.6
+    selection_score: 268
+  - market_hash_name: "P90 | Shapewood (Field-Tested)"
+    category: "smg"
+    weapon_type: "P90"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Revolver Case Collection"
+    cases:
+      - "Revolver Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "P90 | Trigon (Field-Tested)"
+    category: "smg"
+    weapon_type: "P90"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Phoenix Collection"
+    cases:
+      - "Operation Phoenix Weapon Case"
+    min_float: 0.08
+    max_float: 0.75
+    selection_score: 315
+  - market_hash_name: "P90 | Asiimov (Field-Tested)"
+    category: "smg"
+    weapon_type: "P90"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Breakout Collection"
+    cases:
+      - "Operation Breakout Weapon Case"
+    min_float: 0
+    max_float: 0.92
+    selection_score: 318
+  - market_hash_name: "P90 | Death by Kitty (Field-Tested)"
+    category: "smg"
+    weapon_type: "P90"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The eSports 2013 Collection"
+    cases:
+      - "eSports 2013 Case"
+    min_float: 0.08
+    max_float: 0.32
+    selection_score: 259
+  - market_hash_name: "PP-Bizon | Anolis (Field-Tested)"
+    category: "smg"
+    weapon_type: "PP-Bizon"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2021 Mirage Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.5
+    selection_score: 3
+  - market_hash_name: "PP-Bizon | Bamboo Print (Field-Tested)"
+    category: "smg"
+    weapon_type: "PP-Bizon"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Rising Sun Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "PP-Bizon | Chemical Green (Field-Tested)"
+    category: "smg"
+    weapon_type: "PP-Bizon"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Cache Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.9
+    selection_score: 3
+  - market_hash_name: "PP-Bizon | Night Ops (Field-Tested)"
+    category: "smg"
+    weapon_type: "PP-Bizon"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Lake Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "PP-Bizon | Harvester (Field-Tested)"
+    category: "smg"
+    weapon_type: "PP-Bizon"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gamma Collection"
+    cases:
+      - "Gamma Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "PP-Bizon | Jungle Slipstream (Field-Tested)"
+    category: "smg"
+    weapon_type: "PP-Bizon"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Spectrum Collection"
+    cases:
+      - "Spectrum Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 268
+  - market_hash_name: "PP-Bizon | Antique (Field-Tested)"
+    category: "smg"
+    weapon_type: "PP-Bizon"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Huntsman Collection"
+    cases:
+      - "Huntsman Weapon Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 268
+  - market_hash_name: "PP-Bizon | Blue Streak (Field-Tested)"
+    category: "smg"
+    weapon_type: "PP-Bizon"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The eSports 2014 Summer Collection"
+    cases:
+      - "eSports 2014 Summer Case"
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 268
+  - market_hash_name: "PP-Bizon | High Roller (Field-Tested)"
+    category: "smg"
+    weapon_type: "PP-Bizon"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Spectrum 2 Collection"
+    cases:
+      - "Spectrum 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "PP-Bizon | Embargo (Field-Tested)"
+    category: "smg"
+    weapon_type: "PP-Bizon"
+    requested_rarity: "Classified"
+    rarity: "Restricted"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Shattered Web Collection"
+    cases:
+      - "Shattered Web Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "PP-Bizon | Judgement of Anubis (Field-Tested)"
+    category: "smg"
+    weapon_type: "PP-Bizon"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma 3 Collection"
+    cases:
+      - "Chroma 3 Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 318
+  - market_hash_name: "PP-Bizon | Fuel Rod (Field-Tested)"
+    category: "smg"
+    weapon_type: "PP-Bizon"
+    requested_rarity: "Covert"
+    rarity: "Restricted"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Revolver Case Collection"
+    cases:
+      - "Revolver Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "UMP-45 | Caramel (Field-Tested)"
+    category: "smg"
+    weapon_type: "UMP-45"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Assault Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "UMP-45 | Facility Dark (Field-Tested)"
+    category: "smg"
+    weapon_type: "UMP-45"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2018 Nuke Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.5
+    selection_score: 3
+  - market_hash_name: "UMP-45 | Fallout Warning (Field-Tested)"
+    category: "smg"
+    weapon_type: "UMP-45"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Nuke Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "UMP-45 | Gunsmoke (Field-Tested)"
+    category: "smg"
+    weapon_type: "UMP-45"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Italy Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "UMP-45 | Briefing (Field-Tested)"
+    category: "smg"
+    weapon_type: "UMP-45"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gamma 2 Collection"
+    cases:
+      - "Gamma 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "UMP-45 | Corporal (Field-Tested)"
+    category: "smg"
+    weapon_type: "UMP-45"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Phoenix Collection"
+    cases:
+      - "Operation Phoenix Weapon Case"
+    min_float: 0.05
+    max_float: 0.75
+    selection_score: 268
+  - market_hash_name: "UMP-45 | Arctic Wolf (Field-Tested)"
+    category: "smg"
+    weapon_type: "UMP-45"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Clutch Collection"
+    cases:
+      - "Clutch Case"
+    min_float: 0
+    max_float: 0.8
+    selection_score: 318
+  - market_hash_name: "UMP-45 | Moonrise (Field-Tested)"
+    category: "smg"
+    weapon_type: "UMP-45"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma Collection"
+    cases:
+      - "Prisma Case"
+    min_float: 0
+    max_float: 0.4
+    selection_score: 315
+  - market_hash_name: "UMP-45 | Momentum (Field-Tested)"
+    category: "smg"
+    weapon_type: "UMP-45"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Danger Zone Collection"
+    cases:
+      - "Danger Zone Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 318
+  - market_hash_name: "UMP-45 | Neo-Noir (Field-Tested)"
+    category: "smg"
+    weapon_type: "UMP-45"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gallery Collection"
+    cases:
+      - "Gallery Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "UMP-45 | Primal Saber (Field-Tested)"
+    category: "smg"
+    weapon_type: "UMP-45"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma 3 Collection"
+    cases:
+      - "Chroma 3 Case"
+    min_float: 0
+    max_float: 0.77
+    selection_score: 318
+  - market_hash_name: "UMP-45 | Wild Child (Field-Tested)"
+    category: "smg"
+    weapon_type: "UMP-45"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Revolution Collection"
+    cases:
+      - "Revolution Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "M249 | Contrast Spray (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "M249"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Overpass Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "M249 | Impact Drill (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "M249"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Chop Shop Collection"
+    cases: []
+    min_float: 0
+    max_float: 1
+    selection_score: 3
+  - market_hash_name: "M249 | Blizzard Marbleized (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "M249"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Office Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "M249 | Gator Mesh (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "M249"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Safehouse Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "M249 | Deep Relief (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "M249"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Broken Fang Collection"
+    cases:
+      - "Operation Broken Fang Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "M249 | Hypnosis (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "M249"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gallery Collection"
+    cases:
+      - "Gallery Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "M249 | Aztec (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "M249"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The CS20 Collection"
+    cases:
+      - "CS20 Case"
+    min_float: 0
+    max_float: 0.75
+    selection_score: 268
+  - market_hash_name: "M249 | Downtown (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "M249"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Recoil Collection"
+    cases:
+      - "Recoil Case"
+    min_float: 0
+    max_float: 0.65
+    selection_score: 268
+  - market_hash_name: "M249 | Nebula Crusader (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "M249"
+    requested_rarity: "Classified"
+    rarity: "Restricted"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Shadow Collection"
+    cases:
+      - "Shadow Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "M249 | Emerald Poison Dart (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "M249"
+    requested_rarity: "Classified"
+    rarity: "Restricted"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Spectrum Collection"
+    cases:
+      - "Spectrum Case"
+    min_float: 0
+    max_float: 0.45
+    selection_score: 265
+  - market_hash_name: "M249 | Magma (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "M249"
+    requested_rarity: "Covert"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Winter Offensive Collection"
+    cases:
+      - "Winter Offensive Weapon Case"
+    min_float: 0
+    max_float: 0.7
+    selection_score: 268
+  - market_hash_name: "M249 | O.S.I.P.R. (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "M249"
+    requested_rarity: "Covert"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Snakebite Collection"
+    cases:
+      - "Snakebite Case"
+    min_float: 0
+    max_float: 0.7
+    selection_score: 268
+  - market_hash_name: "MAG-7 | Copper Oxide (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "MAG-7"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Boreal Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.65
+    selection_score: 3
+  - market_hash_name: "MAG-7 | Irradiated Alert (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "MAG-7"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Nuke Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "MAG-7 | Wildwood (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "MAG-7"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Sport & Field Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.7
+    selection_score: 3
+  - market_hash_name: "MAG-7 | Chainmail (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "MAG-7"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Norse Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.22
+    selection_score: -3
+  - market_hash_name: "MAG-7 | Cobalt Core (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "MAG-7"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Shadow Collection"
+    cases:
+      - "Shadow Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 268
+  - market_hash_name: "MAG-7 | Firestarter (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "MAG-7"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Vanguard Collection"
+    cases:
+      - "Operation Vanguard Weapon Case"
+    min_float: 0.06
+    max_float: 0.49
+    selection_score: 268
+  - market_hash_name: "MAG-7 | Monster Call (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "MAG-7"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Fracture Collection"
+    cases:
+      - "Fracture Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "MAG-7 | BI83 Spectrum (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "MAG-7"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Riptide Collection"
+    cases:
+      - "Operation Riptide Case"
+    min_float: 0
+    max_float: 0.6
+    selection_score: 268
+  - market_hash_name: "MAG-7 | Justice (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "MAG-7"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma 2 Collection"
+    cases:
+      - "Prisma 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 318
+  - market_hash_name: "MAG-7 | Cinquedea (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "MAG-7"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Canals Collection"
+    cases: []
+    min_float: 0
+    max_float: 1
+    selection_score: 3
+  - market_hash_name: "MAG-7 | Heat (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "MAG-7"
+    requested_rarity: "Covert"
+    rarity: "Restricted"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma 2 Collection"
+    cases:
+      - "Chroma 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "MAG-7 | SWAG-7 (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "MAG-7"
+    requested_rarity: "Covert"
+    rarity: "Restricted"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Clutch Collection"
+    cases:
+      - "Clutch Case"
+    min_float: 0
+    max_float: 0.92
+    selection_score: 268
+  - market_hash_name: "Negev | Boroque Sand (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "Negev"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Canals Collection"
+    cases: []
+    min_float: 0
+    max_float: 1
+    selection_score: 3
+  - market_hash_name: "Negev | Raw Ceramic (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "Negev"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Boreal Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.75
+    selection_score: 3
+  - market_hash_name: "Negev | Bulkhead (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "Negev"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2018 Nuke Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.5
+    selection_score: 3
+  - market_hash_name: "Negev | CaliCamo (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "Negev"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Mirage Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "Negev | Bratatat (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "Negev"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The eSports 2014 Summer Collection"
+    cases:
+      - "eSports 2014 Summer Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Negev | Desert-Strike (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "Negev"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Breakout Collection"
+    cases:
+      - "Operation Breakout Weapon Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 268
+  - market_hash_name: "Negev | Lionfish (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "Negev"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Clutch Collection"
+    cases:
+      - "Clutch Case"
+    min_float: 0
+    max_float: 0.55
+    selection_score: 268
+  - market_hash_name: "Negev | Power Loader (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "Negev"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Revolver Case Collection"
+    cases:
+      - "Revolver Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Negev | Mjölnir (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "Negev"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Norse Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "Negev | dev_texture (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "Negev"
+    requested_rarity: "Classified"
+    rarity: "Restricted"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Snakebite Collection"
+    cases:
+      - "Snakebite Case"
+    min_float: 0
+    max_float: 0.65
+    selection_score: 268
+  - market_hash_name: "Negev | Loudmouth (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "Negev"
+    requested_rarity: "Covert"
+    rarity: "Restricted"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Falchion Collection"
+    cases:
+      - "Falchion Case"
+    min_float: 0.14
+    max_float: 0.65
+    selection_score: 265
+  - market_hash_name: "Negev | Drop Me (Field-Tested)"
+    category: "machine_gun"
+    weapon_type: "Negev"
+    requested_rarity: "Covert"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Recoil Collection"
+    cases:
+      - "Recoil Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Nova | Currents (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Nova"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Achroma Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.65
+    selection_score: 3
+  - market_hash_name: "Nova | Forest Leaves (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Nova"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Aztec Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "Nova | Rust Coat (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Nova"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Havoc Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "Nova | Turquoise Pour (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Nova"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Ascent Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.678431
+    selection_score: 3
+  - market_hash_name: "Nova | Dark Sigil (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Nova"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Kilowatt Collection"
+    cases:
+      - "Kilowatt Case"
+    min_float: 0
+    max_float: 0.698529
+    selection_score: 268
+  - market_hash_name: "Nova | Exo (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Nova"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Gamma Collection"
+    cases:
+      - "Gamma Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 268
+  - market_hash_name: "Nova | Clear Polymer (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Nova"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Operation Broken Fang Collection"
+    cases:
+      - "Operation Broken Fang Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Nova | Rising Skull (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Nova"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Winter Offensive Collection"
+    cases:
+      - "Winter Offensive Weapon Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 268
+  - market_hash_name: "Nova | Hyper Beast (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Nova"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Wildfire Collection"
+    cases:
+      - "Operation Wildfire Case"
+    min_float: 0
+    max_float: 0.6
+    selection_score: 318
+  - market_hash_name: "Nova | Bloomstick (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Nova"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The eSports 2014 Summer Collection"
+    cases:
+      - "eSports 2014 Summer Case"
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 268
+  - market_hash_name: "Nova | Antique (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Nova"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Phoenix Collection"
+    cases:
+      - "Operation Phoenix Weapon Case"
+    min_float: 0
+    max_float: 0.3
+    selection_score: 262
+  - market_hash_name: "Nova | Rising Sun (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Nova"
+    requested_rarity: "Covert"
+    rarity: "Restricted"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Fever Collection"
+    cases:
+      - "Fever Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Sawed-Off | Bamboo Shadow (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Sawed-Off"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Rising Sun Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "Sawed-Off | Clay Ambush (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Sawed-Off"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Havoc Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "Sawed-Off | Mosaico (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Sawed-Off"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Alpha Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "Sawed-Off | Rust Coat (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Sawed-Off"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Cobblestone Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "Sawed-Off | Black Sand (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Sawed-Off"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Danger Zone Collection"
+    cases:
+      - "Danger Zone Case"
+    min_float: 0
+    max_float: 0.9
+    selection_score: 268
+  - market_hash_name: "Sawed-Off | Morris (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Sawed-Off"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Spectrum 2 Collection"
+    cases:
+      - "Spectrum 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Sawed-Off | Analog Input (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Sawed-Off"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Kilowatt Collection"
+    cases:
+      - "Kilowatt Case"
+    min_float: 0
+    max_float: 0.61886
+    selection_score: 268
+  - market_hash_name: "Sawed-Off | Apocalypto (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Sawed-Off"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma 2 Collection"
+    cases:
+      - "Prisma 2 Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Sawed-Off | Devourer (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Sawed-Off"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Horizon Collection"
+    cases:
+      - "Horizon Case"
+    min_float: 0
+    max_float: 0.8
+    selection_score: 318
+  - market_hash_name: "Sawed-Off | Kiss♥Love (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Sawed-Off"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Recoil Collection"
+    cases:
+      - "Recoil Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "Sawed-Off | The Kraken (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Sawed-Off"
+    requested_rarity: "Covert"
+    rarity: "Covert"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Winter Offensive Collection"
+    cases:
+      - "Winter Offensive Weapon Case"
+    min_float: 0
+    max_float: 0.4
+    selection_score: 315
+  - market_hash_name: "Sawed-Off | Wasteland Princess (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "Sawed-Off"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Glove Collection"
+    cases:
+      - "Glove Case"
+    min_float: 0
+    max_float: 0.7
+    selection_score: 268
+  - market_hash_name: "XM1014 | Blue Spruce (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "XM1014"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Lake Collection"
+    cases: []
+    min_float: 0.06
+    max_float: 0.8
+    selection_score: 3
+  - market_hash_name: "XM1014 | Blue Tire (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "XM1014"
+    requested_rarity: "Consumer Grade"
+    rarity: "Consumer Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The 2021 Vertigo Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.55
+    selection_score: 3
+  - market_hash_name: "XM1014 | Banana Leaf (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "XM1014"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The St. Marc Collection"
+    cases: []
+    min_float: 0
+    max_float: 0.6
+    selection_score: 3
+  - market_hash_name: "XM1014 | Blue Steel (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "XM1014"
+    requested_rarity: "Industrial Grade"
+    rarity: "Industrial Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "collection"
+    collections:
+      - "The Lake Collection"
+    cases: []
+    min_float: 0
+    max_float: 1
+    selection_score: 3
+  - market_hash_name: "XM1014 | Irezumi (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "XM1014"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Kilowatt Collection"
+    cases:
+      - "Kilowatt Case"
+    min_float: 0
+    max_float: 0.799353
+    selection_score: 268
+  - market_hash_name: "XM1014 | Mockingbird (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "XM1014"
+    requested_rarity: "Mil-Spec Grade"
+    rarity: "Mil-Spec Grade"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Fever Collection"
+    cases:
+      - "Fever Case"
+    min_float: 0
+    max_float: 1
+    selection_score: 268
+  - market_hash_name: "XM1014 | Black Tie (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "XM1014"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Chroma 3 Collection"
+    cases:
+      - "Chroma 3 Case"
+    min_float: 0
+    max_float: 0.75
+    selection_score: 268
+  - market_hash_name: "XM1014 | Heaven Guard (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "XM1014"
+    requested_rarity: "Restricted"
+    rarity: "Restricted"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Huntsman Collection"
+    cases:
+      - "Huntsman Weapon Case"
+    min_float: 0.03
+    max_float: 0.5
+    selection_score: 268
+  - market_hash_name: "XM1014 | Entombed (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "XM1014"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Fracture Collection"
+    cases:
+      - "Fracture Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 268
+  - market_hash_name: "XM1014 | Tranquility (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "XM1014"
+    requested_rarity: "Classified"
+    rarity: "Classified"
+    rarity_substituted: false
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Vanguard Collection"
+    cases:
+      - "Operation Vanguard Weapon Case"
+    min_float: 0
+    max_float: 0.5
+    selection_score: 268
+  - market_hash_name: "XM1014 | XOXO (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "XM1014"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Snakebite Collection"
+    cases:
+      - "Snakebite Case"
+    min_float: 0
+    max_float: 0.9
+    selection_score: 268
+  - market_hash_name: "XM1014 | Incinegator (Field-Tested)"
+    category: "shotgun"
+    weapon_type: "XM1014"
+    requested_rarity: "Covert"
+    rarity: "Classified"
+    rarity_substituted: true
+    wear: "Field-Tested"
+    source_type: "case"
+    collections:
+      - "The Prisma Collection"
+    cases:
+      - "Prisma Case"
+    min_float: 0.14
+    max_float: 0.65
+    selection_score: 265

@@ -43,6 +43,12 @@ SteamDT K-line probe:
 python -m cs_market_model.collectors.steamdt "AK-47 | Redline (Field-Tested)"
 ```
 
+SteamDT Day 3 batch collection:
+
+```powershell
+python -m cs_market_model.collectors.steamdt_batch --config universe_day3_first_pull.yaml
+```
+
 CSFloat listings probe:
 
 ```powershell
@@ -53,4 +59,4 @@ Both commands save append-only raw JSON under `data/raw/` and do not contain har
 
 ## Next Step
 
-Day 2 should parse the existing sample K-line JSON, document the raw columns, and write one normalized daily bars parquet file plus `reports/tables/data_audit_mvp.csv`.
+Day 3 should collect the first-pull gun-skin universe from `configs/universe_day3_first_pull.yaml`, write append-only raw SteamDT responses, normalize daily bars, and review `reports/tables/day3_steamdt_ingestion_log.csv`.

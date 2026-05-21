@@ -18,7 +18,6 @@ import requests
 from cs_market_model.config import data_path
 from cs_market_model.security.env import require_env
 
-
 BASE_URL = "https://open.steamdt.com"
 KLINE_ENDPOINT = "/open/cs2/item/v1/kline"
 PRICE_SINGLE_ENDPOINT = "/open/cs2/v1/price/single"

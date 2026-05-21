@@ -1,6 +1,7 @@
-# Gun-skins-only MVP universe.
-# Replaces the original mixed cases/sticker config for the current modeling direction.
-# This mirrors the Day 3 first-pull universe so early collection, normalization, and feature work use one source of truth.
+# Day 3 first-pull universe.
+# Scope: 48 normal gun skins, selected from universe_gun_skins_candidate.yaml.
+# Intent: prove SteamDT batch collection and normalization on a liquid subset before pulling all 408 candidates.
+# Selection: 12 common weapons x 4 requested rarity tiers: Mil-Spec, Restricted, Classified, Covert.
 items:
 - market_hash_name: AK-47 | Elite Build (Field-Tested)
   category: rifle

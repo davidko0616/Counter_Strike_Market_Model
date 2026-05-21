@@ -15,7 +15,6 @@ from urllib.request import Request, urlopen
 from cs_market_model.config import PROJECT_ROOT
 from cs_market_model.security.env import require_env
 
-
 BASE_URL = "https://csfloat.com"
 LISTINGS_ENDPOINT = "/api/v1/listings"
 DEFAULT_ITEM = "AK-47 | Redline (Field-Tested)"
@@ -94,50 +93,80 @@ def coverage_rows(paths: set[str], listings: list[dict[str, Any]]) -> list[dict[
         {
             "required_data": "best ask",
             "status": "yes" if has_listing_prices else "no",
-            "evidence": "`price` field is present on listing objects." if has_listing_prices else "`price` missing.",
+            "evidence": (
+                "`price` field is present on listing objects."
+                if has_listing_prices
+                else "`price` missing."
+            ),
             "mvp_implication": "Can estimate executable ask from lowest-price listing.",
         },
         {
             "required_data": "sell listing count",
             "status": "partial",
-            "evidence": "Docs expose `limit` max 50 and `cursor`; no total-count field is documented.",
-            "mvp_implication": "Can count fetched/paginated listings, but exact full depth requires pagination and rate-limit handling.",
+            "evidence": (
+                "Docs expose `limit` max 50 and `cursor`; "
+                "no total-count field is documented."
+            ),
+            "mvp_implication": (
+                "Can count fetched/paginated listings, but exact full depth requires "
+                "pagination and rate-limit handling."
+            ),
         },
         {
             "required_data": "listing depth near market price",
             "status": "yes" if has_listing_prices else "partial",
-            "evidence": "Listing prices allow depth bands within 1/3/5 percent on fetched listings.",
+            "evidence": (
+                "Listing prices allow depth bands within 1/3/5 percent on fetched listings."
+            ),
             "mvp_implication": "Good for ask-side depth if pagination is implemented.",
         },
         {
             "required_data": "float values",
             "status": "yes" if has_any(paths, ["item.float_value"]) else "no",
-            "evidence": "`item.float_value` present." if "item.float_value" in paths else "`item.float_value` missing.",
+            "evidence": (
+                "`item.float_value` present."
+                if "item.float_value" in paths
+                else "`item.float_value` missing."
+            ),
             "mvp_implication": "Usable for float distribution and float percentile features.",
         },
         {
             "required_data": "paint seed / pattern",
             "status": "yes" if has_any(paths, ["item.paint_seed", "item.paint_index"]) else "no",
             "evidence": "`item.paint_seed` and/or `item.paint_index` present.",
-            "mvp_implication": "Useful later for rare pattern filtering; not required for MVP model.",
+            "mvp_implication": (
+                "Useful later for rare pattern filtering; not required for MVP model."
+            ),
         },
         {
             "required_data": "stickers",
             "status": "yes" if any(path.startswith("item.stickers") for path in paths) else "no",
-            "evidence": "`item.stickers[]` present." if any(path.startswith("item.stickers") for path in paths) else "`item.stickers[]` missing.",
+            "evidence": (
+                "`item.stickers[]` present."
+                if any(path.startswith("item.stickers") for path in paths)
+                else "`item.stickers[]` missing."
+            ),
             "mvp_implication": "Can build sticker count and sticker metadata features.",
         },
         {
             "required_data": "sticker reference prices",
             "status": "yes" if has_sticker_reference else "partial",
-            "evidence": "Sticker `reference.price` present when stickers include reference metadata.",
+            "evidence": (
+                "Sticker `reference.price` present when stickers include reference metadata."
+            ),
             "mvp_implication": "Can build a rough sticker overpay proxy, but only when populated.",
         },
         {
             "required_data": "reference price",
             "status": "yes" if has_reference_price else "partial",
-            "evidence": "`reference.base_price` present." if has_reference_price else "No reference price found in sample.",
-            "mvp_implication": "Usable as a reference price, but SteamDT remains primary historical source.",
+            "evidence": (
+                "`reference.base_price` present."
+                if has_reference_price
+                else "No reference price found in sample."
+            ),
+            "mvp_implication": (
+                "Usable as a reference price, but SteamDT remains primary historical source."
+            ),
         },
         {
             "required_data": "predicted/fair price",
@@ -145,37 +174,68 @@ def coverage_rows(paths: set[str], listings: list[dict[str, Any]]) -> list[dict[
             "evidence": "`reference.predicted_price` present in live sample."
             if has_predicted_price
             else "Official listing docs do not document a stable predicted-price field.",
-            "mvp_implication": "Useful as a snapshot feature, but do not use it as the model label or historical return source.",
+            "mvp_implication": (
+                "Useful as a snapshot feature, but do not use it as the model label "
+                "or historical return source."
+            ),
         },
         {
             "required_data": "seller trade reliability",
             "status": "yes" if has_seller_stats else "partial",
-            "evidence": "`seller.statistics.*` present." if has_seller_stats else "Seller statistics missing in sample.",
-            "mvp_implication": "Can use trade count / failed trades / median trade time as execution realism features.",
+            "evidence": (
+                "`seller.statistics.*` present."
+                if has_seller_stats
+                else "Seller statistics missing in sample."
+            ),
+            "mvp_implication": (
+                "Can use trade count / failed trades / median trade time as execution "
+                "realism features."
+            ),
         },
         {
             "required_data": "bid data / spread",
             "status": "no",
-            "evidence": "Official listing docs expose sell listings; bid/order-book bid side is not documented.",
+            "evidence": (
+                "Official listing docs expose sell listings; bid/order-book bid side "
+                "is not documented."
+            ),
             "mvp_implication": "Cannot directly compute true bid-ask spread from CSFloat alone.",
         },
         {
             "required_data": "historical daily prices",
             "status": "no",
-            "evidence": "Official docs do not document historical price bars or sales history endpoint.",
-            "mvp_implication": "CSFloat should not replace SteamDT for labels, returns, volatility, or backtest price history.",
+            "evidence": (
+                "Official docs do not document historical price bars or sales history endpoint."
+            ),
+            "mvp_implication": (
+                "CSFloat should not replace SteamDT for labels, returns, volatility, "
+                "or backtest price history."
+            ),
         },
         {
             "required_data": "historical volume / trade count",
             "status": "no",
-            "evidence": "Listing docs include current listing data and SCM reference volume fields, not CSFloat historical trade volume.",
-            "mvp_implication": "Use SteamDT or another verified history source for volume/time-series modeling.",
+            "evidence": (
+                "Listing docs include current listing data and SCM reference volume fields, "
+                "not CSFloat historical trade volume."
+            ),
+            "mvp_implication": (
+                "Use SteamDT or another verified history source for volume/time-series modeling."
+            ),
         },
     ]
 
 
-def listing_audit_row(market_hash_name: str, payload: Any, listings: list[dict[str, Any]]) -> dict[str, Any]:
-    prices = [listing.get("price") for listing in listings if isinstance(listing.get("price"), int | float)]
+def listing_audit_row(
+    market_hash_name: str,
+    payload: Any,
+    listings: list[dict[str, Any]],
+) -> dict[str, Any]:
+    prices = [
+        listing.get("price")
+        for listing in listings
+        if isinstance(listing.get("price"), int | float)
+    ]
     item_paths = flatten_paths(listings[0]) if listings else set()
     return {
         "market_hash_name": market_hash_name,

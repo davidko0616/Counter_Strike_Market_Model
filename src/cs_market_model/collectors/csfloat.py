@@ -18,7 +18,6 @@ import requests
 from cs_market_model.config import data_path
 from cs_market_model.security.env import require_env
 
-
 BASE_URL = "https://csfloat.com"
 LISTINGS_ENDPOINT = "/api/v1/listings"
 
