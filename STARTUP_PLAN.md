@@ -27,6 +27,13 @@ MVP universe:
 - Start with cases, AK-47 skins, AWP skins, M4A1-S/M4A4 skins, and popular stickers.
 - Exclude knives, gloves, rare patterns, and complex sticker crafts from the first modeling pass unless the data is already clean.
 
+Current implementation note:
+
+- The first pull has been narrowed to gun skins only after project review.
+- Cases, stickers, knives, gloves, and sticker price data are excluded from the current MVP data pull.
+- The Day 3 first-pull universe uses 48 Field-Tested gun skins, with 4 skins each for 12 liquid weapons across Covert, Classified, Restricted, and Mil-Spec rarity slots.
+- Other wears should be added later as an expansion once the first Field-Tested pipeline is validated end to end.
+
 MVP venues and APIs:
 
 - Use both SteamDT and CSFloat, but assign them different responsibilities.
@@ -34,6 +41,13 @@ MVP venues and APIs:
 - CSFloat is the secondary listing, float, sticker, and microstructure source.
 - Build the first working pipeline with SteamDT historical bars, then add CSFloat snapshots as additional features.
 - Treat cross-market spread features as Phase 2, not a blocker for the first model.
+
+Current execution-cost note:
+
+- Do not use Steam marketplace transaction fees for the current SteamDT-based labels.
+- SteamDT prices are treated as a proxy for Youpin/Buff-style markets.
+- Current baseline uses Buff's 2.5% transaction fee, with separate placeholder slippage.
+- Youpin-like 1.0%, Buff-like 2.5%, and CSFloat-like 2.0% fee scenarios are tracked in label sensitivity reports.
 
 Initial API split:
 
@@ -313,6 +327,7 @@ Feature group D: synthetic indices
 - Liquidity-filtered category index.
 - Item return minus category return.
 - Item price/category index ratio.
+- Market-regime breadth features, such as universe/category share above moving average and median drawdown, so broad risk-off periods can be modeled.
 
 Feature group E: order-book/listing features
 
@@ -589,6 +604,12 @@ Deliverable:
 
 - Label table with `Strong Buy`, `Good Time`, and `Bad Time`.
 
+Current implementation note:
+
+- Day 7 writes `data/labels/labels_day7_v1.parquet`.
+- Complete labels are separated from recent incomplete horizons with `is_label_complete`.
+- Manual audit outputs are written to `reports/tables/day7_label_audit.csv` and `reports/tables/day7_label_examples.csv`.
+
 ### Days 8-9: Baseline Models
 
 - Implement momentum and mean-reversion rules.
@@ -600,6 +621,37 @@ Deliverable:
 
 - Baseline metrics report.
 
+Current implementation note:
+
+- Days 8-9 write split-level metrics to `reports/tables/day8_9_baseline_metrics.csv`.
+- Summary metrics are written to `reports/tables/day8_9_baseline_summary.csv`.
+- Out-of-sample baseline predictions are written to `data/processed/day8_9_baseline_predictions.parquet`.
+- Current baselines use complete Day 7 labels only and monthly purged walk-forward splits with embargo.
+
+### Day 9.5: Baseline Improvement Gate
+
+This step was added after the first Days 8-9 results showed weak top-k net return.
+The purpose is to adjust the plan based on observed model behavior before moving to
+LightGBM.
+
+- Add cross-sectional rank features for momentum, volatility, drawdown, and relative-value signals.
+- Train binary `Strong Buy` vs. `Not Strong Buy` baselines in addition to multiclass baselines.
+- Add a deterministic rank-blend benchmark using the binary and multiclass random forest scores.
+- Run fee/horizon label sensitivity checks before trusting one target definition.
+- Report daily top-k and same-item cooldown-adjusted metrics to check for inflated month-level top-k scores.
+
+Deliverable:
+
+- Improved baseline metrics and label sensitivity report.
+
+Current implementation note:
+
+- Feature Factory V1 now includes 85 feature columns after adding rank and market-regime features.
+- Baseline training now evaluates 7 models, including `binary_random_forest` and `forest_rank_blend`.
+- `forest_rank_blend` is the current corrected-cost ranking benchmark to beat, with the best mean `precision@top_k` and positive mean top-k net return.
+- The benchmark has been checked against stricter daily top-k and 14-day same-item cooldown metrics; both remain materially above the Strong Buy base rate.
+- Label sensitivity is written to `reports/tables/day9_5_label_sensitivity.csv`.
+
 ### Days 10-11: LightGBM and Calibration
 
 - Train LightGBM multiclass model.
@@ -610,6 +662,15 @@ Deliverable:
 Deliverable:
 
 - Model comparison table.
+
+Current implementation note:
+
+- Days 10-11 write LightGBM predictions to `data/processed/day10_11_lightgbm_predictions.parquet`.
+- Split-level LightGBM metrics are written to `reports/tables/day10_11_lightgbm_metrics.csv`.
+- Baseline-vs-LightGBM comparison is written to `reports/tables/day10_11_model_comparison.csv`.
+- Feature importance is written to `reports/tables/day10_11_feature_importance.csv`.
+- Calibration diagnostics are written to `reports/tables/day10_11_calibration.csv`.
+- LightGBM is competitive with the forest benchmark; `lightgbm_rank_blend` ties top-k precision and improves mean top-k net return, but Platt calibration does not improve test calibration enough to become the lead model.
 
 ### Days 12-13: Backtest V1
 

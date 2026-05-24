@@ -67,6 +67,16 @@ PATTERNS = [
     ),
 ]
 
+CSFLOAT_TOKEN_FALSE_POSITIVE_WORDS = {
+    "category",
+    "feature",
+    "market",
+    "median",
+    "return",
+    "returns",
+    "weapon",
+}
+
 
 @dataclass(frozen=True)
 class Finding:
@@ -142,6 +152,16 @@ def scan_line(path: Path, line_number: int, line: str) -> list[Finding]:
         search_text = line
         if kind == "CSFloat-like token" and ":" in line:
             search_text = line.split(":", 1)[1]
+        if kind == "CSFloat-like token":
+            for match in pattern.finditer(search_text):
+                candidate = match.group(0)
+                lower_candidate = candidate.lower()
+                if any(word in lower_candidate for word in CSFLOAT_TOKEN_FALSE_POSITIVE_WORDS):
+                    continue
+                if shannon_entropy(candidate) < 4.0:
+                    continue
+                findings.append(Finding(path, line_number, kind))
+            continue
         if pattern.search(search_text):
             findings.append(Finding(path, line_number, kind))
 

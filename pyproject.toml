@@ -32,6 +32,11 @@ dev = [
 csmm-steamdt-probe = "cs_market_model.collectors.steamdt:main"
 csmm-steamdt-batch = "cs_market_model.collectors.steamdt_batch:main"
 csmm-csfloat-probe = "cs_market_model.collectors.csfloat:main"
+csmm-build-features = "cs_market_model.features.build_features:main"
+csmm-build-labels = "cs_market_model.labeling.build_labels:main"
+csmm-label-sensitivity = "cs_market_model.labeling.sensitivity:main"
+csmm-train-baselines = "cs_market_model.models.train:main"
+csmm-train-lightgbm = "cs_market_model.models.lightgbm_train:main"
 csmm-scan-secrets = "cs_market_model.security.scan_secrets:main"
 
 [tool.hatch.build.targets.wheel]

@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from cs_market_model.config import load_yaml_config
 from cs_market_model.security.scan_secrets import scan_line
 
 
@@ -19,6 +20,13 @@ def test_expected_project_paths_exist() -> None:
         root / "src" / "cs_market_model" / "collectors" / "steamdt.py",
         root / "src" / "cs_market_model" / "collectors" / "steamdt_batch.py",
         root / "src" / "cs_market_model" / "collectors" / "csfloat.py",
+        root / "src" / "cs_market_model" / "features" / "build_features.py",
+        root / "src" / "cs_market_model" / "features" / "ranks.py",
+        root / "src" / "cs_market_model" / "labeling" / "build_labels.py",
+        root / "src" / "cs_market_model" / "labeling" / "sensitivity.py",
+        root / "src" / "cs_market_model" / "models" / "train.py",
+        root / "src" / "cs_market_model" / "models" / "lightgbm_train.py",
+        root / "src" / "cs_market_model" / "models" / "calibrate.py",
         root / "src" / "cs_market_model" / "audit_steamdt_sample.py",
         root / "src" / "cs_market_model" / "audit_csfloat_sample.py",
         root / "src" / "cs_market_model" / "security" / "scan_secrets.py",
@@ -47,3 +55,21 @@ def test_secret_scanner_allows_universe_metadata_keys() -> None:
     )
 
     assert findings == []
+
+
+def test_secret_scanner_allows_feature_identifiers() -> None:
+    findings = scan_line(
+        Path("src/cs_market_model/features/indices.py"),
+        1,
+        'features["category_median_return_1d"] = values',
+    )
+
+    assert findings == []
+
+
+def test_fee_config_uses_steamdt_proxy_baseline_not_steam_marketplace_fee() -> None:
+    fees = load_yaml_config("fees.yaml")
+
+    assert fees["venues"]["steam"]["sell_fee_bps"] == 250
+    assert fees["venues"]["youpin"]["sell_fee_bps"] == 100
+    assert fees["venues"]["buff"]["sell_fee_bps"] == 250

@@ -2,9 +2,19 @@ currency: CNY
 venues:
   steam:
     buy_fee_bps: 0
-    sell_fee_bps: 1300
+    sell_fee_bps: 250
     slippage_bps: 100
-    notes: "Initial conservative placeholder. Replace with venue-specific execution assumptions."
+    notes: "SteamDT proxy baseline for Youpin/Buff-like execution. Uses Buff's 2.5% transaction fee rather than Steam marketplace fees."
+  youpin:
+    buy_fee_bps: 0
+    sell_fee_bps: 100
+    slippage_bps: 100
+    notes: "Youpin-like sensitivity scenario: 1.0% transaction fee plus baseline slippage."
+  buff:
+    buy_fee_bps: 0
+    sell_fee_bps: 250
+    slippage_bps: 100
+    notes: "Buff-like sensitivity scenario: 2.5% transaction fee plus baseline slippage."
   csfloat:
     buy_fee_bps: 0
     sell_fee_bps: 200
