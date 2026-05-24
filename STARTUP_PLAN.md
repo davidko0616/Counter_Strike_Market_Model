@@ -137,6 +137,7 @@ Counter Strike Market Model/
         volatility.py
         liquidity.py
         indices.py
+        market_index.py
         events.py
         build_features.py
       labeling/
@@ -322,6 +323,10 @@ Feature group C: volume and liquidity
 
 Feature group D: synthetic indices
 
+- Internal CS2 MVP equal-weight market index.
+- CS2 index returns, volatility, drawdown, trend, and regime flags.
+- Item excess return versus the CS2 MVP market index.
+- Item beta, correlation, and residual volatility versus the CS2 MVP market index.
 - Equal-weight category index.
 - Median category index.
 - Liquidity-filtered category index.
@@ -682,6 +687,14 @@ Deliverable:
 
 - First execution-realistic backtest report.
 
+Current implementation note:
+
+- Backtest V1 reads Day 8-9 and Day 10-11 prediction parquet artifacts.
+- It compares `forest_rank_blend`, `lightgbm_rank_blend`, and `momentum_rule_14d` by default when those models are available.
+- Trade simulation applies daily top-k selection, same-item cooldown, cash-constrained max position sizing, optional category exposure limits, and expected failed-execution dilution.
+- Outputs are written to `reports/backtests/day12_13_trade_ledger.csv`, `reports/backtests/day12_13_daily_equity.csv`, and `reports/tables/day12_13_backtest_summary.csv`.
+- The real local report requires regenerating the ignored prediction parquet files after clone or pull.
+
 ### Day 14: Review and Next Scope Decision
 
 - Review data quality problems.
@@ -692,6 +705,50 @@ Deliverable:
 Deliverable:
 
 - MVP review memo with next steps.
+
+Current implementation note:
+
+- Day 14 outlier audit writes `reports/tables/day14_outlier_audit.csv` and `reports/tables/day14_outlier_model_impact.csv`.
+- The first audit found 8 selected events with net returns above 100%.
+- The positive `lightgbm_rank_blend` and `forest_rank_blend` Backtest V1 totals are more than fully explained by these outlier trades; excluding audited outlier PnL makes both negative.
+- After adding local price bars, price-bar context confirmed that the extreme returns match normalized entry/exit closes, including a 2025-10-22 multi-item spike cluster.
+- The 2025-10-22 spike cluster is a known CS2 economy event from the Covert-to-knife/glove Trade Up Contract update, not a generic bad-tick artifact.
+- The 2026-05-21 souvenir Trade Up Contract update is recorded for future souvenir-universe work, but the current MVP universe excludes souvenir items.
+- Robustness sensitivity is written to `reports/tables/day14_backtest_robustness.csv`; normal-regime metrics excluding known event windows make all compared models negative.
+- Regime-level selected-trade metrics are written to `reports/tables/day14_backtest_regime_summary.csv`. In the current rebuild, `lightgbm_rank_blend` has +1.0350 PnL on 10 known-event selected trades and -0.7951 PnL on 889 normal-regime selected trades.
+- A normal-alpha feature rebuild added relative-value z-scores, price-jump/liquidity-quality features, and post-event aftershock flags, increasing Day 5 from 101 to 145 feature columns.
+- After this rebuild, normal-regime PnL improved modestly but remains negative: `lightgbm_rank_blend` is -0.7266 on 894 normal trades and `forest_rank_blend` is -0.8979 on 893 normal trades.
+- A CS2 MVP equal-weight market index was then added to test whether normal-regime losses are mainly caused by broad market drawdowns. This increased Day 5 to 177 feature columns.
+- The index feature set includes broad market returns, volatility, drawdown, moving-average distance, trend slope, bull/neutral/bear regime flags, item excess returns, beta, correlation, and residual volatility.
+- The rebuilt LightGBM model uses the new index features, especially short-term item excess return and CS2 index volatility/return features.
+- Index-regime reporting is written to `reports/tables/day14_backtest_index_regime_summary.csv`.
+- The latest index-regime split shows normal-regime PnL is still negative in bear, bull, and neutral index regimes. That means broad market weakness is useful context but does not fully explain the current loss; forced trading and label/execution quality remain the core bottlenecks.
+- Day 14 review memo is written to `reports/backtests/day14_mvp_review.md`.
+- Next decision should be to stop forced daily top-k trading by adding a normal-regime no-trade/rejection layer and threshold diagnostics.
+
+### Day 15: Rejection-Aware Normal Model
+
+This step was added after the event and CS2 market-index reviews showed that
+normal-regime trades remain negative even after controlling for known events and
+broad index regimes.
+
+- Keep normal-regime model selection separate from known-event results.
+- Add an abstention policy so the model can select no trades on weak days.
+- Replace daily forced top-k as the main metric with thresholded accepted-trade
+  performance.
+- Add rejection curves by score, calibrated probability, liquidity quality,
+  label quality, and CS2 index regime.
+- Report accepted-trade count, rejection rate, average net return, total PnL,
+  max drawdown, profit factor, and liquidity-adjusted capacity.
+- Add label-quality gates for stale prices, low volume, isolated one-day jumps,
+  event overlap, and non-executable returns.
+
+Deliverable:
+
+- `reports/tables/day15_rejection_curve.csv`
+- `reports/tables/day15_threshold_policy_summary.csv`
+- normal-only accepted-trade report with event-regime results excluded from
+  threshold tuning.
 
 ## 15. Key Risks
 
@@ -722,16 +779,17 @@ Overfitting:
 
 ## 16. Immediate Next Steps
 
-1. Initialize the repository skeleton.
-2. Create `.env.example` and remove hardcoded secrets from copied scripts.
-3. Build the raw-to-clean parser for the existing K-line sample.
-4. Define the first 20 to 50 MVP items.
-5. Generate the first normalized `price_bars` table.
-6. Implement momentum, volatility, and liquidity features.
-7. Implement simplified CUSUM and Triple Barrier labels.
-8. Train baselines before LightGBM.
-9. Run walk-forward evaluation.
-10. Produce the first after-fee backtest report.
+1. Build the Day 15 normal-regime rejection curve.
+2. Add no-trade thresholds to the backtest policy.
+3. Add label-quality flags and hard reject flags to the label table.
+4. Report normal-only threshold performance separately from known-event
+   performance.
+5. Add per-item and per-collection attribution for normal-regime losses.
+6. Add stronger liquidity/spread proxies before expanding the tradable universe.
+7. Add trade-up EV features as explanatory features, while keeping the current
+   tradable MVP narrow.
+8. Treat the October 2025 and May 2026 Trade Up changes as event-engine inputs,
+   not normal-alpha training wins.
 
 ## 17. Definition of Done for the First MVP
 

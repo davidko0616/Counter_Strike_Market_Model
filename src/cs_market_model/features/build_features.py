@@ -10,12 +10,15 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from cs_market_model.config import data_path, reports_path
+from cs_market_model.config import PROJECT_ROOT, data_path, reports_path
+from cs_market_model.features.events import add_market_event_features
 from cs_market_model.features.indices import add_index_features
 from cs_market_model.features.liquidity import add_liquidity_features
+from cs_market_model.features.market_index import add_market_index_features
 from cs_market_model.features.momentum import add_momentum_features
 from cs_market_model.features.ranks import add_rank_features
 from cs_market_model.features.volatility import add_volatility_features
+from cs_market_model.normalization.items import enrich_item_metadata
 
 DEFAULT_PRICE_BARS_INPUT = data_path("processed", "price_bars_day3_first_pull.parquet")
 DEFAULT_METADATA_INPUT = data_path("processed", "item_metadata_day3_first_pull.parquet")
@@ -53,6 +56,7 @@ BASE_COLUMNS = {
     "max_float",
     "stattrak_flag",
     "souvenir_flag",
+    "tradeup_output_rarity",
 }
 
 
@@ -83,6 +87,7 @@ def load_item_metadata(path: Path = DEFAULT_METADATA_INPUT) -> pd.DataFrame | No
 
 def join_item_metadata(price_bars: pd.DataFrame, metadata: pd.DataFrame | None) -> pd.DataFrame:
     """Join item metadata onto price bars using market_hash_name."""
+    metadata = enrich_item_metadata(metadata)
     if metadata is None or metadata.empty:
         return price_bars.copy()
     duplicate_keys = metadata["market_hash_name"].duplicated()
@@ -101,8 +106,10 @@ def build_feature_table(
     features = add_momentum_features(features)
     features = add_volatility_features(features)
     features = add_liquidity_features(features)
+    features = add_market_index_features(features)
     features = add_index_features(features)
     features = add_rank_features(features)
+    features = add_market_event_features(features)
     return features.sort_values(["market_hash_name", "timestamp"]).reset_index(drop=True)
 
 
@@ -177,8 +184,15 @@ def main() -> None:
     print(f"Feature rows: {result.row_count}")
     print(f"Items: {result.item_count}")
     print(f"Feature columns: {result.feature_count}")
-    print(f"Wrote features: {result.features_output}")
-    print(f"Wrote audit: {result.audit_output}")
+    print(f"Wrote features: {_display_path(result.features_output)}")
+    print(f"Wrote audit: {_display_path(result.audit_output)}")
+
+
+def _display_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(PROJECT_ROOT))
+    except ValueError:
+        return str(path)
 
 
 if __name__ == "__main__":

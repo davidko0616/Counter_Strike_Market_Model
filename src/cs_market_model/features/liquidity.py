@@ -4,12 +4,14 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
+import numpy as np
 import pandas as pd
 
 
 def add_liquidity_features(
     feature_frame: pd.DataFrame,
     observed_row_windows: Sequence[int] = (7, 30),
+    quality_windows: Sequence[int] = (7, 30),
 ) -> pd.DataFrame:
     """Add point-in-time data coverage and staleness proxy features."""
     required = {"market_hash_name", "timestamp", "close"}
@@ -54,4 +56,46 @@ def add_liquidity_features(
         features[f"observed_rows_{window}d"] = observed_rows
         features[f"row_coverage_{window}d"] = observed_rows / window
 
+    log_return = _log_return_1d(features)
+    abs_return = log_return.abs()
+    jump_50 = abs_return.gt(np.log(1.5)).where(abs_return.notna(), False)
+    jump_100 = abs_return.gt(np.log(2.0)).where(abs_return.notna(), False)
+    for window in quality_windows:
+        features[f"abs_return_median_{window}d"] = abs_return.groupby(
+            features["market_hash_name"],
+            group_keys=False,
+        ).transform(lambda series, window=window: series.rolling(window, min_periods=1).median())
+        features[f"abs_return_max_{window}d"] = abs_return.groupby(
+            features["market_hash_name"],
+            group_keys=False,
+        ).transform(lambda series, window=window: series.rolling(window, min_periods=1).max())
+        features[f"price_jump_50pct_count_{window}d"] = jump_50.astype(int).groupby(
+            features["market_hash_name"],
+            group_keys=False,
+        ).transform(lambda series, window=window: series.rolling(window, min_periods=1).sum())
+        features[f"price_jump_100pct_count_{window}d"] = jump_100.astype(int).groupby(
+            features["market_hash_name"],
+            group_keys=False,
+        ).transform(lambda series, window=window: series.rolling(window, min_periods=1).sum())
+        features[f"price_jump_50pct_share_{window}d"] = (
+            features[f"price_jump_50pct_count_{window}d"] / window
+        )
+        features[f"price_jump_100pct_share_{window}d"] = (
+            features[f"price_jump_100pct_count_{window}d"] / window
+        )
+
+    features["liquidity_quality_score_30d"] = (
+        pd.to_numeric(features.get("row_coverage_30d", 1.0), errors="coerce").fillna(0.0)
+        * (1.0 - pd.to_numeric(features["price_jump_50pct_share_30d"], errors="coerce").fillna(1.0))
+        * (1.0 / (1.0 + pd.to_numeric(features["effective_staleness_days"], errors="coerce").fillna(0.0)))
+    )
+
     return features
+
+
+def _log_return_1d(features: pd.DataFrame) -> pd.Series:
+    if "log_return_1d" in features.columns:
+        return pd.to_numeric(features["log_return_1d"], errors="coerce")
+    close = pd.to_numeric(features["close"], errors="coerce")
+    log_close = np.log(close)
+    return log_close.groupby(features["market_hash_name"], group_keys=False).diff()

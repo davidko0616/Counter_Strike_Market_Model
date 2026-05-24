@@ -37,6 +37,8 @@ csmm-build-labels = "cs_market_model.labeling.build_labels:main"
 csmm-label-sensitivity = "cs_market_model.labeling.sensitivity:main"
 csmm-train-baselines = "cs_market_model.models.train:main"
 csmm-train-lightgbm = "cs_market_model.models.lightgbm_train:main"
+csmm-run-backtest = "cs_market_model.backtesting.portfolio:main"
+csmm-audit-outliers = "cs_market_model.backtesting.audit_outliers:main"
 csmm-scan-secrets = "cs_market_model.security.scan_secrets:main"
 
 [tool.hatch.build.targets.wheel]

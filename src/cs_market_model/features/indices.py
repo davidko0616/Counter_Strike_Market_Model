@@ -95,6 +95,11 @@ def add_index_features(feature_frame: pd.DataFrame) -> pd.DataFrame:
                 [features["timestamp"], features["category"]],
                 dropna=False,
             ).transform("mean")
+        features["item_to_category_index_zscore"] = _group_zscore(
+            features,
+            group_columns=["timestamp", "category"],
+            value_column="item_to_category_index_ratio",
+        )
 
     if "weapon_type" in features.columns:
         weapon_group = features.groupby(["timestamp", "weapon_type"], dropna=False)
@@ -114,5 +119,60 @@ def add_index_features(feature_frame: pd.DataFrame) -> pd.DataFrame:
                 features[f"item_minus_weapon_return_{window}d"] = (
                     features[return_column] - features[weapon_return_column]
                 )
+        features["weapon_median_normalized_close"] = weapon_group[
+            "normalized_close_since_start"
+        ].transform("median")
+        features["item_to_weapon_index_ratio"] = (
+            features["normalized_close_since_start"]
+            / features["weapon_median_normalized_close"]
+        ) - 1.0
+        features["item_to_weapon_index_zscore"] = _group_zscore(
+            features,
+            group_columns=["timestamp", "weapon_type"],
+            value_column="item_to_weapon_index_ratio",
+        )
+
+    if "rarity" in features.columns:
+        rarity_group = features.groupby(["timestamp", "rarity"], dropna=False)
+        features["rarity_median_normalized_close"] = rarity_group[
+            "normalized_close_since_start"
+        ].transform("median")
+        features["item_to_rarity_index_ratio"] = (
+            features["normalized_close_since_start"]
+            / features["rarity_median_normalized_close"]
+        ) - 1.0
+        features["item_to_rarity_index_zscore"] = _group_zscore(
+            features,
+            group_columns=["timestamp", "rarity"],
+            value_column="item_to_rarity_index_ratio",
+        )
+
+    if "collections" in features.columns:
+        collection_group = features.groupby(["timestamp", "collections"], dropna=False)
+        features["collection_median_normalized_close"] = collection_group[
+            "normalized_close_since_start"
+        ].transform("median")
+        features["item_to_collection_index_ratio"] = (
+            features["normalized_close_since_start"]
+            / features["collection_median_normalized_close"]
+        ) - 1.0
+        features["item_to_collection_index_zscore"] = _group_zscore(
+            features,
+            group_columns=["timestamp", "collections"],
+            value_column="item_to_collection_index_ratio",
+        )
 
     return features
+
+
+def _group_zscore(
+    frame: pd.DataFrame,
+    *,
+    group_columns: list[str],
+    value_column: str,
+) -> pd.Series:
+    values = pd.to_numeric(frame[value_column], errors="coerce")
+    group_keys = [frame[column] for column in group_columns]
+    group_mean = values.groupby(group_keys, dropna=False).transform("mean")
+    group_std = values.groupby(group_keys, dropna=False).transform("std")
+    return (values - group_mean) / group_std.replace(0, pd.NA)

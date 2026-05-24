@@ -16,7 +16,7 @@ from cs_market_model.backtesting.metrics import (
     summarize_metrics,
 )
 from cs_market_model.backtesting.walk_forward import make_monthly_walk_forward_splits
-from cs_market_model.config import data_path, load_yaml_config, reports_path
+from cs_market_model.config import PROJECT_ROOT, data_path, load_yaml_config, reports_path
 from cs_market_model.features.build_features import feature_columns
 from cs_market_model.models.baselines import (
     LABEL_STRONG_BUY,
@@ -49,6 +49,26 @@ LABEL_COLUMNS = [
     "vertical_net_return",
     "holding_period_days",
     "is_label_complete",
+]
+OPTIONAL_LABEL_COLUMNS = [
+    "label_market_regime",
+    "label_overlaps_known_market_event",
+    "label_overlaps_covert_tradeup_event",
+    "label_overlaps_souvenir_tradeup_event",
+    "known_event_rows_in_label_window",
+    "days_to_first_known_event_in_label_window",
+]
+OPTIONAL_DIAGNOSTIC_FEATURE_COLUMNS = [
+    "cs2_index_regime_bull",
+    "cs2_index_regime_neutral",
+    "cs2_index_regime_bear",
+    "cs2_index_return_7d",
+    "cs2_index_return_30d",
+    "cs2_index_drawdown_30d",
+    "cs2_index_ma_distance_30d",
+    "item_excess_log_return_7d",
+    "item_excess_log_return_30d",
+    "liquidity_quality_score_30d",
 ]
 
 
@@ -96,7 +116,8 @@ def build_modeling_dataset(
     features["timestamp"] = pd.to_datetime(features["timestamp"], utc=True)
     candidate_features = _numeric_feature_columns(features)
 
-    dataset = labels[LABEL_COLUMNS].merge(
+    label_columns = [*LABEL_COLUMNS, *[column for column in OPTIONAL_LABEL_COLUMNS if column in labels]]
+    dataset = labels[label_columns].merge(
         features[["market_hash_name", "timestamp", *candidate_features]],
         on=["market_hash_name", "timestamp"],
         how="left",
@@ -350,6 +371,10 @@ def _base_prediction_frame(rows: pd.DataFrame) -> pd.DataFrame:
         "vertical_net_return",
         "holding_period_days",
     ]
+    columns.extend(column for column in OPTIONAL_LABEL_COLUMNS if column in rows.columns)
+    columns.extend(
+        column for column in OPTIONAL_DIAGNOSTIC_FEATURE_COLUMNS if column in rows.columns
+    )
     return rows[columns].copy()
 
 
@@ -460,9 +485,16 @@ def main() -> None:
     print(f"Walk-forward splits: {result.split_count}")
     print(f"Models evaluated: {result.model_count}")
     print(f"Feature columns: {result.feature_count}")
-    print(f"Wrote predictions: {result.predictions_output}")
-    print(f"Wrote metrics: {result.metrics_output}")
-    print(f"Wrote summary: {result.summary_output}")
+    print(f"Wrote predictions: {_display_path(result.predictions_output)}")
+    print(f"Wrote metrics: {_display_path(result.metrics_output)}")
+    print(f"Wrote summary: {_display_path(result.summary_output)}")
+
+
+def _display_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(PROJECT_ROOT))
+    except ValueError:
+        return str(path)
 
 
 if __name__ == "__main__":

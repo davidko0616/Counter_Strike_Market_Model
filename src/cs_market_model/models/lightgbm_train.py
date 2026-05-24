@@ -16,7 +16,7 @@ from cs_market_model.backtesting.metrics import (
     summarize_metrics,
 )
 from cs_market_model.backtesting.walk_forward import make_monthly_walk_forward_splits
-from cs_market_model.config import data_path, load_yaml_config, reports_path
+from cs_market_model.config import PROJECT_ROOT, data_path, load_yaml_config, reports_path
 from cs_market_model.models.baselines import LABEL_STRONG_BUY
 from cs_market_model.models.calibrate import (
     PlattCalibrator,
@@ -549,11 +549,18 @@ def main() -> None:
     print(f"Walk-forward splits: {result.split_count}")
     print(f"LightGBM models evaluated: {result.model_count}")
     print(f"Feature columns: {result.feature_count}")
-    print(f"Wrote predictions: {result.predictions_output}")
-    print(f"Wrote metrics: {result.metrics_output}")
-    print(f"Wrote comparison: {result.comparison_output}")
-    print(f"Wrote feature importance: {result.importance_output}")
-    print(f"Wrote calibration: {result.calibration_output}")
+    print(f"Wrote predictions: {_display_path(result.predictions_output)}")
+    print(f"Wrote metrics: {_display_path(result.metrics_output)}")
+    print(f"Wrote comparison: {_display_path(result.comparison_output)}")
+    print(f"Wrote feature importance: {_display_path(result.importance_output)}")
+    print(f"Wrote calibration: {_display_path(result.calibration_output)}")
+
+
+def _display_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(PROJECT_ROOT))
+    except ValueError:
+        return str(path)
 
 
 if __name__ == "__main__":

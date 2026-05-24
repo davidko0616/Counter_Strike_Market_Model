@@ -15,6 +15,11 @@ DEFAULT_RANK_COLUMNS = (
     "return_volatility_30d",
     "drawdown_from_30d_high",
     "item_to_category_index_ratio",
+    "item_to_weapon_index_ratio",
+    "item_to_rarity_index_ratio",
+    "item_to_collection_index_ratio",
+    "item_to_category_index_zscore",
+    "liquidity_quality_score_30d",
 )
 
 

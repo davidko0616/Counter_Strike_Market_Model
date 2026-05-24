@@ -5,7 +5,11 @@ from math import log
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from cs_market_model.labeling.build_labels import audit_label_table, build_label_table
+from cs_market_model.labeling.build_labels import (
+    add_label_regime_columns,
+    audit_label_table,
+    build_label_table,
+)
 from cs_market_model.labeling.cusum import CusumConfig, sample_cusum_events
 from cs_market_model.labeling.sensitivity import (
     LabelSensitivityScenario,
@@ -150,3 +154,26 @@ def test_label_sensitivity_reports_each_scenario() -> None:
 
     assert sensitivity["scenario_name"].tolist() == ["zero_fee_short", "zero_fee_long"]
     assert {"strong_buy_pct", "median_net_return_at_label"} <= set(sensitivity.columns)
+
+
+def test_label_regime_columns_mark_event_overlap_inside_holding_window() -> None:
+    features = synthetic_label_features({"AK-47 | Test": [100, 101, 102, 103]})
+    features["is_known_market_event_window"] = [False, False, True, False]
+    features["is_covert_tradeup_event_window"] = [False, False, True, False]
+    labels = pd.DataFrame(
+        {
+            "event_id": ["event_000000"],
+            "market_hash_name": ["AK-47 | Test"],
+            "timestamp": [pd.Timestamp("2026-01-01", tz="UTC")],
+            "vertical_barrier_timestamp": [pd.Timestamp("2026-01-04", tz="UTC")],
+            "exit_timestamp": [pd.Timestamp("2026-01-03", tz="UTC")],
+            "is_label_complete": [True],
+        }
+    )
+
+    annotated = add_label_regime_columns(labels, features)
+
+    assert bool(annotated.loc[0, "label_overlaps_known_market_event"])
+    assert bool(annotated.loc[0, "label_overlaps_covert_tradeup_event"])
+    assert annotated.loc[0, "label_market_regime"] == "known_event"
+    assert annotated.loc[0, "days_to_first_known_event_in_label_window"] == 2

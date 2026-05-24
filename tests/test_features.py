@@ -85,6 +85,16 @@ def test_feature_factory_adds_expected_feature_columns() -> None:
         "universe_above_ma_30d_share",
         "log_return_14d_universe_rank",
         "close_to_ma_30d_weapon_rank",
+        "item_to_rarity_index_zscore",
+        "item_to_weapon_index_zscore",
+        "price_jump_50pct_count_30d",
+        "liquidity_quality_score_30d",
+        "is_post_known_market_event_30d",
+        "cs2_mvp_equal_weight_index",
+        "cs2_index_return_30d",
+        "item_excess_log_return_30d",
+        "item_beta_to_cs2_index_30d",
+        "cs2_index_regime_bear",
     }
 
     assert expected <= set(features.columns)
@@ -116,6 +126,11 @@ def test_feature_factory_uses_only_prefix_history() -> None:
         "universe_above_ma_30d_share",
         "log_return_14d_universe_rank",
         "close_to_ma_30d_weapon_rank",
+        "item_to_rarity_index_zscore",
+        "price_jump_50pct_count_30d",
+        "liquidity_quality_score_30d",
+        "cs2_mvp_equal_weight_index",
+        "item_excess_log_return_30d",
     ]
     full_prefix = full_features[full_features["timestamp"] <= cutoff][compare_columns]
     prefix_subset = prefix_features[compare_columns]

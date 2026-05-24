@@ -1,0 +1,25 @@
+events:
+  - event_id: cs2_covert_knife_glove_tradeup
+    name: "CS2 Covert-to-knife/glove trade-up update"
+    start_date: "2025-10-22"
+    end_date: "2025-10-28"
+    source: "Valve Counter-Strike 2 update notes"
+    source_url: "https://www.counter-strike.net/news/updates?l=english"
+    affected_item_query:
+      rarities: ["Covert"]
+      include_terms: []
+      exclude_terms: ["Souvenir"]
+    modeling_action: "event_regime"
+    notes: "Trade Up Contracts were expanded to allow five Covert items to produce knives or gloves. Treat resulting price jumps as exogenous event-regime observations, not normal-regime alpha."
+  - event_id: cs2_souvenir_tradeup_update
+    name: "CS2 souvenir trade-up eligibility update"
+    start_date: "2026-05-21"
+    end_date: "2026-05-28"
+    source: "CS2 update notes/community mirrors"
+    source_url: "https://patched.gg/games/counter-strike-2/counter-strike-2-update-2026-05-22"
+    affected_item_query:
+      rarities: []
+      include_terms: ["Souvenir"]
+      exclude_terms: []
+    modeling_action: "event_regime"
+    notes: "Souvenir quality items can be selected in Trade Up Contracts, with souvenir attributes removed and normal higher-quality output produced. Souvenir spikes should be evaluated as a separate event regime."

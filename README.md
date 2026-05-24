@@ -6,7 +6,7 @@ The project ranks item-date opportunities by expected after-cost value rather th
 
 ## Current Status
 
-Completed through Days 10-11:
+Completed through Days 12-13 implementation:
 
 - Project environment, secret handling, and repository skeleton are in place.
 - The MVP universe is gun skins only: no knives, gloves, cases, stickers, or sticker price data.
@@ -20,6 +20,7 @@ Completed through Days 10-11:
 - Feature Factory V1 includes market-regime features so broad market drawdowns and bloated/risk-off periods can be modeled.
 - Baseline reports include stricter daily top-k and same-item cooldown-adjusted metrics to reduce over-optimistic ranking claims.
 - LightGBM binary, multiclass, calibrated, and rank-blend models are compared against the Day 9.5 forest benchmark.
+- Backtest V1 converts ranked prediction outputs into cash-constrained top-k trade simulations with same-item cooldown, position sizing, trade ledger, equity curve, drawdown, turnover, and selected-trade precision.
 
 Current local generated artifacts:
 
@@ -38,6 +39,9 @@ Current local generated artifacts:
 - `reports/tables/day10_11_model_comparison.csv`
 - `reports/tables/day10_11_feature_importance.csv`
 - `reports/tables/day10_11_calibration.csv`
+- `reports/backtests/day12_13_trade_ledger.csv`
+- `reports/backtests/day12_13_daily_equity.csv`
+- `reports/tables/day12_13_backtest_summary.csv`
 
 These data and report outputs are intentionally ignored by git.
 
@@ -116,6 +120,18 @@ Days 10-11 LightGBM comparison:
 python -m cs_market_model.models.lightgbm_train
 ```
 
+Days 12-13 Backtest V1:
+
+```powershell
+python -m cs_market_model.backtesting.portfolio
+```
+
+Day 14 outlier audit:
+
+```powershell
+python -m cs_market_model.backtesting.audit_outliers
+```
+
 CSFloat listings probe:
 
 ```powershell
@@ -126,9 +142,20 @@ Collector commands save append-only raw JSON under `data/raw/` and do not contai
 
 ## Next Step
 
-Days 12-13 should run Backtest V1:
+Separate Backtest V1 event-regime trades from normal-regime validation:
 
-- Convert ranked probabilities into executable top-k trade simulations.
-- Apply fees, slippage, holding period, and same-item cooldown constraints.
 - Compare `forest_rank_blend`, `lightgbm_rank_blend`, and the best simple baseline.
-- Report after-fee returns, drawdown, turnover, and trade examples.
+- Review after-fee returns, drawdown, turnover, and trade examples.
+- Keep known CS2 economy-patch rows, but report them separately from normal-market performance.
+- Add event-calendar and Trade Up eligibility features before expanding to souvenir items.
+
+Backtest V1 now writes:
+
+- `reports/backtests/day12_13_trade_ledger.csv`
+- `reports/backtests/day12_13_daily_equity.csv`
+- `reports/tables/day12_13_backtest_summary.csv`
+- `reports/tables/day14_outlier_audit.csv`
+- `reports/tables/day14_outlier_model_impact.csv`
+- `reports/tables/day14_backtest_robustness.csv`
+- `reports/tables/day14_backtest_regime_summary.csv`
+- `reports/backtests/day14_mvp_review.md`

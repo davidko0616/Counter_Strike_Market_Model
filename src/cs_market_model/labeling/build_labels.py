@@ -10,7 +10,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from cs_market_model.config import data_path, load_yaml_config, reports_path
+from cs_market_model.config import PROJECT_ROOT, data_path, load_yaml_config, reports_path
 from cs_market_model.labeling.cusum import CusumConfig, sample_cusum_events
 from cs_market_model.labeling.triple_barrier import (
     FeeModel,
@@ -102,7 +102,62 @@ def build_label_table(
         fee_model=fee_model,
         config=triple_barrier_config,
     )
-    return labels
+    return add_label_regime_columns(labels, feature_table)
+
+
+def add_label_regime_columns(labels: pd.DataFrame, feature_table: pd.DataFrame) -> pd.DataFrame:
+    """Annotate labels whose holding windows overlap known market-event rows."""
+    if labels.empty:
+        return labels.copy()
+
+    annotated = labels.copy()
+    annotated["label_overlaps_known_market_event"] = False
+    annotated["label_overlaps_covert_tradeup_event"] = False
+    annotated["label_overlaps_souvenir_tradeup_event"] = False
+    annotated["known_event_rows_in_label_window"] = 0
+    annotated["days_to_first_known_event_in_label_window"] = np.nan
+    annotated["label_market_regime"] = "normal"
+
+    if "is_known_market_event_window" not in feature_table.columns:
+        return annotated
+
+    features = feature_table.copy()
+    features["timestamp"] = pd.to_datetime(features["timestamp"], utc=True)
+    feature_groups = {
+        market_hash_name: rows.sort_values("timestamp").reset_index(drop=True)
+        for market_hash_name, rows in features.groupby("market_hash_name", sort=False)
+    }
+
+    for index, label in annotated.iterrows():
+        item_rows = feature_groups.get(str(label["market_hash_name"]))
+        if item_rows is None:
+            continue
+        start = pd.Timestamp(label["timestamp"])
+        raw_end = label.get("exit_timestamp")
+        end = pd.Timestamp(raw_end) if pd.notna(raw_end) else pd.Timestamp(
+            label["vertical_barrier_timestamp"]
+        )
+        window = item_rows[(item_rows["timestamp"] >= start) & (item_rows["timestamp"] <= end)]
+        event_window = window[window["is_known_market_event_window"].fillna(False).astype(bool)]
+        if event_window.empty:
+            continue
+
+        annotated.at[index, "label_overlaps_known_market_event"] = True
+        annotated.at[index, "known_event_rows_in_label_window"] = int(len(event_window))
+        annotated.at[index, "days_to_first_known_event_in_label_window"] = int(
+            (event_window["timestamp"].min() - start).days
+        )
+        annotated.at[index, "label_market_regime"] = "known_event"
+        if "is_covert_tradeup_event_window" in event_window.columns:
+            annotated.at[index, "label_overlaps_covert_tradeup_event"] = bool(
+                event_window["is_covert_tradeup_event_window"].fillna(False).any()
+            )
+        if "is_souvenir_tradeup_event_window" in event_window.columns:
+            annotated.at[index, "label_overlaps_souvenir_tradeup_event"] = bool(
+                event_window["is_souvenir_tradeup_event_window"].fillna(False).any()
+            )
+
+    return annotated
 
 
 def audit_label_table(labels: pd.DataFrame) -> pd.DataFrame:
@@ -123,6 +178,9 @@ def audit_label_table(labels: pd.DataFrame) -> pd.DataFrame:
         return pd.DataFrame(metrics)
 
     complete_labels = labels[labels["is_label_complete"]]
+    if "label_market_regime" in labels.columns:
+        for regime, count in labels["label_market_regime"].value_counts().sort_index().items():
+            metrics.append({"metric": f"label_market_regime_count.{regime}", "value": int(count)})
     for label_class, count in complete_labels["label_class"].value_counts().sort_index().items():
         metrics.append({"metric": f"label_count.{label_class}", "value": int(count)})
 
@@ -188,6 +246,14 @@ def label_examples(labels: pd.DataFrame, examples_per_class: int = 8) -> pd.Data
         "row_coverage_30d",
         "effective_staleness_days",
     ]
+    optional_columns = [
+        "label_market_regime",
+        "label_overlaps_known_market_event",
+        "label_overlaps_covert_tradeup_event",
+        "known_event_rows_in_label_window",
+        "days_to_first_known_event_in_label_window",
+    ]
+    columns.extend(column for column in optional_columns if column in examples.columns)
     return examples[columns].reset_index(drop=True)
 
 
@@ -279,9 +345,16 @@ def main() -> None:
     print(f"Events: {result.event_count}")
     print(f"Complete labels: {result.complete_label_count}")
     print(f"Incomplete labels: {result.incomplete_label_count}")
-    print(f"Wrote labels: {result.labels_output}")
-    print(f"Wrote audit: {result.audit_output}")
-    print(f"Wrote examples: {result.examples_output}")
+    print(f"Wrote labels: {_display_path(result.labels_output)}")
+    print(f"Wrote audit: {_display_path(result.audit_output)}")
+    print(f"Wrote examples: {_display_path(result.examples_output)}")
+
+
+def _display_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(PROJECT_ROOT))
+    except ValueError:
+        return str(path)
 
 
 if __name__ == "__main__":
