@@ -10,3 +10,20 @@ transaction_costs:
   use_fees_config: true
   failed_execution_probability: 0.0
 
+rejection_policies:
+  conservative:
+    min_score_threshold: 0.6
+    min_liquidity_quality: 0.5
+    max_staleness_days: 3.0
+    max_price_jump_share: 0.1
+    exclude_event_regime: true
+    min_row_coverage: 0.5
+  aggressive:
+    min_score_threshold: 0.3
+    min_liquidity_quality: 0.3
+    exclude_event_regime: true
+  quality_gate:
+    min_row_coverage: 0.5
+    max_staleness_days: 2.0
+    max_price_jump_share: 0.05
+    exclude_event_regime: true

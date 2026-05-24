@@ -104,9 +104,12 @@ Counter Strike Market Model/
   .env.example
   configs/
     universe_mvp.yaml
+    universe_day3_first_pull.yaml
+    universe_gun_skins_candidate.yaml
     venues.yaml
     fees.yaml
     backtest.yaml
+    market_events.yaml
   data/
     raw/
     interim/
@@ -115,8 +118,9 @@ Counter Strike Market Model/
     labels/
   notebooks/
     01_data_audit.ipynb
-    02_feature_sanity_checks.ipynb
+    02_feature_distributions.ipynb
     03_model_error_analysis.ipynb
+    04_regime_visualization.ipynb
   reports/
     figures/
     tables/
@@ -125,8 +129,10 @@ Counter Strike Market Model/
     cs_market_model/
       __init__.py
       config.py
+      utils.py
       collectors/
         steamdt.py
+        steamdt_batch.py
         csfloat.py
       normalization/
         items.py
@@ -139,14 +145,17 @@ Counter Strike Market Model/
         indices.py
         market_index.py
         events.py
+        ranks.py
         build_features.py
       labeling/
         cusum.py
         triple_barrier.py
+        sensitivity.py
         build_labels.py
       models/
         baselines.py
         train.py
+        lightgbm_train.py
         calibrate.py
         explain.py
       backtesting/
@@ -154,12 +163,27 @@ Counter Strike Market Model/
         portfolio.py
         walk_forward.py
         metrics.py
+        audit_outliers.py
       dashboard/
         app.py
+      security/
+        env.py
+        scan_secrets.py
   tests/
     test_labeling.py
-    test_features_no_leakage.py
-    test_backtest_costs.py
+    test_features.py
+    test_event_features.py
+    test_market_index.py
+    test_baseline_models.py
+    test_lightgbm_train.py
+    test_calibration.py
+    test_walk_forward.py
+    test_portfolio_backtest.py
+    test_outlier_audit.py
+    test_price_normalization.py
+    test_item_metadata.py
+    test_steamdt_batch.py
+    test_project_skeleton.py
 ```
 
 ## 5. Technology Choices
@@ -750,6 +774,132 @@ Deliverable:
 - normal-only accepted-trade report with event-regime results excluded from
   threshold tuning.
 
+### Day 16: Code Hygiene and Utility Extraction
+
+This step was added after a project-wide code review identified duplicated
+functions and missing infrastructure patterns across the codebase.
+
+- Create `src/cs_market_model/utils.py` to hold shared utility functions.
+- Extract `safe_item_name()` from `collectors/csfloat.py` and
+  `collectors/steamdt.py` into `utils.py`.
+- Extract `_display_path()` from the 6 files where it is duplicated
+  (`build_features.py`, `build_labels.py`, `train.py`, `lightgbm_train.py`,
+  `portfolio.py`, `audit_outliers.py`) into `config.py` or `utils.py`.
+- Extract `_rank_blend_for_split()` from `models/train.py` and
+  `models/lightgbm_train.py` into a shared model utilities module.
+- Extract `_fee_model_from_config()` from `labeling/build_labels.py` and
+  `labeling/sensitivity.py` into a shared labeling utility.
+- Fix cross-module private imports: refactor `_attach_split_metadata` and
+  `_base_prediction_frame` in `train.py` to public functions since they are
+  imported by `lightgbm_train.py`.
+- Replace `print()` output with Python `logging` module across all pipeline
+  scripts. Use `logging.getLogger(__name__)` in each module.
+- Add `__all__` exports to all subpackage `__init__.py` files.
+- Update `hashlib.sha1` in `normalization/prices.py` to `hashlib.sha256`.
+
+Deliverable:
+
+- `src/cs_market_model/utils.py` with shared utilities.
+- Zero duplicated utility functions across the codebase.
+- All pipeline scripts use `logging` instead of `print()`.
+- All existing tests pass after refactor.
+
+### Day 17: EDA Notebooks and Research Presentation
+
+This step was added because the `notebooks/` directory is empty despite being
+part of the original plan. For a research project, exploratory analysis
+notebooks are essential for interpretability, presentation, and debugging.
+
+- Create `notebooks/01_data_audit.ipynb`: visualize price bar coverage, missing
+  data heatmap, volume distributions, staleness patterns, per-item time series.
+- Create `notebooks/02_feature_distributions.ipynb`: feature histograms,
+  correlation matrix, feature importance comparison across models, rank feature
+  distributions, cross-sectional feature spreads by category.
+- Create `notebooks/03_model_error_analysis.ipynb`: false Strong Buy
+  investigation, confusion matrices per walk-forward split, precision@top-k
+  over time, regime-conditional error rates, per-item model bias analysis.
+- Create `notebooks/04_regime_visualization.ipynb`: CS2 market index time
+  series, bull/bear/neutral regime overlay, event-regime trade highlighting,
+  equity curve with regime shading, normal vs event PnL waterfall chart.
+- Use generated report CSVs and parquet artifacts as data sources.
+
+Deliverable:
+
+- 4 runnable Jupyter notebooks with visualizations.
+- Key charts saved to `reports/figures/` for use in presentations or papers.
+
+### Day 18: CSFloat Feature Integration and Ablation
+
+This step implements the Phase 2 feature expansion planned in Section 6.1.
+The CSFloat collector already works; this step connects listing data into
+the feature pipeline.
+
+- Implement `normalization/order_books.py`: parse CSFloat listing snapshots
+  into normalized listing depth, best ask, float distribution, and sticker
+  features.
+- Build a CSFloat snapshot collector schedule for the 48 MVP items.
+- Add CSFloat-derived features to `build_features.py` with timestamp-safe
+  joins (only use listing snapshots available before prediction time).
+- New features: best ask distance from close, listing count, sell-side depth
+  within 1%/3%/5%, float percentile, sticker count proxy, reference price
+  gap.
+- Run ablation: compare `SteamDT only` (current 177 features) against
+  `SteamDT + CSFloat` to measure whether CSFloat features improve top-k
+  precision and net return.
+- Add tests for CSFloat normalization and point-in-time safety.
+
+Deliverable:
+
+- `normalization/order_books.py` fully implemented.
+- Ablation table in `reports/tables/day18_csfloat_ablation.csv`.
+- Updated feature audit with CSFloat feature coverage.
+
+### Day 19: Universe Expansion
+
+This step expands the tradable universe beyond the initial 48 Field-Tested
+gun skins after the pipeline has been validated end to end.
+
+- Select 100 to 150 items from the 408-item candidate universe
+  (`universe_gun_skins_candidate.yaml`) based on liquidity, data coverage,
+  and trading volume thresholds.
+- Add other wear conditions beyond Field-Tested (Minimal Wear, Well-Worn)
+  for high-liquidity items only.
+- Re-run the full pipeline (collection, features, labels, models, backtest)
+  on the expanded universe.
+- Compare cross-sectional signal quality: does a larger universe improve
+  category-relative and rank feature informativeness?
+- Check whether rejection thresholds from Day 15 transfer to the expanded
+  universe or need re-tuning.
+- Add per-item and per-collection attribution for normal-regime losses.
+
+Deliverable:
+
+- Updated `configs/universe_mvp_v2.yaml` with expanded item list.
+- Comparison report: 48-item vs expanded-universe backtest metrics.
+- Per-item and per-collection loss attribution table.
+
+### Day 20: Dashboard MVP
+
+This step builds the first interactive dashboard after the backtest and
+rejection system are validated.
+
+- Implement `dashboard/app.py` using Streamlit.
+- Views: top buy candidates, signal probabilities, expected net return,
+  liquidity score, confidence score, reason codes, feature contribution
+  summary.
+- Add filters by weapon, rarity, collection, venue, and liquidity.
+- Add historical performance charts: equity curve with regime overlay,
+  drawdown, rolling precision.
+- Add model comparison view: forest vs LightGBM vs baselines.
+- Add rejection policy visualization: show which trades were accepted/
+  rejected and why.
+- Load data from local parquet artifacts and report CSVs.
+
+Deliverable:
+
+- Runnable Streamlit dashboard (`streamlit run src/cs_market_model/dashboard/app.py`).
+- Screenshots saved to `reports/figures/`.
+
 ## 15. Key Risks
 
 Data quality:
@@ -777,19 +927,55 @@ Overfitting:
 - The feature space can become large quickly.
 - Keep ablation testing and simple baselines in the core workflow.
 
+Normal-regime alpha:
+
+- Current models are unprofitable in normal market conditions after fees.
+- All observed profitability comes from ~10 trades during the October 2025 CS2 Trade Up economy event.
+- The rejection/abstention layer (Day 15) and CSFloat features (Day 18) are the primary mitigations.
+- Universe expansion (Day 19) may improve cross-sectional signal quality.
+
+Code maintenance:
+
+- Several utility functions are duplicated across 2-6 files.
+- All output uses `print()` instead of the `logging` module.
+- Day 16 code hygiene pass addresses both issues.
+
 ## 16. Immediate Next Steps
 
-1. Build the Day 15 normal-regime rejection curve.
-2. Add no-trade thresholds to the backtest policy.
-3. Add label-quality flags and hard reject flags to the label table.
-4. Report normal-only threshold performance separately from known-event
+Priority 1 — Research critical (Days 15-16):
+
+1. Build the Day 15 normal-regime rejection curve and no-trade thresholds.
+2. Add label-quality gates and hard reject flags to the label table.
+3. Report normal-only threshold performance separately from known-event
    performance.
-5. Add per-item and per-collection attribution for normal-regime losses.
-6. Add stronger liquidity/spread proxies before expanding the tradable universe.
-7. Add trade-up EV features as explanatory features, while keeping the current
-   tradable MVP narrow.
-8. Treat the October 2025 and May 2026 Trade Up changes as event-engine inputs,
-   not normal-alpha training wins.
+4. Run Day 16 code hygiene: extract duplicated utilities, replace `print()`
+   with `logging`, fix cross-module private imports.
+
+Priority 2 — Research expansion (Days 17-18):
+
+5. Create EDA notebooks for data audit, feature distributions, model error
+   analysis, and regime visualization.
+6. Implement CSFloat feature integration and run the `SteamDT only` vs
+   `SteamDT + CSFloat` ablation.
+7. Add stronger liquidity/spread proxies from CSFloat listing data before
+   expanding the tradable universe.
+
+Priority 3 — Scale and present (Days 19-20):
+
+8. Expand the tradable universe from 48 to 100-150 items with per-item and
+   per-collection loss attribution.
+9. Build the Streamlit dashboard MVP with signal viewer, regime overlay,
+   and rejection policy visualization.
+10. Add trade-up EV features as explanatory features, while keeping the
+    current tradable MVP narrow.
+
+Standing rules:
+
+- Treat the October 2025 and May 2026 Trade Up changes as event-engine inputs,
+  not normal-alpha training wins.
+- Do not expand the universe until the rejection layer is validated on the
+  current 48-item set.
+- Every new feature group must include an ablation row showing marginal impact.
 
 ## 17. Definition of Done for the First MVP
 
@@ -802,6 +988,7 @@ The first MVP is done when the project can run one reproducible command that:
 5. Trains baseline and LightGBM models.
 6. Runs walk-forward validation.
 7. Runs an execution-realistic top-k backtest.
-8. Saves a report with metrics, charts, and top signal examples.
+8. Applies rejection thresholds to filter low-conviction trades.
+9. Saves a report with metrics, charts, and top signal examples.
 
 The output does not need to be profitable in the first version. It needs to be honest, reproducible, leakage-safe, and detailed enough to show what must improve next.

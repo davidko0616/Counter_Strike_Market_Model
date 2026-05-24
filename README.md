@@ -6,21 +6,21 @@ The project ranks item-date opportunities by expected after-cost value rather th
 
 ## Current Status
 
-Completed through Days 12-13 implementation:
+Completed through Day 14 implementation:
 
 - Project environment, secret handling, and repository skeleton are in place.
 - The MVP universe is gun skins only: no knives, gloves, cases, stickers, or sticker price data.
 - The first-pull universe has 48 Field-Tested skins across rifles, snipers, pistols, and SMGs.
 - SteamDT Day 3 collection produced normalized daily bars and item metadata for all 48 items.
-- Feature Factory V1 builds momentum, volatility, liquidity/staleness, and category/weapon-relative features.
+- Feature Factory V1 builds 177 feature columns: momentum, volatility, liquidity/staleness, category/weapon-relative, cross-sectional ranks, market-regime, and known-event features.
 - Labeling V1 builds CUSUM-sampled events and net-return Triple Barrier labels.
 - Baseline modeling evaluates rule, logistic regression, and random forest models with purged walk-forward splits.
 - Day 9.5 adds cross-sectional rank features, binary Strong Buy models, a forest rank-blend, and label sensitivity checks.
 - Execution assumptions now use a SteamDT proxy baseline: 2.5% transaction fee, reflecting Buff/Youpin-style markets rather than Steam marketplace fees.
-- Feature Factory V1 includes market-regime features so broad market drawdowns and bloated/risk-off periods can be modeled.
-- Baseline reports include stricter daily top-k and same-item cooldown-adjusted metrics to reduce over-optimistic ranking claims.
 - LightGBM binary, multiclass, calibrated, and rank-blend models are compared against the Day 9.5 forest benchmark.
 - Backtest V1 converts ranked prediction outputs into cash-constrained top-k trade simulations with same-item cooldown, position sizing, trade ledger, equity curve, drawdown, turnover, and selected-trade precision.
+- Day 14 outlier audit separates event-regime trades (Oct 2025 Trade Up update) from normal-regime performance. Normal-regime trading is negative across all models and all index regimes.
+- CS2 equal-weight market index added with item excess returns, beta, correlation, and regime classification.
 
 Current local generated artifacts:
 
@@ -42,6 +42,11 @@ Current local generated artifacts:
 - `reports/backtests/day12_13_trade_ledger.csv`
 - `reports/backtests/day12_13_daily_equity.csv`
 - `reports/tables/day12_13_backtest_summary.csv`
+- `reports/tables/day14_outlier_audit.csv`
+- `reports/tables/day14_outlier_model_impact.csv`
+- `reports/tables/day14_backtest_robustness.csv`
+- `reports/tables/day14_backtest_regime_summary.csv`
+- `reports/backtests/day14_mvp_review.md`
 
 These data and report outputs are intentionally ignored by git.
 
@@ -140,22 +145,21 @@ python -m cs_market_model.collectors.csfloat "AK-47 | Redline (Field-Tested)"
 
 Collector commands save append-only raw JSON under `data/raw/` and do not contain hardcoded secrets.
 
-## Next Step
+## Next Steps
 
-Separate Backtest V1 event-regime trades from normal-regime validation:
+The project roadmap extends from Day 15 through Day 20. See `STARTUP_PLAN.md` for full details.
 
-- Compare `forest_rank_blend`, `lightgbm_rank_blend`, and the best simple baseline.
-- Review after-fee returns, drawdown, turnover, and trade examples.
-- Keep known CS2 economy-patch rows, but report them separately from normal-market performance.
-- Add event-calendar and Trade Up eligibility features before expanding to souvenir items.
+**Priority 1 — Research critical (Days 15-16):**
 
-Backtest V1 now writes:
+- Day 15: Build a rejection-aware normal-regime model with no-trade thresholds and label-quality gates. Stop forcing daily top-k trades; let the model abstain on weak days.
+- Day 16: Code hygiene pass — extract duplicated utility functions, replace `print()` with `logging`, fix cross-module private imports.
 
-- `reports/backtests/day12_13_trade_ledger.csv`
-- `reports/backtests/day12_13_daily_equity.csv`
-- `reports/tables/day12_13_backtest_summary.csv`
-- `reports/tables/day14_outlier_audit.csv`
-- `reports/tables/day14_outlier_model_impact.csv`
-- `reports/tables/day14_backtest_robustness.csv`
-- `reports/tables/day14_backtest_regime_summary.csv`
-- `reports/backtests/day14_mvp_review.md`
+**Priority 2 — Research expansion (Days 17-18):**
+
+- Day 17: Create EDA notebooks for data audit, feature distributions, model error analysis, and regime visualization.
+- Day 18: Integrate CSFloat listing features into the pipeline and run `SteamDT only` vs `SteamDT + CSFloat` ablation.
+
+**Priority 3 — Scale and present (Days 19-20):**
+
+- Day 19: Expand the tradable universe from 48 to 100-150 items with per-item loss attribution.
+- Day 20: Build a Streamlit dashboard MVP with signal viewer, regime overlay, and rejection policy visualization.

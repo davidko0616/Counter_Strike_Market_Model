@@ -49,6 +49,10 @@ OPTIONAL_TRADE_COLUMNS = [
     "item_excess_log_return_7d",
     "item_excess_log_return_30d",
     "liquidity_quality_score_30d",
+    "effective_staleness_days",
+    "row_coverage_30d",
+    "price_jump_50pct_share_30d",
+    "price_jump_100pct_share_30d",
 ]
 
 

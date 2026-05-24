@@ -39,6 +39,7 @@ csmm-train-baselines = "cs_market_model.models.train:main"
 csmm-train-lightgbm = "cs_market_model.models.lightgbm_train:main"
 csmm-run-backtest = "cs_market_model.backtesting.portfolio:main"
 csmm-audit-outliers = "cs_market_model.backtesting.audit_outliers:main"
+csmm-rejection-analysis = "cs_market_model.backtesting.rejection:main"
 csmm-scan-secrets = "cs_market_model.security.scan_secrets:main"
 
 [tool.hatch.build.targets.wheel]
