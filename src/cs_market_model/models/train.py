@@ -69,6 +69,11 @@ OPTIONAL_DIAGNOSTIC_FEATURE_COLUMNS = [
     "item_excess_log_return_7d",
     "item_excess_log_return_30d",
     "liquidity_quality_score_30d",
+    "csfloat_snapshot_available",
+    "csfloat_snapshot_age_days",
+    "csfloat_listing_count",
+    "csfloat_min_price_to_close",
+    "csfloat_median_price_to_close",
 ]
 
 

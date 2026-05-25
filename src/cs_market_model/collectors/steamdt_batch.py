@@ -13,7 +13,7 @@ from typing import Any
 import pandas as pd
 
 from cs_market_model.collectors.steamdt import SteamDTClient, save_raw_response
-from cs_market_model.config import data_path, load_yaml_config, reports_path
+from cs_market_model.config import PROJECT_ROOT, data_path, load_yaml_config, reports_path
 from cs_market_model.normalization.prices import parse_steamdt_kline_payload
 
 DEFAULT_CONFIG_NAME = "universe_day3_first_pull.yaml"
@@ -207,9 +207,16 @@ def main() -> None:
     print(f"Successful items: {result.successful_items}")
     print(f"Failed items: {result.failed_items}")
     print(f"Price bar rows: {result.price_bar_rows}")
-    print(f"Wrote bars: {result.bars_output}")
-    print(f"Wrote metadata: {result.metadata_output}")
-    print(f"Wrote ingestion log: {result.log_output}")
+    print(f"Wrote bars: {_display_path(result.bars_output)}")
+    print(f"Wrote metadata: {_display_path(result.metadata_output)}")
+    print(f"Wrote ingestion log: {_display_path(result.log_output)}")
+
+
+def _display_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(PROJECT_ROOT))
+    except ValueError:
+        return str(path)
 
 
 if __name__ == "__main__":

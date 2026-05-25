@@ -95,6 +95,9 @@ def test_feature_factory_adds_expected_feature_columns() -> None:
         "item_excess_log_return_30d",
         "item_beta_to_cs2_index_30d",
         "cs2_index_regime_bear",
+        "csfloat_snapshot_available",
+        "csfloat_listing_count",
+        "csfloat_min_price_to_close",
     }
 
     assert expected <= set(features.columns)
@@ -131,6 +134,7 @@ def test_feature_factory_uses_only_prefix_history() -> None:
         "liquidity_quality_score_30d",
         "cs2_mvp_equal_weight_index",
         "item_excess_log_return_30d",
+        "csfloat_snapshot_available",
     ]
     full_prefix = full_features[full_features["timestamp"] <= cutoff][compare_columns]
     prefix_subset = prefix_features[compare_columns]

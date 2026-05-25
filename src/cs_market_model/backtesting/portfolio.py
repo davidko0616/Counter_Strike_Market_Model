@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +13,10 @@ import pandas as pd
 from cs_market_model.backtesting.execution import (
     ExecutionAssumptions,
     realized_trade_return,
+)
+from cs_market_model.backtesting.rejection_policy import (
+    RejectionPolicy,
+    rejection_reason_for_row,
 )
 from cs_market_model.config import PROJECT_ROOT, data_path, load_yaml_config, reports_path
 
@@ -53,6 +57,11 @@ OPTIONAL_TRADE_COLUMNS = [
     "row_coverage_30d",
     "price_jump_50pct_share_30d",
     "price_jump_100pct_share_30d",
+    "csfloat_snapshot_available",
+    "csfloat_snapshot_age_days",
+    "csfloat_listing_count",
+    "csfloat_min_price_to_close",
+    "csfloat_median_price_to_close",
 ]
 
 
@@ -74,6 +83,8 @@ class PortfolioBacktestConfig:
     category_col: str = "category"
     liquidity_col: str = "row_coverage_30d"
     failed_execution_probability: float = 0.0
+    rejection_policy: RejectionPolicy | None = None
+    rejection_policy_name: str | None = None
 
     def __post_init__(self) -> None:
         if self.initial_capital <= 0:
@@ -130,6 +141,24 @@ def config_from_yaml() -> PortfolioBacktestConfig:
         failed_execution_probability=float(
             transaction_costs.get("failed_execution_probability", 0.0)
         ),
+    )
+
+
+def rejection_policy_from_yaml(policy_name: str) -> RejectionPolicy:
+    """Build a named rejection policy from ``configs/backtest.yaml``."""
+    config = load_yaml_config("backtest.yaml")
+    raw_policies = config.get("rejection_policies", {}) or {}
+    if policy_name not in raw_policies:
+        raise ValueError(f"Unknown rejection policy: {policy_name}")
+    params = raw_policies[policy_name] or {}
+    return RejectionPolicy(
+        min_score_threshold=float(params.get("min_score_threshold", 0.0)),
+        min_liquidity_quality=float(params.get("min_liquidity_quality", 0.0)),
+        max_staleness_days=float(params.get("max_staleness_days", float("inf"))),
+        max_price_jump_share=float(params.get("max_price_jump_share", 1.0)),
+        exclude_event_regime=bool(params.get("exclude_event_regime", True)),
+        min_row_coverage=float(params.get("min_row_coverage", 0.0)),
+        reject_bear_without_alpha=bool(params.get("reject_bear_without_alpha", False)),
     )
 
 
@@ -316,6 +345,15 @@ def _simulate_one_model(
         for _, row in day_rows.sort_values(config.score_col, ascending=False).iterrows():
             if day_selected >= config.top_k:
                 break
+            rejection_reason = None
+            if config.rejection_policy is not None:
+                rejection_reason = rejection_reason_for_row(
+                    row,
+                    config.rejection_policy,
+                    score_col=config.score_col,
+                )
+                if rejection_reason is not None:
+                    continue
             if not _passes_optional_liquidity(row, config):
                 continue
             item = str(row[config.item_col])
@@ -375,6 +413,8 @@ def _simulate_one_model(
                 "realized_net_return": trade_return,
                 "notional": float(notional),
                 "pnl": float(notional * trade_return),
+                "rejection_policy_name": config.rejection_policy_name,
+                "rejection_reason": rejection_reason,
                 "cash_after_entry": float(cash),
                 "_proceeds": float(notional * (1.0 + trade_return)),
             }
@@ -540,6 +580,8 @@ def _empty_ledger() -> pd.DataFrame:
             "realized_net_return",
             "notional",
             "pnl",
+            "rejection_policy_name",
+            "rejection_reason",
             "cash_after_entry",
             "cash_after_exit",
             *OPTIONAL_TRADE_COLUMNS,
@@ -611,7 +653,19 @@ def main() -> None:
         dest="model_names",
         help="Model to backtest. May be provided multiple times.",
     )
+    parser.add_argument(
+        "--rejection-policy",
+        help="Named rejection policy from configs/backtest.yaml to apply before entries.",
+    )
     args = parser.parse_args()
+
+    config = config_from_yaml()
+    if args.rejection_policy:
+        config = replace(
+            config,
+            rejection_policy=rejection_policy_from_yaml(args.rejection_policy),
+            rejection_policy_name=args.rejection_policy,
+        )
 
     result = run_day12_13_backtest(
         prediction_inputs=args.prediction_inputs,
@@ -619,6 +673,7 @@ def main() -> None:
         summary_output=args.summary_output,
         daily_equity_output=args.daily_equity_output,
         model_names=args.model_names,
+        config=config,
     )
     print(f"Backtest trades: {result.trade_count}")
     print(f"Models backtested: {result.model_count}")

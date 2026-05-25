@@ -774,35 +774,52 @@ Deliverable:
 - normal-only accepted-trade report with event-regime results excluded from
   threshold tuning.
 
-### Day 16: Code Hygiene and Utility Extraction
+Current implementation note:
 
-This step was added after a project-wide code review identified duplicated
-functions and missing infrastructure patterns across the codebase.
+- Day 15 post-hoc rejection analysis is implemented in
+  `src/cs_market_model/backtesting/rejection.py`.
+- The CLI is `csmm-rejection-analysis` or
+  `python -m cs_market_model.backtesting.rejection`.
+- Outputs are written to `reports/tables/day15_rejection_curve.csv`,
+  `reports/tables/day15_threshold_policy_summary.csv`, and
+  `reports/tables/day15_normal_accepted_trade_summary.csv`.
+- The conservative policy improves normal-only selected-trade diagnostics, but
+  this is still post-hoc analysis on the existing trade ledger.
 
-- Create `src/cs_market_model/utils.py` to hold shared utility functions.
-- Extract `safe_item_name()` from `collectors/csfloat.py` and
-  `collectors/steamdt.py` into `utils.py`.
-- Extract `_display_path()` from the 6 files where it is duplicated
-  (`build_features.py`, `build_labels.py`, `train.py`, `lightgbm_train.py`,
-  `portfolio.py`, `audit_outliers.py`) into `config.py` or `utils.py`.
-- Extract `_rank_blend_for_split()` from `models/train.py` and
-  `models/lightgbm_train.py` into a shared model utilities module.
-- Extract `_fee_model_from_config()` from `labeling/build_labels.py` and
-  `labeling/sensitivity.py` into a shared labeling utility.
-- Fix cross-module private imports: refactor `_attach_split_metadata` and
-  `_base_prediction_frame` in `train.py` to public functions since they are
-  imported by `lightgbm_train.py`.
-- Replace `print()` output with Python `logging` module across all pipeline
-  scripts. Use `logging.getLogger(__name__)` in each module.
-- Add `__all__` exports to all subpackage `__init__.py` files.
-- Update `hashlib.sha1` in `normalization/prices.py` to `hashlib.sha256`.
+### Day 16: Integrated and Walk-Forward Rejection Validation
+
+This step converts Day 15 from a post-hoc filter into a pre-entry backtest gate
+and validates score thresholds with walk-forward selection.
+
+- Extract shared rejection policy primitives into
+  `src/cs_market_model/backtesting/rejection_policy.py`.
+- Add `--rejection-policy` support to the portfolio backtest so rejected
+  candidates are skipped before daily top-k slots are filled.
+- Keep the original no-filter ledger for baseline comparisons.
+- Run an integrated conservative-policy backtest that produces a separate
+  trade ledger, summary, and equity curve.
+- Add a Day 16 walk-forward validator that selects score thresholds from prior
+  months only and evaluates the next month on normal-regime trades.
+- Report selected threshold, training metrics, test metrics, accepted trades,
+  rejection rate, profit factor, and accepted-trade drawdown.
 
 Deliverable:
 
-- `src/cs_market_model/utils.py` with shared utilities.
-- Zero duplicated utility functions across the codebase.
-- All pipeline scripts use `logging` instead of `print()`.
-- All existing tests pass after refactor.
+- `reports/backtests/day16_conservative_trade_ledger.csv`
+- `reports/backtests/day16_conservative_daily_equity.csv`
+- `reports/tables/day16_conservative_backtest_summary.csv`
+- `reports/tables/day16_walk_forward_threshold_selection.csv`
+- `reports/tables/day16_walk_forward_threshold_summary.csv`
+- `reports/backtests/day16_walk_forward_accepted_trades.csv`
+
+Current implementation note:
+
+- The integrated conservative policy no longer lets rejected candidates consume
+  daily top-k slots.
+- On the current rebuild, integrated conservative backtest results are positive
+  for the forest and LightGBM rank blends and negative for momentum.
+- Walk-forward score-threshold validation remains positive for forest and
+  LightGBM after selecting each month from prior months only.
 
 ### Day 17: EDA Notebooks and Research Presentation
 
@@ -938,18 +955,18 @@ Code maintenance:
 
 - Several utility functions are duplicated across 2-6 files.
 - All output uses `print()` instead of the `logging` module.
-- Day 16 code hygiene pass addresses both issues.
+- This is now deferred until after the rejection system is validated.
 
 ## 16. Immediate Next Steps
 
 Priority 1 — Research critical (Days 15-16):
 
-1. Build the Day 15 normal-regime rejection curve and no-trade thresholds.
-2. Add label-quality gates and hard reject flags to the label table.
-3. Report normal-only threshold performance separately from known-event
-   performance.
-4. Run Day 16 code hygiene: extract duplicated utilities, replace `print()`
-   with `logging`, fix cross-module private imports.
+1. Keep Day 15 post-hoc rejection analysis as the diagnostic baseline.
+2. Use Day 16 integrated rejection backtests for execution-aware policy results.
+3. Use Day 16 walk-forward threshold validation for the headline normal-regime
+   rejection result.
+4. Add label-quality gates and hard reject flags to the label table once the
+   current score-threshold validation is reviewed.
 
 Priority 2 — Research expansion (Days 17-18):
 

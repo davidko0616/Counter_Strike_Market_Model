@@ -11,6 +11,10 @@ import numpy as np
 import pandas as pd
 
 from cs_market_model.config import PROJECT_ROOT, data_path, reports_path
+from cs_market_model.features.csfloat_listings import (
+    DEFAULT_CSFLOAT_FEATURES_OUTPUT,
+    add_csfloat_listing_features,
+)
 from cs_market_model.features.events import add_market_event_features
 from cs_market_model.features.indices import add_index_features
 from cs_market_model.features.liquidity import add_liquidity_features
@@ -100,12 +104,14 @@ def join_item_metadata(price_bars: pd.DataFrame, metadata: pd.DataFrame | None) 
 def build_feature_table(
     price_bars: pd.DataFrame,
     metadata: pd.DataFrame | None = None,
+    csfloat_features: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """Build point-in-time-safe feature rows from normalized price bars."""
     features = join_item_metadata(price_bars, metadata)
     features = add_momentum_features(features)
     features = add_volatility_features(features)
     features = add_liquidity_features(features)
+    features = add_csfloat_listing_features(features, csfloat_features)
     features = add_market_index_features(features)
     features = add_index_features(features)
     features = add_rank_features(features)
@@ -146,11 +152,17 @@ def build_day5_features(
     metadata_input: Path = DEFAULT_METADATA_INPUT,
     features_output: Path = DEFAULT_FEATURES_OUTPUT,
     audit_output: Path = DEFAULT_AUDIT_OUTPUT,
+    csfloat_features_input: Path | None = DEFAULT_CSFLOAT_FEATURES_OUTPUT,
 ) -> FeatureBuildResult:
     """Load Day 3 outputs, build Day 5 features, and save artifacts."""
     price_bars = load_price_bars(price_bars_input)
     metadata = load_item_metadata(metadata_input)
-    feature_table = build_feature_table(price_bars, metadata)
+    csfloat_features = (
+        pd.read_parquet(csfloat_features_input)
+        if csfloat_features_input is not None and csfloat_features_input.exists()
+        else None
+    )
+    feature_table = build_feature_table(price_bars, metadata, csfloat_features)
     audit = audit_feature_table(feature_table)
 
     features_output.parent.mkdir(parents=True, exist_ok=True)
@@ -173,6 +185,12 @@ def main() -> None:
     parser.add_argument("--metadata-input", type=Path, default=DEFAULT_METADATA_INPUT)
     parser.add_argument("--features-output", type=Path, default=DEFAULT_FEATURES_OUTPUT)
     parser.add_argument("--audit-output", type=Path, default=DEFAULT_AUDIT_OUTPUT)
+    parser.add_argument(
+        "--csfloat-features-input",
+        type=Path,
+        default=DEFAULT_CSFLOAT_FEATURES_OUTPUT,
+        help="Optional parsed CSFloat listing feature parquet.",
+    )
     args = parser.parse_args()
 
     result = build_day5_features(
@@ -180,6 +198,7 @@ def main() -> None:
         metadata_input=args.metadata_input,
         features_output=args.features_output,
         audit_output=args.audit_output,
+        csfloat_features_input=args.csfloat_features_input,
     )
     print(f"Feature rows: {result.row_count}")
     print(f"Items: {result.item_count}")

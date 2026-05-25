@@ -9,18 +9,15 @@ metrics to identify policies that improve normal-regime PnL.
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 import pandas as pd
 
-from cs_market_model.backtesting.portfolio import (
-    DEFAULT_TRADE_LEDGER_OUTPUT,
-    PortfolioBacktestConfig,
-    _max_drawdown,
-)
+from cs_market_model.backtesting.portfolio import DEFAULT_TRADE_LEDGER_OUTPUT
+from cs_market_model.backtesting.rejection_policy import RejectionPolicy
 from cs_market_model.config import PROJECT_ROOT, load_yaml_config, reports_path
 
 DEFAULT_REJECTION_CURVE_OUTPUT = reports_path("tables", "day15_rejection_curve.csv")
@@ -28,40 +25,6 @@ DEFAULT_POLICY_SUMMARY_OUTPUT = reports_path("tables", "day15_threshold_policy_s
 DEFAULT_NORMAL_ACCEPTED_OUTPUT = reports_path(
     "tables", "day15_normal_accepted_trade_summary.csv"
 )
-
-
-# ---------------------------------------------------------------------------
-# Rejection policy
-# ---------------------------------------------------------------------------
-
-
-@dataclass(frozen=True)
-class RejectionPolicy:
-    """Configurable trade rejection thresholds.
-
-    Each gate is applied in priority order.  The first failing gate sets
-    ``rejection_reason``.  Trades that pass all gates are accepted.
-    """
-
-    min_score_threshold: float = 0.0
-    min_liquidity_quality: float = 0.0
-    max_staleness_days: float = float("inf")
-    max_price_jump_share: float = 1.0
-    exclude_event_regime: bool = True
-    min_row_coverage: float = 0.0
-    reject_bear_without_alpha: bool = False
-
-    def __post_init__(self) -> None:
-        if self.min_score_threshold < 0:
-            raise ValueError("min_score_threshold must be non-negative")
-        if self.min_liquidity_quality < 0:
-            raise ValueError("min_liquidity_quality must be non-negative")
-        if self.max_staleness_days <= 0:
-            raise ValueError("max_staleness_days must be positive")
-        if self.max_price_jump_share < 0:
-            raise ValueError("max_price_jump_share must be non-negative")
-        if self.min_row_coverage < 0:
-            raise ValueError("min_row_coverage must be non-negative")
 
 
 # ---------------------------------------------------------------------------
@@ -88,68 +51,51 @@ def apply_rejection_policy(
         frame["is_accepted"] = pd.Series(dtype="bool")
         return frame
 
-    reasons: list[str | None] = [None] * len(frame)
+    # Vectorized rejection: build reason series, first non-None wins
+    reasons = pd.Series([None] * len(frame), index=frame.index, dtype="object")
 
     # Gate 1: event-regime exclusion
     if resolved_policy.exclude_event_regime and "label_market_regime" in frame.columns:
-        event_mask = frame["label_market_regime"].astype(str).eq("known_event")
-        for idx in frame.index[event_mask]:
-            pos = frame.index.get_loc(idx)
-            if reasons[pos] is None:
-                reasons[pos] = "event_regime"
+        mask = frame["label_market_regime"].astype(str).eq("known_event")
+        reasons = reasons.where(reasons.notna() | ~mask, "event_regime")
 
     # Gate 2: score threshold
     if resolved_policy.min_score_threshold > 0 and "strong_buy_score" in frame.columns:
         score = pd.to_numeric(frame["strong_buy_score"], errors="coerce").fillna(0.0)
-        low_score = score.lt(resolved_policy.min_score_threshold)
-        for idx in frame.index[low_score]:
-            pos = frame.index.get_loc(idx)
-            if reasons[pos] is None:
-                reasons[pos] = "low_score"
+        mask = score.lt(resolved_policy.min_score_threshold)
+        reasons = reasons.where(reasons.notna() | ~mask, "low_score")
 
     # Gate 3: liquidity quality
     if resolved_policy.min_liquidity_quality > 0:
         liq_col = "liquidity_quality_score_30d"
         if liq_col in frame.columns:
             liq = pd.to_numeric(frame[liq_col], errors="coerce").fillna(0.0)
-            low_liq = liq.lt(resolved_policy.min_liquidity_quality)
-            for idx in frame.index[low_liq]:
-                pos = frame.index.get_loc(idx)
-                if reasons[pos] is None:
-                    reasons[pos] = "low_liquidity"
+            mask = liq.lt(resolved_policy.min_liquidity_quality)
+            reasons = reasons.where(reasons.notna() | ~mask, "low_liquidity")
 
     # Gate 4: staleness
     if np.isfinite(resolved_policy.max_staleness_days):
         stale_col = "effective_staleness_days"
         if stale_col in frame.columns:
             stale = pd.to_numeric(frame[stale_col], errors="coerce").fillna(0.0)
-            too_stale = stale.gt(resolved_policy.max_staleness_days)
-            for idx in frame.index[too_stale]:
-                pos = frame.index.get_loc(idx)
-                if reasons[pos] is None:
-                    reasons[pos] = "stale_price"
+            mask = stale.gt(resolved_policy.max_staleness_days)
+            reasons = reasons.where(reasons.notna() | ~mask, "stale_price")
 
     # Gate 5: price jump share
     if resolved_policy.max_price_jump_share < 1.0:
         jump_col = "price_jump_50pct_share_30d"
         if jump_col in frame.columns:
             jump = pd.to_numeric(frame[jump_col], errors="coerce").fillna(0.0)
-            high_jump = jump.gt(resolved_policy.max_price_jump_share)
-            for idx in frame.index[high_jump]:
-                pos = frame.index.get_loc(idx)
-                if reasons[pos] is None:
-                    reasons[pos] = "price_jump"
+            mask = jump.gt(resolved_policy.max_price_jump_share)
+            reasons = reasons.where(reasons.notna() | ~mask, "price_jump")
 
     # Gate 6: row coverage
     if resolved_policy.min_row_coverage > 0:
         cov_col = "row_coverage_30d"
         if cov_col in frame.columns:
             cov = pd.to_numeric(frame[cov_col], errors="coerce").fillna(0.0)
-            low_cov = cov.lt(resolved_policy.min_row_coverage)
-            for idx in frame.index[low_cov]:
-                pos = frame.index.get_loc(idx)
-                if reasons[pos] is None:
-                    reasons[pos] = "low_coverage"
+            mask = cov.lt(resolved_policy.min_row_coverage)
+            reasons = reasons.where(reasons.notna() | ~mask, "low_coverage")
 
     # Gate 7: bear market regime — reject if CS2 index is bearish AND
     # the item is not outperforming the market (no excess alpha)
@@ -161,11 +107,8 @@ def apply_rejection_policy(
                 frame[bear_col], errors="coerce"
             ).fillna(0).astype(bool)
             excess = pd.to_numeric(frame[excess_col], errors="coerce").fillna(0.0)
-            bear_no_alpha = is_bear & excess.le(0)
-            for idx in frame.index[bear_no_alpha]:
-                pos = frame.index.get_loc(idx)
-                if reasons[pos] is None:
-                    reasons[pos] = "bear_no_alpha"
+            mask = is_bear & excess.le(0)
+            reasons = reasons.where(reasons.notna() | ~mask, "bear_no_alpha")
 
     frame["rejection_reason"] = reasons
     frame["is_accepted"] = frame["rejection_reason"].isna()
@@ -210,9 +153,14 @@ def _accepted_trade_metrics(
     else:
         profit_factor = 0.0
 
-    # Approximate Sharpe from trade returns
+    # Sharpe from trade returns, annualized by average holding period
     if returns.std(ddof=0) > 0:
-        sharpe = float(returns.mean() / returns.std(ddof=0) * np.sqrt(365))
+        avg_holding = 14.0  # default triple-barrier horizon
+        if "holding_period_days" in accepted.columns:
+            hp = pd.to_numeric(accepted["holding_period_days"], errors="coerce")
+            avg_holding = hp.mean() if hp.notna().any() else 14.0
+        trades_per_year = 365.0 / max(avg_holding, 1.0)
+        sharpe = float(returns.mean() / returns.std(ddof=0) * np.sqrt(trades_per_year))
     else:
         sharpe = np.nan
 

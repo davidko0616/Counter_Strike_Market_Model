@@ -19,7 +19,7 @@ class FeeModel:
     """Round-trip execution assumptions in basis points."""
 
     buy_fee_bps: float = 0.0
-    sell_fee_bps: float = 1300.0
+    sell_fee_bps: float = 250.0
     slippage_bps: float = 100.0
 
     @property
