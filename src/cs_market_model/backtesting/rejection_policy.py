@@ -85,10 +85,14 @@ def rejection_reason_for_row(
 def _numeric_value(row: pd.Series, column: str, *, default: float) -> float:
     if column not in row.index:
         return default
-    value = pd.to_numeric(pd.Series([row.get(column)]), errors="coerce").iloc[0]
-    if not np.isfinite(value):
+    raw = row.get(column)
+    if raw is None or (isinstance(raw, float) and not np.isfinite(raw)):
         return default
-    return float(value)
+    try:
+        value = float(raw)
+    except (TypeError, ValueError):
+        return default
+    return value if np.isfinite(value) else default
 
 
 def _string_value(row: pd.Series, column: str) -> str:

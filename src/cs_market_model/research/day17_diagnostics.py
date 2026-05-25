@@ -88,7 +88,8 @@ def run_day17_diagnostics(
 ) -> Day17Result:
     """Run Day 17 diagnostics from generated Day 16 artifacts."""
     base_ledger = pd.read_csv(base_ledger_input)
-    pd.read_csv(accepted_input)
+    # accepted_input is not used directly — acceptance is re-derived from
+    # selection thresholds applied to the base ledger in tag_walk_forward_acceptance.
     selection = pd.read_csv(selection_input)
     labels = pd.read_parquet(labels_input)
     features = pd.read_parquet(features_input)
@@ -165,11 +166,18 @@ def tag_walk_forward_acceptance(
         frame["entry_timestamp"].dt.tz_convert(None).dt.to_period("M").astype(str)
     )
     frame["selected_threshold"] = 0.0
-    threshold_lookup = _threshold_lookup(selection)
-    for idx, row in frame.iterrows():
-        key = (str(row["model_name"]), str(row["test_period"]))
-        threshold = threshold_lookup.get(key, 0.0)
-        frame.at[idx, "selected_threshold"] = threshold
+    if not selection.empty and "selected_score_threshold" in selection.columns:
+        sel_lookup = selection[["model_name", "test_period", "selected_score_threshold"]].copy()
+        sel_lookup["model_name"] = sel_lookup["model_name"].astype(str)
+        sel_lookup["test_period"] = sel_lookup["test_period"].astype(str)
+        frame["model_name"] = frame["model_name"].astype(str)
+        frame = frame.merge(
+            sel_lookup, on=["model_name", "test_period"], how="left", suffixes=("", "_sel"),
+        )
+        frame["selected_threshold"] = (
+            frame["selected_score_threshold"].fillna(0.0)
+        )
+        frame = frame.drop(columns=["selected_score_threshold"], errors="ignore")
 
     tagged_frames = []
     for _, group in frame.groupby(["model_name", "test_period"], sort=False):

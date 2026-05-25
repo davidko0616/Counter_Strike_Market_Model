@@ -152,6 +152,7 @@ def add_csfloat_listing_features(
             left_on="timestamp",
             right_on="timestamp_ingested",
             direction="backward",
+            tolerance=pd.Timedelta(days=30),
         )
         joined_parts.append(merged)
     joined = pd.concat(joined_parts, ignore_index=True, sort=False)
@@ -202,19 +203,23 @@ def _as_utc_ns(values: Any) -> pd.Series:
     return pd.Series(pd.to_datetime(values, utc=True), index=index).astype("datetime64[ns, UTC]")
 
 
+# Keys whose values are in cents and need conversion to dollars.
+_CENTS_KEYS = frozenset({"price_cents"})
+
+
 def _extract_numeric(listing: dict[str, Any], keys: list[str]) -> float | None:
     for key in keys:
         if key in listing:
             value = pd.to_numeric(pd.Series([listing.get(key)]), errors="coerce").iloc[0]
             if np.isfinite(value):
-                return float(value)
+                return float(value / 100.0) if key in _CENTS_KEYS else float(value)
     item = listing.get("item")
     if isinstance(item, dict):
         for key in keys:
             if key in item:
                 value = pd.to_numeric(pd.Series([item.get(key)]), errors="coerce").iloc[0]
                 if np.isfinite(value):
-                    return float(value)
+                    return float(value / 100.0) if key in _CENTS_KEYS else float(value)
     return None
 
 

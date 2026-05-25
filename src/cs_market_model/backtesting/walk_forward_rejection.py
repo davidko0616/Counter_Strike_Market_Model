@@ -220,7 +220,7 @@ def _select_threshold_from_training(
         return 0.0, _accepted_trade_metrics(train, len(train))
 
     ranked = pd.DataFrame(candidates).sort_values(
-        ["accepted_total_pnl", "profit_factor", "accepted_count"],
+        ["profit_factor", "accepted_win_rate", "accepted_count"],
         ascending=[False, False, False],
     )
     best = ranked.iloc[0]
