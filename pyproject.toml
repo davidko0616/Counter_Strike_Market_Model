@@ -46,6 +46,8 @@ csmm-walk-forward-rejection = "cs_market_model.backtesting.walk_forward_rejectio
 csmm-day17-diagnostics = "cs_market_model.research.day17_diagnostics:main"
 csmm-day18-csfloat-ablation = "cs_market_model.research.day18_csfloat_ablation:main"
 csmm-day19-csfloat-coverage = "cs_market_model.research.day19_csfloat_coverage:main"
+csmm-day19-universe-expansion = "cs_market_model.research.day19_universe_expansion:main"
+csmm-day21-v2-robustness = "cs_market_model.research.day21_v2_robustness:main"
 csmm-scan-secrets = "cs_market_model.security.scan_secrets:main"
 
 [tool.hatch.build.targets.wheel]

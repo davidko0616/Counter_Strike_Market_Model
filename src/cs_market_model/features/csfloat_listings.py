@@ -203,8 +203,9 @@ def _as_utc_ns(values: Any) -> pd.Series:
     return pd.Series(pd.to_datetime(values, utc=True), index=index).astype("datetime64[ns, UTC]")
 
 
-# Keys whose values are in cents and need conversion to dollars.
-_CENTS_KEYS = frozenset({"price_cents"})
+# CSFloat listing prices are integer cents even when the field is named
+# "price"; normalize to dollars before building cross-venue features.
+_CENTS_KEYS = frozenset({"price", "price_cents", "lowest_price"})
 
 
 def _extract_numeric(listing: dict[str, Any], keys: list[str]) -> float | None:

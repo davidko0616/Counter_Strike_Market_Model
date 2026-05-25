@@ -112,6 +112,10 @@ def build_ablation_setup_table(
         if csfloat_snapshots is None or csfloat_snapshots.empty
         else int(csfloat_snapshots["market_hash_name"].nunique())
     )
+    csfloat_status = "ready_for_model_ablation" if covered_rows > 0 else "no_csfloat_snapshot_coverage"
+    if snapshot_count > 0 and covered_rows == 0:
+        csfloat_status = "snapshots_collected_no_price_bar_coverage"
+
     rows = [
         {
             "variant": "steamdt_only",
@@ -137,7 +141,7 @@ def build_ablation_setup_table(
             "csfloat_covered_rows": covered_rows,
             "csfloat_coverage_rate": float(coverage_rate),
             "ablation_ready": bool(covered_rows > 0),
-            "status": "ready_for_model_ablation" if covered_rows > 0 else "no_csfloat_snapshot_coverage",
+            "status": csfloat_status,
         },
     ]
     return pd.DataFrame(rows)
@@ -147,16 +151,36 @@ def build_ablation_report(ablation: pd.DataFrame) -> str:
     """Build a concise Day 18 Markdown report."""
     csfloat_row = ablation[ablation["variant"].eq("steamdt_plus_csfloat")].iloc[0]
     ready = bool(csfloat_row["ablation_ready"])
+    snapshot_count = int(csfloat_row["csfloat_snapshot_count"])
     if ready:
         interpretation = (
             "CSFloat snapshots are present, so the next step is to train both "
             "feature variants and compare model/backtest metrics."
+        )
+        next_plan = (
+            "Train the SteamDT-only and CSFloat-enabled variants, then compare "
+            "model metrics, backtest PnL, and rejection diagnostics."
+        )
+    elif snapshot_count > 0:
+        interpretation = (
+            "CSFloat snapshots exist, but none can be joined yet under the "
+            "point-in-time as-of rule. The current daily price bars end before "
+            "the snapshot timestamps, so a real model ablation should wait for "
+            "newer SteamDT bars or additional future snapshots."
+        )
+        next_plan = (
+            "Collect the next daily SteamDT bars, rebuild features, and rerun "
+            "this ablation once CSFloat coverage is nonzero."
         )
     else:
         interpretation = (
             "No CSFloat snapshot coverage is available locally. The feature join "
             "is implemented, but a real model ablation should wait until raw "
             "CSFloat listing snapshots are collected."
+        )
+        next_plan = (
+            "Collect CSFloat listing snapshots for the MVP universe, rebuild the "
+            "CSFloat feature parquet, rebuild features, and rerun Day 18."
         )
     return "\n".join(
         [
@@ -172,9 +196,7 @@ def build_ablation_report(ablation: pd.DataFrame) -> str:
             "",
             "## Next Plan",
             "",
-            "Collect CSFloat listing snapshots for the MVP universe, rebuild the "
-            "CSFloat feature parquet, rebuild features, and rerun baseline, "
-            "LightGBM, backtest, rejection, and Day 17 diagnostics.",
+            next_plan,
             "",
         ]
     )

@@ -42,7 +42,8 @@ def test_parse_csfloat_envelope_extracts_listing_features(tmp_path) -> None:
 
     assert row is not None
     assert row["csfloat_listing_count"] == 2
-    assert row["csfloat_min_price"] == 100
+    assert row["csfloat_min_price"] == 1.0
+    assert row["csfloat_median_price"] == 1.1
     assert row["csfloat_median_float"] == 0.26
     assert row["csfloat_mean_sticker_count"] == 1.0
 
@@ -64,9 +65,9 @@ def test_asof_join_only_uses_past_snapshots() -> None:
             "market_hash_name": ["AK-47 | Test (Field-Tested)"],
             "timestamp_ingested": [pd.Timestamp("2026-01-02", tz="UTC")],
             "csfloat_listing_count": [2],
-            "csfloat_min_price": [100.0],
-            "csfloat_median_price": [120.0],
-            "csfloat_mean_price": [110.0],
+            "csfloat_min_price": [1.0],
+            "csfloat_median_price": [1.2],
+            "csfloat_mean_price": [1.1],
             "csfloat_price_spread_proxy": [0.2],
             "csfloat_min_float": [0.2],
             "csfloat_median_float": [0.25],
@@ -79,7 +80,7 @@ def test_asof_join_only_uses_past_snapshots() -> None:
 
     assert joined.loc[0, "csfloat_snapshot_available"] == False
     assert joined.loc[1, "csfloat_snapshot_available"] == True
-    assert joined.loc[1, "csfloat_min_price_to_close"] == 5.0
+    assert joined.loc[1, "csfloat_min_price_to_close"] == 0.05
 
 
 def test_load_raw_csfloat_listing_features_missing_dir_returns_empty(tmp_path) -> None:
