@@ -54,25 +54,25 @@ class CapacitySizingConfig:
     """Capacity and liquidity assumptions for turning signals into sized trades."""
 
     portfolio_capital_usd: float = 1_000.0
-    max_notional_per_trade: float = 0.03
-    max_item_daily_notional: float = 0.03
-    max_bucket_daily_notional: float = 0.12
+    max_notional_per_trade_fraction: float = 0.03
+    max_item_daily_notional_fraction: float = 0.03
+    max_bucket_daily_notional_fraction: float = 0.12
     max_sell_count_participation: float = 0.05
     max_csfloat_listing_participation: float = 0.10
     fallback_liquidity_multiplier: float = 0.25
-    minimum_executable_notional: float = 0.001
+    minimum_executable_notional_fraction: float = 0.001
 
     def __post_init__(self) -> None:
         if self.portfolio_capital_usd <= 0:
             raise ValueError("portfolio_capital_usd must be positive")
         for field_name in (
-            "max_notional_per_trade",
-            "max_item_daily_notional",
-            "max_bucket_daily_notional",
+            "max_notional_per_trade_fraction",
+            "max_item_daily_notional_fraction",
+            "max_bucket_daily_notional_fraction",
             "max_sell_count_participation",
             "max_csfloat_listing_participation",
             "fallback_liquidity_multiplier",
-            "minimum_executable_notional",
+            "minimum_executable_notional_fraction",
         ):
             if getattr(self, field_name) < 0:
                 raise ValueError(f"{field_name} must be non-negative")
@@ -150,7 +150,7 @@ def apply_price_bucket_execution_costs(
     trades: pd.DataFrame,
     cost_buckets: list[dict[str, float | str]] | None = None,
 ) -> pd.DataFrame:
-    """Subtract extra spread/slippage cost by entry-price bucket."""
+    """Apply extra spread/slippage cost through entry and exit price multipliers."""
     buckets = cost_buckets or PRICE_BUCKET_COST_BPS
     frame = trades.copy()
     frame["entry_close"] = pd.to_numeric(frame["entry_close"], errors="coerce")
@@ -170,11 +170,26 @@ def apply_price_bucket_execution_costs(
         frame.loc[mask, "execution_price_bucket"] = bucket_name
         frame.loc[mask, "extra_execution_cost_bps"] = float(bucket["extra_cost_bps"])
     frame["extra_execution_cost_return"] = frame["extra_execution_cost_bps"] / 10_000.0
-    frame["realized_net_return"] = (
-        frame["realized_net_return_raw"] - frame["extra_execution_cost_return"]
+    frame["extra_entry_cost_multiplier"] = 1.0 + frame["extra_execution_cost_return"]
+    frame["extra_exit_cost_multiplier"] = 1.0 - frame["extra_execution_cost_return"]
+    frame["execution_cost_method"] = "entry_exit_price_multiplier"
+    frame["realized_net_return"] = cost_return_with_entry_exit_multipliers(
+        frame["realized_net_return_raw"],
+        frame["extra_execution_cost_return"],
     )
     frame["pnl"] = pd.to_numeric(frame["notional"], errors="coerce") * frame["realized_net_return"]
     return frame
+
+
+def cost_return_with_entry_exit_multipliers(
+    raw_return: pd.Series | float,
+    cost_return: pd.Series | float,
+) -> pd.Series | float:
+    """Apply extra cost as worse entry and exit prices, not flat return subtraction."""
+    gross_return = 1.0 + raw_return
+    entry_multiplier = 1.0 + cost_return
+    exit_multiplier = 1.0 - cost_return
+    return (gross_return * exit_multiplier / entry_multiplier) - 1.0
 
 
 def load_liquidity_table(path: Path = DEFAULT_LIQUIDITY_INPUT) -> pd.DataFrame:
@@ -236,14 +251,24 @@ def apply_capacity_adjusted_sizing(
     sized_rows: list[dict[str, Any]] = []
     sort_columns = [
         column
-        for column in ["model_name", "entry_timestamp", "strong_buy_score"]
+        for column in [
+            "model_name",
+            "entry_timestamp",
+            "strong_buy_score",
+            "market_hash_name",
+            "event_id",
+        ]
         if column in frame.columns
     ]
     ascending = [
         False if column == "strong_buy_score" else True
         for column in sort_columns
     ]
-    ordered = frame.sort_values(sort_columns, ascending=ascending) if sort_columns else frame
+    ordered = (
+        frame.sort_values(sort_columns, ascending=ascending, kind="mergesort")
+        if sort_columns
+        else frame
+    )
     usage: dict[tuple[str, str, str, str], float] = {}
 
     for _, row in ordered.iterrows():
@@ -254,18 +279,24 @@ def apply_capacity_adjusted_sizing(
         original_notional = _finite_float(row.get("original_notional"), 0.0)
         item_key = (model_name, entry_date, "item", item)
         bucket_key = (model_name, entry_date, "bucket", bucket)
-        item_remaining = max(resolved.max_item_daily_notional - usage.get(item_key, 0.0), 0.0)
-        bucket_remaining = max(resolved.max_bucket_daily_notional - usage.get(bucket_key, 0.0), 0.0)
+        item_remaining = max(
+            resolved.max_item_daily_notional_fraction - usage.get(item_key, 0.0),
+            0.0,
+        )
+        bucket_remaining = max(
+            resolved.max_bucket_daily_notional_fraction - usage.get(bucket_key, 0.0),
+            0.0,
+        )
         liquidity_cap = _liquidity_notional_cap(row, resolved, original_notional)
         capacity_notional = min(
             original_notional,
-            resolved.max_notional_per_trade,
+            resolved.max_notional_per_trade_fraction,
             item_remaining,
             bucket_remaining,
             liquidity_cap,
         )
         capacity_notional = max(capacity_notional, 0.0)
-        capacity_filled = capacity_notional >= resolved.minimum_executable_notional
+        capacity_filled = capacity_notional >= resolved.minimum_executable_notional_fraction
 
         output = row.to_dict()
         output["capacity_liquidity_notional_cap"] = float(liquidity_cap)

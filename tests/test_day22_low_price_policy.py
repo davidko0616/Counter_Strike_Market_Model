@@ -8,10 +8,11 @@ from cs_market_model.research.day22_low_price_policy import (
     add_liquidity_depth,
     apply_capacity_adjusted_sizing,
     apply_price_bucket_execution_costs,
+    cost_return_with_entry_exit_multipliers,
 )
 
 
-def test_price_bucket_execution_costs_subtract_expected_penalties() -> None:
+def test_price_bucket_execution_costs_apply_entry_exit_price_multipliers() -> None:
     trades = pd.DataFrame(
         {
             "entry_close": [0.5, 2.0, 10.0, 25.0],
@@ -24,8 +25,25 @@ def test_price_bucket_execution_costs_subtract_expected_penalties() -> None:
 
     assert result["execution_price_bucket"].tolist() == ["<=1", "1-5", "5-20", ">20"]
     assert result["extra_execution_cost_bps"].tolist() == [500.0, 250.0, 150.0, 100.0]
-    assert result["realized_net_return"].tolist() == pytest.approx([0.05, 0.075, 0.085, 0.09])
-    assert result["pnl"].tolist() == pytest.approx([0.05, 0.075, 0.085, 0.09])
+    assert result["execution_cost_method"].unique().tolist() == [
+        "entry_exit_price_multiplier"
+    ]
+    assert result["realized_net_return"].tolist() == pytest.approx(
+        [
+            (1.10 * 0.95 / 1.05) - 1.0,
+            (1.10 * 0.975 / 1.025) - 1.0,
+            (1.10 * 0.985 / 1.015) - 1.0,
+            (1.10 * 0.99 / 1.01) - 1.0,
+        ]
+    )
+    assert result["pnl"].tolist() == pytest.approx(result["realized_net_return"].tolist())
+
+
+def test_high_return_price_bucket_cost_is_not_flat_subtraction() -> None:
+    corrected = cost_return_with_entry_exit_multipliers(1.0, 0.05)
+
+    assert corrected == pytest.approx((2.0 * 0.95 / 1.05) - 1.0)
+    assert corrected < 0.95
 
 
 def test_capacity_adjusted_sizing_caps_item_bucket_and_liquidity() -> None:
@@ -51,11 +69,11 @@ def test_capacity_adjusted_sizing_caps_item_bucket_and_liquidity() -> None:
         trades,
         CapacitySizingConfig(
             portfolio_capital_usd=1_000.0,
-            max_notional_per_trade=0.05,
-            max_item_daily_notional=0.006,
-            max_bucket_daily_notional=0.009,
+            max_notional_per_trade_fraction=0.05,
+            max_item_daily_notional_fraction=0.006,
+            max_bucket_daily_notional_fraction=0.009,
             max_sell_count_participation=0.05,
-            minimum_executable_notional=0.001,
+            minimum_executable_notional_fraction=0.001,
         ),
     )
 
@@ -63,6 +81,44 @@ def test_capacity_adjusted_sizing_caps_item_bucket_and_liquidity() -> None:
         [0.005, 0.001, 0.003]
     )
     assert result["pnl"].tolist() == pytest.approx([0.0005, 0.0001, 0.0003])
+
+
+def test_capacity_adjusted_sizing_uses_market_hash_name_tiebreaker() -> None:
+    trades = pd.DataFrame(
+        {
+            "model_name": ["lightgbm_rank_blend"] * 3,
+            "market_hash_name": ["C", "A", "B"],
+            "entry_timestamp": pd.to_datetime(
+                ["2026-01-01", "2026-01-01", "2026-01-01"],
+                utc=True,
+            ),
+            "strong_buy_score": [0.9, 0.9, 0.9],
+            "entry_close": [10.0, 10.0, 10.0],
+            "execution_price_bucket": ["5-20", "5-20", "5-20"],
+            "steam_sell_count": [100.0, 100.0, 100.0],
+            "realized_net_return": [0.10, 0.10, 0.10],
+            "notional": [0.05, 0.05, 0.05],
+            "pnl": [0.005, 0.005, 0.005],
+        }
+    )
+
+    result = apply_capacity_adjusted_sizing(
+        trades,
+        CapacitySizingConfig(
+            portfolio_capital_usd=1_000.0,
+            max_notional_per_trade_fraction=0.05,
+            max_item_daily_notional_fraction=0.05,
+            max_bucket_daily_notional_fraction=0.075,
+            max_sell_count_participation=1.0,
+            minimum_executable_notional_fraction=0.001,
+        ),
+    )
+
+    assert result["market_hash_name"].tolist() == ["A", "B", "C"]
+    assert result["capacity_adjusted_notional"].tolist() == pytest.approx(
+        [0.05, 0.025, 0.0]
+    )
+    assert result["capacity_filled"].tolist() == [True, True, False]
 
 
 def test_add_liquidity_depth_merges_steam_sell_count() -> None:

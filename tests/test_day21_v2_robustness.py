@@ -55,6 +55,60 @@ def test_v2_enrichment_fills_blank_category_from_features() -> None:
     assert enriched.loc[0, "category"] == "rifle"
 
 
+def test_v2_enrichment_dedupes_duplicate_feature_rows_with_diagnostics() -> None:
+    features = pd.concat([_features(), _features().iloc[[0]]], ignore_index=True)
+
+    enriched = enrich_trades_with_features(_trades(), features)
+
+    assert len(enriched) == len(_trades())
+    duplicate = enriched[enriched["market_hash_name"].eq("A")].iloc[0]
+    assert duplicate["entry_close"] == 0.5
+    assert duplicate["feature_join_duplicate_count"] == 2
+    assert duplicate["feature_join_duplicate_conflict"] == False
+    assert duplicate["feature_join_conflicting_columns"] == ""
+
+
+def test_v2_enrichment_reports_conflicting_duplicate_feature_rows() -> None:
+    features = _features()
+    conflicting = features.iloc[[0]].copy()
+    conflicting["close"] = 0.7
+    features = pd.concat([features, conflicting], ignore_index=True)
+
+    enriched = enrich_trades_with_features(_trades(), features)
+    duplicate = enriched[enriched["market_hash_name"].eq("A")].iloc[0]
+
+    assert duplicate["entry_close"] == 0.5
+    assert duplicate["feature_join_duplicate_count"] == 2
+    assert duplicate["feature_join_duplicate_conflict"] == True
+    assert duplicate["feature_join_conflicting_columns"] == "close"
+
+
+def test_v2_enrichment_strict_mode_rejects_conflicting_duplicate_feature_rows() -> None:
+    features = _features()
+    conflicting = features.iloc[[0]].copy()
+    conflicting["close"] = 0.7
+    features = pd.concat([features, conflicting], ignore_index=True)
+
+    with pytest.raises(ValueError, match="Conflicting duplicate feature rows"):
+        enrich_trades_with_features(
+            _trades(),
+            features,
+            strict_duplicate_conflicts=True,
+        )
+
+
+def test_v2_top_trade_flags_feature_join_duplicate_conflict() -> None:
+    features = _features()
+    conflicting = features.iloc[[0]].copy()
+    conflicting["close"] = 0.7
+    features = pd.concat([features, conflicting], ignore_index=True)
+    enriched = enrich_trades_with_features(_trades(), features)
+
+    top = build_top_trade_audit(enriched, top_n=1)
+
+    assert "feature_join_duplicate_conflict" in top.loc[0, "audit_flags"]
+
+
 def _trades() -> pd.DataFrame:
     return pd.DataFrame(
         {

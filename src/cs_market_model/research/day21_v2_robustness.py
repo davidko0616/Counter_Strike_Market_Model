@@ -18,6 +18,7 @@ DEFAULT_SCENARIO_OUTPUT = reports_path("tables", "day21_v2_scenario_robustness.c
 DEFAULT_TOP_TRADES_OUTPUT = reports_path("tables", "day21_v2_top_trades.csv")
 DEFAULT_BUCKET_OUTPUT = reports_path("tables", "day21_v2_bucket_attribution.csv")
 DEFAULT_REPORT_OUTPUT = reports_path("backtests", "day21_v2_robustness_report.md")
+FEATURE_JOIN_KEYS = ["market_hash_name", "entry_timestamp"]
 
 
 @dataclass(frozen=True)
@@ -68,7 +69,12 @@ def run_day21_v2_robustness(
     )
 
 
-def enrich_trades_with_features(accepted: pd.DataFrame, features: pd.DataFrame) -> pd.DataFrame:
+def enrich_trades_with_features(
+    accepted: pd.DataFrame,
+    features: pd.DataFrame,
+    *,
+    strict_duplicate_conflicts: bool = False,
+) -> pd.DataFrame:
     """Attach entry-date price and item metadata to accepted trades."""
     trades = accepted.copy()
     trades["entry_timestamp"] = pd.to_datetime(trades["entry_timestamp"], utc=True)
@@ -96,13 +102,42 @@ def enrich_trades_with_features(accepted: pd.DataFrame, features: pd.DataFrame) 
         ]
         if column in features_at_entry.columns
     ]
-    enriched = trades.merge(
+    feature_join, duplicate_diagnostics = dedupe_features_for_trade_join(
         features_at_entry[feature_columns],
+    )
+    if strict_duplicate_conflicts and duplicate_diagnostics[
+        "feature_join_duplicate_conflict"
+    ].any():
+        conflicts = duplicate_diagnostics[
+            duplicate_diagnostics["feature_join_duplicate_conflict"]
+        ]
+        examples = conflicts.head(5)[FEATURE_JOIN_KEYS].to_dict("records")
+        raise ValueError(f"Conflicting duplicate feature rows detected: {examples}")
+
+    enriched = trades.merge(
+        feature_join,
         on=["market_hash_name", "entry_timestamp"],
         how="left",
         suffixes=("", "_feature"),
         validate="many_to_one",
     )
+    enriched = enriched.merge(
+        duplicate_diagnostics,
+        on=FEATURE_JOIN_KEYS,
+        how="left",
+        validate="many_to_one",
+    )
+    enriched["feature_join_duplicate_count"] = (
+        pd.to_numeric(enriched["feature_join_duplicate_count"], errors="coerce")
+        .fillna(1)
+        .astype(int)
+    )
+    enriched["feature_join_duplicate_conflict"] = enriched[
+        "feature_join_duplicate_conflict"
+    ].fillna(False).astype(bool)
+    enriched["feature_join_conflicting_columns"] = enriched[
+        "feature_join_conflicting_columns"
+    ].fillna("")
     for column in ["category", "weapon_type", "rarity", "wear", "source_type"]:
         feature_column = f"{column}_feature"
         if feature_column not in enriched.columns:
@@ -130,6 +165,57 @@ def enrich_trades_with_features(accepted: pd.DataFrame, features: pd.DataFrame) 
         labels=["<=1", "1-5", "5-20", "20-100", ">100"],
     ).astype("string")
     return enriched
+
+
+def dedupe_features_for_trade_join(
+    features: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Deduplicate feature rows and return per-key duplicate diagnostics."""
+    if features.empty:
+        diagnostics = pd.DataFrame(
+            columns=[
+                *FEATURE_JOIN_KEYS,
+                "feature_join_duplicate_count",
+                "feature_join_duplicate_conflict",
+                "feature_join_conflicting_columns",
+            ]
+        )
+        return features.copy(), diagnostics
+
+    frame = features.copy()
+    missing = [column for column in FEATURE_JOIN_KEYS if column not in frame.columns]
+    if missing:
+        raise ValueError(f"Missing feature join keys: {missing}")
+    frame["entry_timestamp"] = pd.to_datetime(frame["entry_timestamp"], utc=True)
+    value_columns = [column for column in frame.columns if column not in FEATURE_JOIN_KEYS]
+
+    diagnostic_rows: list[dict[str, Any]] = []
+    for keys, group in frame.groupby(FEATURE_JOIN_KEYS, dropna=False, sort=False):
+        if not isinstance(keys, tuple):
+            keys = (keys,)
+        conflicting_columns = [
+            column
+            for column in value_columns
+            if _normalized_nunique(group[column]) > 1
+        ]
+        row = dict(zip(FEATURE_JOIN_KEYS, keys, strict=True))
+        row.update(
+            {
+                "feature_join_duplicate_count": int(len(group)),
+                "feature_join_duplicate_conflict": bool(conflicting_columns),
+                "feature_join_conflicting_columns": "|".join(conflicting_columns),
+            }
+        )
+        diagnostic_rows.append(row)
+
+    diagnostics = pd.DataFrame(diagnostic_rows)
+    deduped = frame.drop_duplicates(FEATURE_JOIN_KEYS, keep="first").copy()
+    return deduped, diagnostics
+
+
+def _normalized_nunique(values: pd.Series) -> int:
+    normalized = values.map(lambda value: "<NA>" if pd.isna(value) else repr(value))
+    return int(normalized.nunique(dropna=False))
 
 
 def build_scenario_robustness(enriched: pd.DataFrame) -> pd.DataFrame:
@@ -201,6 +287,9 @@ def build_top_trade_audit(enriched: pd.DataFrame, top_n: int = 100) -> pd.DataFr
         "price_jump_100pct_count_7d",
         "price_jump_50pct_count_30d",
         "price_jump_100pct_count_30d",
+        "feature_join_duplicate_count",
+        "feature_join_duplicate_conflict",
+        "feature_join_conflicting_columns",
     ]
     available_columns = [column for column in columns if column in enriched.columns]
     top = enriched.sort_values("pnl", ascending=False).head(top_n).copy()
@@ -334,6 +423,8 @@ def _trade_audit_flags(row: pd.Series) -> str:
         flags.append("recent_100pct_jump")
     if row.get("row_coverage_30d", 1) < 0.75:
         flags.append("low_30d_coverage")
+    if row.get("feature_join_duplicate_conflict", False):
+        flags.append("feature_join_duplicate_conflict")
     return "|".join(flags)
 
 

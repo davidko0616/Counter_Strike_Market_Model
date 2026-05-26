@@ -116,18 +116,20 @@ def walk_forward_score_threshold_selection(
             test = model_trades[model_trades["_period"].eq(test_period)].copy()
             if test.empty:
                 continue
+            train_candidates = _apply_base_policy_gates(train, resolved_base_policy)
+            test_candidates = _apply_base_policy_gates(test, resolved_base_policy)
 
             selected_threshold, train_metrics = _select_threshold_from_training(
-                train,
+                train_candidates,
                 threshold_grid,
                 min_training_trades=min_training_trades,
                 min_accepted_trades=min_accepted_trades,
                 base_policy=resolved_base_policy,
             )
             policy = replace(resolved_base_policy, min_score_threshold=selected_threshold)
-            tagged_test = apply_rejection_policy(test, policy)
+            tagged_test = apply_rejection_policy(test_candidates, policy)
             accepted_test = tagged_test[tagged_test["is_accepted"]].copy()
-            test_metrics = _accepted_trade_metrics(accepted_test, len(test))
+            test_metrics = _accepted_trade_metrics(accepted_test, len(test_candidates))
 
             accepted_test["selected_threshold"] = selected_threshold
             accepted_test["test_period"] = test_period
@@ -137,7 +139,10 @@ def walk_forward_score_threshold_selection(
                 "model_name": model_name,
                 "test_period": test_period,
                 "training_period_count": len(train_periods),
-                "training_trade_count": len(train),
+                "raw_training_trade_count": len(train),
+                "training_trade_count": len(train_candidates),
+                "raw_test_trade_count": len(test),
+                "test_trade_count": len(test_candidates),
                 "selected_score_threshold": selected_threshold,
             }
             row.update({f"train_{key}": value for key, value in train_metrics.items()})
@@ -231,6 +236,21 @@ def _select_threshold_from_training(
         for key in best.index
         if key != "threshold"
     }
+
+
+def _apply_base_policy_gates(
+    ledger: pd.DataFrame,
+    base_policy: RejectionPolicy,
+) -> pd.DataFrame:
+    """Return rows eligible for score-threshold selection under non-score gates."""
+    if ledger.empty:
+        return ledger.copy()
+    non_score_policy = replace(base_policy, min_score_threshold=0.0)
+    tagged = apply_rejection_policy(ledger, non_score_policy)
+    return tagged[tagged["is_accepted"]].drop(
+        columns=["rejection_reason", "is_accepted"],
+        errors="ignore",
+    ).copy()
 
 
 def main() -> None:

@@ -80,3 +80,44 @@ def test_walk_forward_applies_base_policy_price_gate() -> None:
 
     assert not accepted.empty
     assert accepted["entry_close"].ge(1.0).all()
+
+
+def test_walk_forward_threshold_training_uses_same_base_price_gate() -> None:
+    rows = []
+    for month in ["2026-01", "2026-02"]:
+        for name, score, entry_close, trade_return in [
+            ("Low Price High Score", 0.95, 0.5, 0.20),
+            ("High Price Low Score", 0.40, 10.0, 0.10),
+        ]:
+            timestamp = pd.Timestamp(f"{month}-01", tz="UTC")
+            rows.append(
+                {
+                    "model_name": "lightgbm_rank_blend",
+                    "event_id": f"{month}-{name}",
+                    "market_hash_name": name,
+                    "entry_timestamp": timestamp,
+                    "exit_timestamp": timestamp + pd.Timedelta(days=7),
+                    "strong_buy_score": score,
+                    "label_market_regime": "normal",
+                    "realized_net_return": trade_return,
+                    "pnl": 0.05 * trade_return,
+                    "notional": 0.05,
+                    "is_actual_strong_buy": trade_return > 0,
+                    "entry_close": entry_close,
+                }
+            )
+    ledger = pd.DataFrame(rows)
+
+    selection, accepted = walk_forward_score_threshold_selection(
+        ledger,
+        thresholds=[0.0, 0.5, 0.9],
+        min_training_trades=1,
+        min_accepted_trades=1,
+        base_policy=RejectionPolicy(exclude_event_regime=False, min_entry_price=5.0),
+    )
+
+    february = selection[selection["test_period"].eq("2026-02")].iloc[0]
+    assert february["raw_training_trade_count"] == 2
+    assert february["training_trade_count"] == 1
+    assert february["selected_score_threshold"] == 0.0
+    assert accepted["entry_close"].ge(5.0).all()
