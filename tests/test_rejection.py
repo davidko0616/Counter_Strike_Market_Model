@@ -37,6 +37,7 @@ def _make_ledger(n: int = 20) -> pd.DataFrame:
         "pnl": rng.uniform(-0.003, 0.004, size=n),
         "label_market_regime": ["normal"] * (n - 2) + ["known_event"] * 2,
         "liquidity_quality_score_30d": np.linspace(0.2, 0.9, n),
+        "entry_close": np.linspace(0.25, 10.0, n),
         "effective_staleness_days": np.linspace(0.0, 5.0, n),
         "row_coverage_30d": np.linspace(0.3, 1.0, n),
         "price_jump_50pct_share_30d": np.linspace(0.0, 0.3, n),
@@ -85,6 +86,17 @@ class TestApplyRejectionPolicy:
         rejected = result[~result["is_accepted"]]
         assert not rejected.empty
         assert "low_liquidity" in rejected["rejection_reason"].values
+
+    def test_min_entry_price_threshold(self) -> None:
+        ledger = _make_ledger()
+        policy = RejectionPolicy(
+            min_entry_price=1.0,
+            exclude_event_regime=False,
+        )
+        result = apply_rejection_policy(ledger, policy)
+        low_price = result[result["entry_close"] < 1.0]
+        assert not low_price.empty
+        assert (low_price["rejection_reason"] == "low_entry_price").all()
 
     def test_staleness_threshold(self) -> None:
         ledger = _make_ledger()

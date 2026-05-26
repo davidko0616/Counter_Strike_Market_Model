@@ -6,6 +6,7 @@ from cs_market_model.backtesting.walk_forward_rejection import (
     summarize_walk_forward_selection,
     walk_forward_score_threshold_selection,
 )
+from cs_market_model.backtesting.rejection_policy import RejectionPolicy
 
 
 def _ledger() -> pd.DataFrame:
@@ -32,6 +33,7 @@ def _ledger() -> pd.DataFrame:
                     "pnl": notional * trade_return,
                     "notional": notional,
                     "is_actual_strong_buy": trade_return > 0,
+                    "entry_close": [0.5, 2.0, 3.0, 4.0][idx],
                 }
             )
     return pd.DataFrame(rows)
@@ -65,3 +67,16 @@ def test_walk_forward_summary_aggregates_accepted_test_trades() -> None:
     assert summary.loc[0, "walk_forward_periods"] == 3
     assert summary.loc[0, "accepted_count"] > 0
     assert summary.loc[0, "accepted_total_pnl"] > 0
+
+
+def test_walk_forward_applies_base_policy_price_gate() -> None:
+    _, accepted = walk_forward_score_threshold_selection(
+        _ledger(),
+        thresholds=[0.0],
+        min_training_trades=4,
+        min_accepted_trades=1,
+        base_policy=RejectionPolicy(exclude_event_regime=False, min_entry_price=1.0),
+    )
+
+    assert not accepted.empty
+    assert accepted["entry_close"].ge(1.0).all()

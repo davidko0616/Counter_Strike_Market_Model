@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -51,6 +51,7 @@ def run_day16_walk_forward_rejection(
     accepted_output: Path = DEFAULT_ACCEPTED_OUTPUT,
     min_training_trades: int = 100,
     min_accepted_trades: int = 20,
+    base_policy: RejectionPolicy | None = None,
 ) -> Day16Result:
     """Run walk-forward threshold selection from the no-filter trade ledger."""
     if not trade_ledger_input.exists():
@@ -61,6 +62,7 @@ def run_day16_walk_forward_rejection(
         ledger,
         min_training_trades=min_training_trades,
         min_accepted_trades=min_accepted_trades,
+        base_policy=base_policy,
     )
     summary = summarize_walk_forward_selection(selection, accepted)
 
@@ -86,6 +88,7 @@ def walk_forward_score_threshold_selection(
     *,
     min_training_trades: int = 100,
     min_accepted_trades: int = 20,
+    base_policy: RejectionPolicy | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Select score thresholds on prior months and evaluate the next month.
 
@@ -98,6 +101,7 @@ def walk_forward_score_threshold_selection(
 
     threshold_grid = thresholds or [round(v, 2) for v in np.arange(0.0, 0.95, 0.05)]
     frame = _normal_ledger_with_period(ledger)
+    resolved_base_policy = base_policy or RejectionPolicy(exclude_event_regime=False)
     if frame.empty:
         return pd.DataFrame(), pd.DataFrame()
 
@@ -118,11 +122,9 @@ def walk_forward_score_threshold_selection(
                 threshold_grid,
                 min_training_trades=min_training_trades,
                 min_accepted_trades=min_accepted_trades,
+                base_policy=resolved_base_policy,
             )
-            policy = RejectionPolicy(
-                min_score_threshold=selected_threshold,
-                exclude_event_regime=False,
-            )
+            policy = replace(resolved_base_policy, min_score_threshold=selected_threshold)
             tagged_test = apply_rejection_policy(test, policy)
             accepted_test = tagged_test[tagged_test["is_accepted"]].copy()
             test_metrics = _accepted_trade_metrics(accepted_test, len(test))
@@ -199,16 +201,15 @@ def _select_threshold_from_training(
     *,
     min_training_trades: int,
     min_accepted_trades: int,
+    base_policy: RejectionPolicy | None = None,
 ) -> tuple[float, dict[str, Any]]:
     if len(train) < min_training_trades:
         return 0.0, _accepted_trade_metrics(train, len(train))
 
     candidates: list[dict[str, Any]] = []
+    resolved_base_policy = base_policy or RejectionPolicy(exclude_event_regime=False)
     for threshold in thresholds:
-        policy = RejectionPolicy(
-            min_score_threshold=threshold,
-            exclude_event_regime=False,
-        )
+        policy = replace(resolved_base_policy, min_score_threshold=threshold)
         tagged = apply_rejection_policy(train, policy)
         accepted = tagged[tagged["is_accepted"]]
         metrics = _accepted_trade_metrics(accepted, len(train))
@@ -242,6 +243,7 @@ def main() -> None:
     parser.add_argument("--accepted-output", type=Path, default=DEFAULT_ACCEPTED_OUTPUT)
     parser.add_argument("--min-training-trades", type=int, default=100)
     parser.add_argument("--min-accepted-trades", type=int, default=20)
+    parser.add_argument("--min-entry-price", type=float, default=0.0)
     args = parser.parse_args()
 
     result = run_day16_walk_forward_rejection(
@@ -251,6 +253,10 @@ def main() -> None:
         accepted_output=args.accepted_output,
         min_training_trades=args.min_training_trades,
         min_accepted_trades=args.min_accepted_trades,
+        base_policy=RejectionPolicy(
+            exclude_event_regime=False,
+            min_entry_price=args.min_entry_price,
+        ),
     )
     print(f"Walk-forward periods: {result.selection_rows}")
     print(f"Accepted trades: {result.accepted_rows}")

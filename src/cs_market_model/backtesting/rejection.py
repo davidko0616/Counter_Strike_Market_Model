@@ -73,6 +73,12 @@ def apply_rejection_policy(
             mask = liq.lt(resolved_policy.min_liquidity_quality)
             reasons = reasons.where(reasons.notna() | ~mask, "low_liquidity")
 
+    # Gate 3b: minimum executable entry price
+    if resolved_policy.min_entry_price > 0 and "entry_close" in frame.columns:
+        entry_price = pd.to_numeric(frame["entry_close"], errors="coerce").fillna(0.0)
+        mask = entry_price.lt(resolved_policy.min_entry_price)
+        reasons = reasons.where(reasons.notna() | ~mask, "low_entry_price")
+
     # Gate 4: staleness
     if np.isfinite(resolved_policy.max_staleness_days):
         stale_col = "effective_staleness_days"

@@ -23,6 +23,7 @@ class RejectionPolicy:
     exclude_event_regime: bool = True
     min_row_coverage: float = 0.0
     reject_bear_without_alpha: bool = False
+    min_entry_price: float = 0.0
 
     def __post_init__(self) -> None:
         if self.min_score_threshold < 0:
@@ -35,6 +36,8 @@ class RejectionPolicy:
             raise ValueError("max_price_jump_share must be non-negative")
         if self.min_row_coverage < 0:
             raise ValueError("min_row_coverage must be non-negative")
+        if self.min_entry_price < 0:
+            raise ValueError("min_entry_price must be non-negative")
 
 
 def rejection_reason_for_row(
@@ -56,6 +59,11 @@ def rejection_reason_for_row(
         liquidity = _numeric_value(row, "liquidity_quality_score_30d", default=0.0)
         if liquidity < policy.min_liquidity_quality:
             return "low_liquidity"
+
+    if policy.min_entry_price > 0 and "entry_close" in row.index:
+        entry_price = _numeric_value(row, "entry_close", default=0.0)
+        if entry_price < policy.min_entry_price:
+            return "low_entry_price"
 
     if np.isfinite(policy.max_staleness_days) and "effective_staleness_days" in row.index:
         staleness = _numeric_value(row, "effective_staleness_days", default=0.0)
