@@ -524,7 +524,7 @@ Strict validation:
 
 Status:
 
-Results remain provisional until wear-variant validity is audited.
+Wear-variant validity audit is now complete; see the later wear-variant status section.
 
 ## Current Status After Capacity Config Naming Fix
 
@@ -552,7 +552,114 @@ Strict validation:
 
 Status:
 
-The original critical code blockers are fixed. Remaining serious review items include wear-variant validity, dashboard cache refresh, per-period top-N exclusion, and broader corrected reruns.
+The original critical code blockers are fixed. Remaining serious review items include dashboard cache refresh, per-period top-N exclusion, and broader corrected reruns.
+
+## Current Status After Wear-Variant Validity Audit
+
+Completed:
+
+1. MW/WW variant generation now intersects each requested wear range with the item's actual `min_float, max_float`.
+2. Impossible variants are excluded instead of having their float range reset to a generic wear range.
+3. `reports/tables/day19_excluded_wear_variants.csv` is written on each Day 19 universe rebuild.
+4. Strict tests cover valid intersections and impossible variant exclusions.
+5. The current v2 universe rebuild produced:
+   - 110 base Field-Tested items
+   - 40 valid MW/WW variant items
+   - 0 excluded impossible variants
+   - 150 total v2 universe items
+6. Day 22 and Day 23 were rerun after the audit.
+
+Corrected LightGBM results after wear-variant audit:
+
+| Policy | Capacity PnL | Trades | Profit Factor | Win Rate |
+| --- | ---: | ---: | ---: | ---: |
+| raw v2 costed | 0.7314 | 642 | 2.7641 | 68.54% |
+| `$1+` costed | 0.2025 | 403 | 1.8471 | 72.70% |
+| `$5+` costed | 0.1007 | 232 | 1.7592 | 81.03% |
+
+Strict validation:
+
+`pytest -W error` passes for the full test suite. Current count: `104 passed`.
+
+Status:
+
+The original critical blockers, wear-variant serious review item, corrected Day 21/17 reruns, and per-period top-N exclusion are fixed. The next serious item is dashboard cache freshness, but the immediate research move is `$5+` capacity sensitivity under harsher robustness assumptions.
+
+## Current Status After Corrected Day 21/17 Reruns
+
+Completed on the corrected Day 22 policy outputs:
+
+1. Day 21 robustness now includes both global top-winner removal and per-period top-winner removal.
+2. Day 21 drops stale feature-join diagnostics from accepted-trade inputs before attaching fresh diagnostics.
+3. Day 17 has a corrected policy-variant mode that reads Day 22 accepted trades and threshold selections directly.
+4. Strict tests cover stale feature-join diagnostic replacement and corrected policy-variant summaries.
+
+Corrected LightGBM Day 21 stress results:
+
+| Policy | Raw PnL | 50% Cap PnL | Remove Top 5 Global | Remove Top 5 Per Period | Profit Factor Raw |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| raw v2 costed | 0.7314 | 0.5084 | 0.4334 | 0.1864 | 2.7641 |
+| `$1+` costed | 0.2025 | 0.1841 | 0.1210 | -0.0302 | 1.8471 |
+| `$5+` costed | 0.1007 | 0.0918 | 0.0580 | -0.0244 | 1.7592 |
+
+Corrected Day 17 LightGBM policy summary:
+
+| Policy | Accepted Trades | Rejected Trades | Rejection Rate | Accepted PnL | Profit Factor | Median Entry Close |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| raw v2 costed | 642 | 996 | 60.81% | 0.7314 | 2.7641 | 1.14 |
+| `$1+` costed | 403 | 594 | 59.58% | 0.2025 | 1.8471 | 4.82 |
+| `$5+` costed | 232 | 322 | 58.12% | 0.1007 | 1.7592 | 23.04 |
+
+Interpretation:
+
+The broader corrected diagnostics are harsher than the headline Day 22/23 result. Global top-trade removal remains positive, but per-period top-winner removal turns `$1+` and `$5+` negative. This means the next `$5+` capacity sensitivity should test concentration and fill realism aggressively before treating `$5+` as a defensible default.
+
+## Current Status After `$5+` Capacity Sensitivity
+
+Completed:
+
+1. Capacity sizing now supports explicit open-position limits:
+   - max open positions
+   - max open positions per execution price bucket
+2. Day 24 runs `$5+` capacity sensitivity without overwriting Day 22 baseline outputs.
+3. Sensitivity scenarios test stricter item/day, bucket/day, liquidity participation, and open-position caps.
+4. Outputs:
+   - `reports/tables/day24_min_price_5_capacity_sensitivity.csv`
+   - `reports/tables/day24_min_price_5_capacity_period_attribution.csv`
+   - `reports/backtests/day24_min_price_5_capacity_sensitivity_report.md`
+
+LightGBM `$5+` capacity sensitivity:
+
+| Scenario | Trades | Capacity Rejected | PnL | Profit Factor | Max Drawdown | Top 2 Period PnL Share | Positive Period Share |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| current_day22 | 232 | 3 | 0.1007 | 1.7592 | -0.0381 | 67.77% | 90.91% |
+| strict_daily_half | 228 | 7 | 0.0499 | 1.7254 | -0.0200 | 68.43% | 90.91% |
+| strict_open_10 | 175 | 60 | 0.0332 | 2.0756 | -0.0090 | 63.53% | 90.91% |
+| severe_open_5 | 125 | 110 | 0.0217 | 2.5699 | -0.0034 | 58.03% | 81.82% |
+
+Interpretation:
+
+The `$5+` policy survives the configured capacity stress suite, but not strongly enough for a live-trading recommendation. The correct status is conservative default candidate for paper trading. Period concentration remains material, so the next work should strengthen rejection gates and dashboard visibility rather than loosen capacity assumptions.
+
+## Current Status After Dashboard Upgrade
+
+Completed:
+
+1. Dashboard now uses the corrected `$5+` conservative policy artifacts by default.
+2. Current signal view keeps both accepted and rejected candidates.
+3. Rejected candidates show explicit rejection reasons:
+   - below minimum price
+   - low score
+   - low liquidity
+   - missing price
+4. Capacity tab shows Day 24 stress scenarios, survival status, drawdown, profit factor, and period concentration.
+5. Freshness tab shows artifact paths, row counts, and modification timestamps.
+6. Dashboard artifact loading no longer uses stale Streamlit cache.
+7. Local dashboard verified at `http://localhost:8508`.
+
+Status:
+
+The dashboard is now aligned with the corrected research position: `$5+` is the conservative default candidate for paper trading, while capacity concentration and rejected candidates remain visible.
 
 ## Immediate Cleanup
 
@@ -569,10 +676,10 @@ The original critical code blockers are fixed. Remaining serious review items in
    - `entry_price >= $5`
 3. [x] Fix price-bucket slippage/spread math.
 4. [x] Rerun walk-forward policy comparison with matching train/test gates.
-5. [ ] Rerun Day 17 diagnostics with corrected policy variants.
-6. [ ] Rerun Day 21 robustness audit with corrected cost math.
-7. [ ] Rerun Day 22 and Day 23 with corrected capacity sizing.
-8. [ ] Compare raw v2 vs `$1+` vs `$5+` strategies using corrected outputs.
+5. [x] Rerun Day 17 diagnostics with corrected policy variants.
+6. [x] Rerun Day 21 robustness audit with corrected cost math.
+7. [x] Rerun Day 22 and Day 23 with corrected capacity sizing.
+8. [x] Compare raw v2 vs `$1+` vs `$5+` strategies using corrected outputs.
 
 ## Low-Price Artifact Audit
 
@@ -582,7 +689,7 @@ The original critical code blockers are fixed. Remaining serious review items in
 4. Check whether low-price items have enough listing depth using CSFloat and SteamDT `sellCount`.
 5. Add capacity limits by price bucket.
 6. Add max notional per item/day.
-7. Add max position count per price bucket.
+7. [x] Add max position count per price bucket.
 
 ## CSFloat Work
 
@@ -597,35 +704,35 @@ The original critical code blockers are fixed. Remaining serious review items in
 
 ## Universe Expansion Checks
 
-1. Verify v2 universe selection logic is acceptable.
-2. Review `configs/universe_mvp_v2.yaml`.
-3. Check MW/WW variants for valid float ranges and physical existence.
+1. [x] Verify v2 universe selection logic is acceptable.
+2. [x] Review `configs/universe_mvp_v2.yaml`.
+3. [x] Check MW/WW variants for valid float ranges and physical existence.
 4. Confirm the use of SteamDT `sellCount` as a liquidity proxy is acceptable.
 5. Consider adding `price_single` liquidity collection as a separate reusable collector.
 6. Add liquidity snapshot artifact for reproducibility.
-7. Add an excluded-variant audit table for impossible wear variants.
+7. [x] Add an excluded-variant audit table for impossible wear variants.
 
 ## Dashboard Work
 
-1. Add rejected candidates view.
-2. Add rejection reason details.
+1. [x] Add rejected candidates view.
+2. [x] Add rejection reason details.
 3. Add price-bucket filters.
-4. Add minimum price policy toggle.
+4. [x] Add minimum price policy toggle.
 5. Add CSFloat coverage panel.
 6. Add low-price warning indicators.
 7. Add model comparison view.
-8. Add Day 21 robustness summary panel.
-9. Fix dashboard cache refresh behavior.
-10. Show data/report freshness timestamps.
-11. Add manual refresh or cache-clear control.
+8. [x] Add Day 24 capacity stress summary panel.
+9. [x] Fix dashboard cache refresh behavior.
+10. [x] Show data/report freshness timestamps.
+11. [x] Add manual refresh or cache-clear control.
 
 ## Research Improvements
 
 1. Add normal-only headline metrics everywhere.
 2. Add capped-return headline metrics.
-3. Add per-period top-trade-excluded headline metrics.
+3. [x] Add per-period top-trade-excluded headline metrics.
 4. Add per-price-bucket PnL to every backtest report.
-5. Add per-wear and per-rarity attribution to Day 17 or Day 21.
+5. [x] Add per-wear and per-rarity attribution to Day 17 or Day 21.
 6. Add event-regime reports separately from normal-regime reports.
 7. Add capacity-adjusted PnL.
 8. Add rejection curves by price bucket.
@@ -646,6 +753,7 @@ The original critical code blockers are fixed. Remaining serious review items in
 8. Add duplicate-safe feature-join tests. Completed.
 9. Add train/test policy-gate consistency tests.
 10. Rename capacity config fields that represent fractions.
+11. Add impossible wear-variant exclusion tests.
 
 ## Recommended Order
 
@@ -662,9 +770,10 @@ Updated recommended order after capacity review:
 2. Fix walk-forward train/test policy consistency.
 3. Fix deterministic capacity ordering.
 4. Fix duplicate-safe feature joins.
-5. Validate MW/WW variants and remove impossible variants.
-6. Rerun Day 22 and Day 23.
-7. Rerun Day 21 robustness with corrected cost math.
-8. Only then run `$5+` capacity sensitivity.
-9. Upgrade dashboard after corrected `$5+` results are available.
+5. Validate MW/WW variants and remove impossible variants. Completed.
+6. Rerun Day 22 and Day 23. Completed.
+7. Rerun Day 21 robustness with corrected cost math. Completed.
+8. Only then run `$5+` capacity sensitivity. Completed.
+9. Upgrade dashboard after corrected `$5+` results are available. Completed.
 10. Continue waiting for CSFloat point-in-time coverage so Day 18 can become a true ablation.
+11. Add stricter rejection gates for the `$5+` paper-trade candidate.

@@ -22,10 +22,14 @@ def test_v2_robustness_scenarios_cap_and_remove_top_trades() -> None:
     raw = lightgbm[lightgbm["scenario"].eq("raw_all_accepted")].iloc[0]
     cap = lightgbm[lightgbm["scenario"].eq("cap_returns_50pct")].iloc[0]
     without_top = lightgbm[lightgbm["scenario"].eq("exclude_top_1_pnl_trades")].iloc[0]
+    without_top_per_period = lightgbm[
+        lightgbm["scenario"].eq("exclude_top_1_pnl_trades_per_period")
+    ].iloc[0]
 
     assert raw["total_pnl"] == 0.24
     assert cap["total_pnl"] == 0.04
     assert without_top["total_pnl"] == pytest.approx(-0.01)
+    assert without_top_per_period["total_pnl"] == pytest.approx(-0.01)
 
 
 def test_v2_robustness_top_trade_flags_low_price_extreme_return() -> None:
@@ -81,6 +85,20 @@ def test_v2_enrichment_reports_conflicting_duplicate_feature_rows() -> None:
     assert duplicate["feature_join_duplicate_count"] == 2
     assert duplicate["feature_join_duplicate_conflict"] == True
     assert duplicate["feature_join_conflicting_columns"] == "close"
+
+
+def test_v2_enrichment_replaces_existing_feature_join_diagnostics() -> None:
+    trades = _trades()
+    trades["feature_join_duplicate_count"] = 99
+    trades["feature_join_duplicate_conflict"] = True
+    trades["feature_join_conflicting_columns"] = "stale"
+
+    enriched = enrich_trades_with_features(trades, _features())
+
+    duplicate = enriched[enriched["market_hash_name"].eq("A")].iloc[0]
+    assert duplicate["feature_join_duplicate_count"] == 1
+    assert duplicate["feature_join_duplicate_conflict"] == False
+    assert duplicate["feature_join_conflicting_columns"] == ""
 
 
 def test_v2_enrichment_strict_mode_rejects_conflicting_duplicate_feature_rows() -> None:

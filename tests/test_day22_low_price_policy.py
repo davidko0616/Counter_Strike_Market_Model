@@ -121,6 +121,52 @@ def test_capacity_adjusted_sizing_uses_market_hash_name_tiebreaker() -> None:
     assert result["capacity_filled"].tolist() == [True, True, False]
 
 
+def test_capacity_adjusted_sizing_enforces_open_position_limits() -> None:
+    trades = pd.DataFrame(
+        {
+            "model_name": ["lightgbm_rank_blend"] * 3,
+            "market_hash_name": ["A", "B", "C"],
+            "entry_timestamp": pd.to_datetime(
+                ["2026-01-01", "2026-01-02", "2026-01-03"],
+                utc=True,
+            ),
+            "exit_timestamp": pd.to_datetime(
+                ["2026-01-10", "2026-01-11", "2026-01-12"],
+                utc=True,
+            ),
+            "strong_buy_score": [0.9, 0.8, 0.7],
+            "entry_close": [10.0, 10.0, 10.0],
+            "execution_price_bucket": ["5-20", "5-20", "5-20"],
+            "steam_sell_count": [100.0, 100.0, 100.0],
+            "realized_net_return": [0.10, 0.10, 0.10],
+            "notional": [0.05, 0.05, 0.05],
+            "pnl": [0.005, 0.005, 0.005],
+        }
+    )
+
+    result = apply_capacity_adjusted_sizing(
+        trades,
+        CapacitySizingConfig(
+            portfolio_capital_usd=1_000.0,
+            max_notional_per_trade_fraction=0.05,
+            max_item_daily_notional_fraction=0.05,
+            max_bucket_daily_notional_fraction=0.15,
+            max_sell_count_participation=1.0,
+            minimum_executable_notional_fraction=0.001,
+            max_open_positions=2,
+            max_open_positions_per_bucket=1,
+        ),
+    )
+
+    assert result["capacity_filled"].tolist() == [True, False, False]
+    assert result["capacity_rejection_reason"].tolist() == [
+        "",
+        "open_position_limit",
+        "open_position_limit",
+    ]
+    assert result["capacity_bucket_open_positions_before"].tolist() == [0, 1, 1]
+
+
 def test_add_liquidity_depth_merges_steam_sell_count() -> None:
     trades = pd.DataFrame({"market_hash_name": ["A", "B"]})
     liquidity = pd.DataFrame(

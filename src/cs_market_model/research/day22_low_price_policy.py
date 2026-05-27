@@ -61,6 +61,8 @@ class CapacitySizingConfig:
     max_csfloat_listing_participation: float = 0.10
     fallback_liquidity_multiplier: float = 0.25
     minimum_executable_notional_fraction: float = 0.001
+    max_open_positions: int | None = None
+    max_open_positions_per_bucket: int | None = None
 
     def __post_init__(self) -> None:
         if self.portfolio_capital_usd <= 0:
@@ -75,6 +77,10 @@ class CapacitySizingConfig:
             "minimum_executable_notional_fraction",
         ):
             if getattr(self, field_name) < 0:
+                raise ValueError(f"{field_name} must be non-negative")
+        for field_name in ("max_open_positions", "max_open_positions_per_bucket"):
+            value = getattr(self, field_name)
+            if value is not None and value < 0:
                 raise ValueError(f"{field_name} must be non-negative")
 
 
@@ -240,6 +246,10 @@ def apply_capacity_adjusted_sizing(
 
     frame = trades.copy()
     frame["entry_timestamp"] = pd.to_datetime(frame["entry_timestamp"], utc=True)
+    if "exit_timestamp" in frame.columns:
+        frame["exit_timestamp"] = pd.to_datetime(frame["exit_timestamp"], utc=True)
+    else:
+        frame["exit_timestamp"] = frame["entry_timestamp"]
     frame["entry_date"] = frame["entry_timestamp"].dt.strftime("%Y-%m-%d")
     if "execution_price_bucket" not in frame.columns:
         frame["execution_price_bucket"] = "unknown"
@@ -270,12 +280,28 @@ def apply_capacity_adjusted_sizing(
         else frame
     )
     usage: dict[tuple[str, str, str, str], float] = {}
+    open_positions: dict[str, list[dict[str, Any]]] = {}
 
     for _, row in ordered.iterrows():
         model_name = str(row.get("model_name", "model"))
         entry_date = str(row.get("entry_date", ""))
         item = str(row.get("market_hash_name", ""))
         bucket = str(row.get("execution_price_bucket", "unknown"))
+        entry_timestamp = pd.Timestamp(row.get("entry_timestamp"))
+        model_open = _active_open_positions(
+            open_positions.get(model_name, []),
+            entry_timestamp,
+        )
+        open_positions[model_name] = model_open
+        open_position_count = len(model_open)
+        bucket_open_position_count = sum(
+            1 for position in model_open if position["bucket"] == bucket
+        )
+        open_position_capacity_available = _open_position_capacity_available(
+            open_position_count,
+            bucket_open_position_count,
+            resolved,
+        )
         original_notional = _finite_float(row.get("original_notional"), 0.0)
         item_key = (model_name, entry_date, "item", item)
         bucket_key = (model_name, entry_date, "bucket", bucket)
@@ -296,18 +322,27 @@ def apply_capacity_adjusted_sizing(
             liquidity_cap,
         )
         capacity_notional = max(capacity_notional, 0.0)
+        if not open_position_capacity_available:
+            capacity_notional = 0.0
         capacity_filled = capacity_notional >= resolved.minimum_executable_notional_fraction
 
         output = row.to_dict()
         output["capacity_liquidity_notional_cap"] = float(liquidity_cap)
         output["capacity_item_remaining_before"] = float(item_remaining)
         output["capacity_bucket_remaining_before"] = float(bucket_remaining)
+        output["capacity_open_positions_before"] = int(open_position_count)
+        output["capacity_bucket_open_positions_before"] = int(bucket_open_position_count)
+        output["capacity_max_open_positions"] = resolved.max_open_positions
+        output["capacity_max_open_positions_per_bucket"] = resolved.max_open_positions_per_bucket
         output["capacity_adjusted_notional"] = float(capacity_notional)
         output["capacity_notional_multiplier"] = (
             float(capacity_notional / original_notional) if original_notional > 0 else 0.0
         )
         output["capacity_filled"] = bool(capacity_filled)
-        output["capacity_rejection_reason"] = "" if capacity_filled else "insufficient_capacity"
+        output["capacity_rejection_reason"] = _capacity_rejection_reason(
+            capacity_filled,
+            open_position_capacity_available,
+        )
         output["notional"] = float(capacity_notional)
         output["pnl"] = float(capacity_notional * _finite_float(row.get("realized_net_return"), 0.0))
         sized_rows.append(output)
@@ -315,6 +350,13 @@ def apply_capacity_adjusted_sizing(
         if capacity_filled:
             usage[item_key] = usage.get(item_key, 0.0) + capacity_notional
             usage[bucket_key] = usage.get(bucket_key, 0.0) + capacity_notional
+            model_open.append(
+                {
+                    "exit_timestamp": pd.Timestamp(row.get("exit_timestamp")),
+                    "bucket": bucket,
+                }
+            )
+            open_positions[model_name] = model_open
 
     return pd.DataFrame(sized_rows)
 
@@ -410,6 +452,43 @@ def _first_finite(row: pd.Series, columns: list[str]) -> float | None:
         if np.isfinite(value):
             return value
     return None
+
+
+def _active_open_positions(
+    positions: list[dict[str, Any]],
+    entry_timestamp: pd.Timestamp,
+) -> list[dict[str, Any]]:
+    return [
+        position
+        for position in positions
+        if pd.Timestamp(position["exit_timestamp"]) > entry_timestamp
+    ]
+
+
+def _open_position_capacity_available(
+    open_position_count: int,
+    bucket_open_position_count: int,
+    config: CapacitySizingConfig,
+) -> bool:
+    if config.max_open_positions is not None and open_position_count >= config.max_open_positions:
+        return False
+    if (
+        config.max_open_positions_per_bucket is not None
+        and bucket_open_position_count >= config.max_open_positions_per_bucket
+    ):
+        return False
+    return True
+
+
+def _capacity_rejection_reason(
+    capacity_filled: bool,
+    open_position_capacity_available: bool,
+) -> str:
+    if capacity_filled:
+        return ""
+    if not open_position_capacity_available:
+        return "open_position_limit"
+    return "insufficient_capacity"
 
 
 def _finite_float(value: object, default: float = 0.0) -> float:

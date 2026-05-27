@@ -77,6 +77,14 @@ def enrich_trades_with_features(
 ) -> pd.DataFrame:
     """Attach entry-date price and item metadata to accepted trades."""
     trades = accepted.copy()
+    trades = trades.drop(
+        columns=[
+            "feature_join_duplicate_count",
+            "feature_join_duplicate_conflict",
+            "feature_join_conflicting_columns",
+        ],
+        errors="ignore",
+    )
     trades["entry_timestamp"] = pd.to_datetime(trades["entry_timestamp"], utc=True)
     features_at_entry = features.copy()
     features_at_entry["entry_timestamp"] = pd.to_datetime(features_at_entry["timestamp"], utc=True)
@@ -239,6 +247,13 @@ def build_scenario_robustness(enriched: pd.DataFrame) -> pd.DataFrame:
             (
                 f"exclude_top_{top_n}_pnl_trades",
                 _exclude_top_pnl_by_model(enriched, top_n),
+                None,
+            )
+        )
+        scenarios.append(
+            (
+                f"exclude_top_{top_n}_pnl_trades_per_period",
+                _exclude_top_pnl_by_model_period(enriched, top_n),
                 None,
             )
         )
@@ -409,6 +424,20 @@ def _exclude_top_pnl_by_model(frame: pd.DataFrame, top_n: int) -> pd.Series:
     return mask
 
 
+def _exclude_top_pnl_by_model_period(frame: pd.DataFrame, top_n: int) -> pd.Series:
+    mask = _all_mask(frame)
+    if frame.empty:
+        return mask
+    top_indices = (
+        frame.sort_values("pnl", ascending=False)
+        .groupby(["model_name", "entry_month"], sort=False)
+        .head(top_n)
+        .index
+    )
+    mask.loc[top_indices] = False
+    return mask
+
+
 def _trade_audit_flags(row: pd.Series) -> str:
     flags: list[str] = []
     if pd.notna(row.get("entry_close")) and row["entry_close"] < 1:
@@ -454,12 +483,14 @@ def _interpret(
     raw = _scenario(lightgbm, "raw_all_accepted")
     cap50 = _scenario(lightgbm, "cap_returns_50pct")
     exclude_top5 = _scenario(lightgbm, "exclude_top_5_pnl_trades")
+    exclude_top5_period = _scenario(lightgbm, "exclude_top_5_pnl_trades_per_period")
     normal = _scenario(lightgbm, "normal_only")
     notes = [
         f"Raw LightGBM accepted PnL is {raw['total_pnl']:.4f} across {int(raw['trade_count'])} trades.",
         f"Normal-only PnL is {normal['total_pnl']:.4f}.",
         f"With returns capped at 50%, PnL is {cap50['total_pnl']:.4f}.",
         f"After removing the top 5 trades, PnL is {exclude_top5['total_pnl']:.4f}.",
+        f"After removing the top 5 trades in each period, PnL is {exclude_top5_period['total_pnl']:.4f}.",
     ]
     flagged = top_trades[
         top_trades["model_name"].eq("lightgbm_rank_blend")

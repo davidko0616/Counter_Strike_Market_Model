@@ -5,6 +5,8 @@ import pandas as pd
 from cs_market_model.research.day17_diagnostics import (
     build_accepted_rejected_profile,
     build_item_attribution,
+    build_policy_variant_group_attribution,
+    build_policy_variant_summary,
     build_threshold_stability,
     tag_walk_forward_acceptance,
 )
@@ -71,3 +73,43 @@ def test_threshold_stability_counts_changes() -> None:
 
     assert stability.loc[0, "period_count"] == 2
     assert stability.loc[0, "threshold_changes"] == 0
+
+
+def test_policy_variant_summary_uses_corrected_accepted_trades_and_selection_counts() -> None:
+    trades = pd.DataFrame(
+        {
+            "policy_variant": ["min_price_5_costed", "min_price_5_costed"],
+            "model_name": ["model", "model"],
+            "market_hash_name": ["A", "B"],
+            "test_period": ["2026-01", "2026-01"],
+            "entry_timestamp": pd.to_datetime(["2026-01-01", "2026-01-02"], utc=True),
+            "realized_net_return": [0.20, -0.05],
+            "pnl": [0.02, -0.005],
+            "notional": [0.1, 0.1],
+            "entry_close": [6.0, 7.0],
+            "is_actual_strong_buy": [True, False],
+            "capacity_notional_multiplier": [1.0, 0.5],
+        }
+    )
+    selections = pd.DataFrame(
+        {
+            "policy_variant": ["min_price_5_costed"],
+            "model_name": ["model"],
+            "test_period": ["2026-01"],
+            "selected_score_threshold": [0.8],
+            "test_accepted_count": [2],
+            "test_rejected_count": [8],
+            "test_accepted_total_pnl": [0.015],
+        }
+    )
+
+    summary = build_policy_variant_summary(trades, selections)
+    item = build_policy_variant_group_attribution(
+        trades,
+        ["policy_variant", "model_name", "market_hash_name"],
+    )
+
+    assert summary.loc[0, "accepted_pnl"] == 0.015
+    assert summary.loc[0, "rejection_rate"] == 0.8
+    assert summary.loc[0, "profit_factor"] == 4.0
+    assert set(item["market_hash_name"]) == {"A", "B"}
