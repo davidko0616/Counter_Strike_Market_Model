@@ -27,7 +27,7 @@ DEFAULT_COMPARISON_OUTPUT = reports_path("tables", "day22_low_price_policy_compa
 DEFAULT_REPORT_OUTPUT = reports_path("backtests", "day22_low_price_policy_report.md")
 
 PRICE_BUCKET_COST_BPS = [
-    {"bucket": "<=1", "min_price": 0.0, "max_price": 1.0, "extra_cost_bps": 500.0},
+    {"bucket": "<1", "min_price": 0.0, "max_price": 1.0, "extra_cost_bps": 500.0},
     {"bucket": "1-5", "min_price": 1.0, "max_price": 5.0, "extra_cost_bps": 250.0},
     {"bucket": "5-20", "min_price": 5.0, "max_price": 20.0, "extra_cost_bps": 150.0},
     {"bucket": ">20", "min_price": 20.0, "max_price": np.inf, "extra_cost_bps": 100.0},
@@ -78,6 +78,8 @@ class CapacitySizingConfig:
         ):
             if getattr(self, field_name) < 0:
                 raise ValueError(f"{field_name} must be non-negative")
+            if getattr(self, field_name) > 1:
+                raise ValueError(f"{field_name} must be at most 1.0")
         for field_name in ("max_open_positions", "max_open_positions_per_bucket"):
             value = getattr(self, field_name)
             if value is not None and value < 0:
@@ -239,7 +241,13 @@ def apply_capacity_adjusted_sizing(
     trades: pd.DataFrame,
     config: CapacitySizingConfig | None = None,
 ) -> pd.DataFrame:
-    """Resize accepted trades by per-trade, per-day, and depth-based capacity caps."""
+    """Resize accepted trades by per-trade, per-day, and depth-based capacity caps.
+
+    ``notional`` and ``pnl`` must be capital-normalized units, not raw dollar
+    amounts. The upstream portfolio backtest compounds equity, so notional may
+    exceed 1.0, but obviously dollar-scale inputs are refused to avoid mixing
+    units.
+    """
     resolved = config or CapacitySizingConfig()
     if trades.empty:
         return trades.copy()
@@ -255,6 +263,7 @@ def apply_capacity_adjusted_sizing(
         frame["execution_price_bucket"] = "unknown"
     frame["original_notional"] = pd.to_numeric(frame["notional"], errors="coerce").fillna(0.0)
     frame["original_pnl"] = pd.to_numeric(frame["pnl"], errors="coerce").fillna(0.0)
+    _validate_capital_normalized_units(frame, resolved)
     frame["realized_net_return"] = pd.to_numeric(frame["realized_net_return"], errors="coerce")
     frame["entry_close"] = pd.to_numeric(frame["entry_close"], errors="coerce")
 
@@ -458,11 +467,12 @@ def _active_open_positions(
     positions: list[dict[str, Any]],
     entry_timestamp: pd.Timestamp,
 ) -> list[dict[str, Any]]:
-    return [
-        position
-        for position in positions
-        if pd.Timestamp(position["exit_timestamp"]) > entry_timestamp
-    ]
+    active: list[dict[str, Any]] = []
+    for position in positions:
+        exit_timestamp = pd.Timestamp(position["exit_timestamp"])
+        if pd.isna(exit_timestamp) or exit_timestamp > entry_timestamp:
+            active.append(position)
+    return active
 
 
 def _open_position_capacity_available(
@@ -489,6 +499,21 @@ def _capacity_rejection_reason(
     if not open_position_capacity_available:
         return "open_position_limit"
     return "insufficient_capacity"
+
+
+def _validate_capital_normalized_units(
+    frame: pd.DataFrame,
+    config: CapacitySizingConfig,
+) -> None:
+    if "original_notional" not in frame.columns or frame["original_notional"].empty:
+        return
+    max_abs = pd.to_numeric(frame["original_notional"], errors="coerce").abs().max()
+    dollar_like_limit = max(20.0, config.portfolio_capital_usd * config.max_notional_per_trade_fraction)
+    if pd.notna(max_abs) and max_abs > dollar_like_limit:
+        raise ValueError(
+            f"original_notional appears to be in dollar terms (max_abs={max_abs:.2f}). "
+            "Capacity sizing expects capital-normalized units, not raw dollars."
+        )
 
 
 def _finite_float(value: object, default: float = 0.0) -> float:

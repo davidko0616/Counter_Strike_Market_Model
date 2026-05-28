@@ -41,6 +41,20 @@ def test_v2_robustness_top_trade_flags_low_price_extreme_return() -> None:
     assert "return_ge_100pct" in top.loc[0, "audit_flags"]
 
 
+def test_scenario_exclude_event_overlap_without_column_matches_raw() -> None:
+    trades = _trades().drop(columns=["label_overlaps_known_market_event"])
+    features = _features()
+    enriched = enrich_trades_with_features(trades, features)
+
+    scenarios = build_scenario_robustness(enriched)
+    lightgbm = scenarios[scenarios["model_name"].eq("lightgbm_rank_blend")]
+    raw = lightgbm[lightgbm["scenario"].eq("raw_all_accepted")].iloc[0]
+    event = lightgbm[lightgbm["scenario"].eq("exclude_known_event_overlap")].iloc[0]
+
+    assert event["trade_count"] == raw["trade_count"]
+    assert event["total_pnl"] == raw["total_pnl"]
+
+
 def test_v2_bucket_attribution_includes_wear_and_price_bucket() -> None:
     enriched = enrich_trades_with_features(_trades(), _features())
 

@@ -233,7 +233,7 @@ def build_scenario_robustness(enriched: pd.DataFrame) -> pd.DataFrame:
         ("normal_only", enriched["label_market_regime"].astype(str).eq("normal"), None),
         (
             "exclude_known_event_overlap",
-            ~enriched.get("label_overlaps_known_market_event", False).fillna(False).astype(bool),
+            _exclude_known_event_overlap_mask(enriched),
             None,
         ),
         ("cap_returns_100pct", _all_mask(enriched), 1.0),
@@ -408,6 +408,12 @@ def _summary_row(group: pd.DataFrame, scenario_name: str, model_name: str) -> di
 
 def _all_mask(frame: pd.DataFrame) -> pd.Series:
     return pd.Series(True, index=frame.index)
+
+
+def _exclude_known_event_overlap_mask(frame: pd.DataFrame) -> pd.Series:
+    if "label_overlaps_known_market_event" not in frame.columns:
+        return _all_mask(frame)
+    return ~frame["label_overlaps_known_market_event"].fillna(False).astype(bool)
 
 
 def _exclude_top_pnl_by_model(frame: pd.DataFrame, top_n: int) -> pd.Series:

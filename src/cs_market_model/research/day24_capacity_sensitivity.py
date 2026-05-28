@@ -1,4 +1,10 @@
-"""Day 24 capacity sensitivity for the conservative $5+ policy."""
+"""Day 24 capacity sensitivity for the conservative $5+ policy.
+
+Threshold selection is still capacity-unaware: score thresholds are selected on
+the full $5+ eligible population, then capacity constraints are applied as a
+post-filter. Severe capacity scenarios may need their own threshold search in a
+future validation pass.
+"""
 
 from __future__ import annotations
 
@@ -38,6 +44,10 @@ DEFAULT_REPORT_OUTPUT = reports_path(
     "day24_min_price_5_capacity_sensitivity_report.md",
 )
 DEFAULT_BACKTEST_OUTPUT_DIR = reports_path("backtests")
+MAX_TOP_2_PERIOD_PNL_SHARE = 0.80
+MIN_POSITIVE_PERIOD_SHARE = 0.50
+MAX_ACCEPTED_DRAWDOWN = -0.10
+MIN_ACCEPTED_TRADES = 50
 
 
 @dataclass(frozen=True)
@@ -228,11 +238,10 @@ def build_capacity_summary_rows(
                 else np.nan,
                 "top_1_period_pnl_share": _top_period_share(period_pnl, total_pnl, 1),
                 "top_2_period_pnl_share": _top_period_share(period_pnl, total_pnl, 2),
-                "survives_capacity_stress": bool(
-                    total_pnl > 0
-                    and _profit_factor(model_filled) > 1.0
-                    and len(model_filled) >= 50
-                    and _top_period_share(period_pnl, total_pnl, 2) <= 1.0
+                "survives_capacity_stress": survives_capacity_stress(
+                    model_filled,
+                    period_pnl,
+                    total_pnl,
                 ),
                 **_config_fields(scenario.config),
             }
@@ -291,6 +300,18 @@ def build_markdown_report(
             )
         ),
         "",
+        "## Survival Criteria",
+        "",
+        (
+            f"Survival requires positive PnL, profit factor above 1.0, at least "
+            f"{MIN_ACCEPTED_TRADES} accepted trades, top-2 period PnL share at or "
+            f"below {MAX_TOP_2_PERIOD_PNL_SHARE:.0%}, positive-period share at or "
+            f"above {MIN_POSITIVE_PERIOD_SHARE:.0%}, and max drawdown above "
+            f"{MAX_ACCEPTED_DRAWDOWN:.0%}."
+        ),
+        "",
+        "Note: threshold selection does not integrate capacity constraints; capacity is applied after threshold selection.",
+        "",
         "## Weakest LightGBM Periods",
         "",
         _markdown_table(
@@ -311,8 +332,7 @@ def build_markdown_report(
 def _decision(lightgbm: pd.DataFrame) -> str:
     if lightgbm.empty:
         return "No LightGBM capacity rows were generated."
-    survivors = lightgbm[lightgbm["survives_capacity_stress"]]
-    if survivors.empty:
+    if not lightgbm["survives_capacity_stress"].fillna(False).all():
         return (
             "The $5+ policy does not survive the configured capacity stress suite. "
             "Use paper-trade-only status and strengthen rejection gates before treating it as a default."
@@ -336,6 +356,30 @@ def _period_pnl(frame: pd.DataFrame) -> pd.Series:
         period_column = "_period"
         frame = temp
     return pd.to_numeric(frame["pnl"], errors="coerce").groupby(frame[period_column].astype(str)).sum()
+
+
+def survives_capacity_stress(
+    filled: pd.DataFrame,
+    period_pnl: pd.Series,
+    total_pnl: float,
+) -> bool:
+    """Return whether a scenario passes the operational capacity stress checks."""
+    if filled.empty or period_pnl.empty:
+        return False
+    profit_factor = _profit_factor(filled)
+    top_2_share = _top_period_share(period_pnl, total_pnl, 2)
+    positive_period_share = float(period_pnl.gt(0).mean())
+    max_drawdown = _max_drawdown(filled)
+    return bool(
+        total_pnl > 0
+        and profit_factor > 1.0
+        and len(filled) >= MIN_ACCEPTED_TRADES
+        and pd.notna(top_2_share)
+        and top_2_share <= MAX_TOP_2_PERIOD_PNL_SHARE
+        and positive_period_share >= MIN_POSITIVE_PERIOD_SHARE
+        and pd.notna(max_drawdown)
+        and max_drawdown > MAX_ACCEPTED_DRAWDOWN
+    )
 
 
 def _top_period_share(period_pnl: pd.Series, total_pnl: float, top_n: int) -> float:
@@ -369,7 +413,8 @@ def _max_drawdown(frame: pd.DataFrame) -> float:
     if "entry_timestamp" in ordered.columns:
         ordered["entry_timestamp"] = pd.to_datetime(ordered["entry_timestamp"], utc=True)
         ordered = ordered.sort_values(["entry_timestamp", "market_hash_name"])
-    equity = 1.0 + pd.to_numeric(ordered["pnl"], errors="coerce").fillna(0.0).cumsum()
+    initial_equity = 1.0
+    equity = initial_equity + pd.to_numeric(ordered["pnl"], errors="coerce").fillna(0.0).cumsum()
     running_peak = equity.cummax()
     return float(equity.div(running_peak).sub(1.0).min())
 

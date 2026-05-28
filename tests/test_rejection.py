@@ -14,6 +14,7 @@ from cs_market_model.backtesting.rejection import (
     summarize_normal_accepted_trades,
     _accepted_trade_metrics,
 )
+from cs_market_model.backtesting.rejection_policy import rejection_reason_for_row
 
 
 def _make_ledger(n: int = 20) -> pd.DataFrame:
@@ -160,6 +161,30 @@ class TestApplyRejectionPolicy:
         )
         result = apply_rejection_policy(ledger, policy)
         assert not result["is_accepted"].any()
+
+    def test_vectorized_and_scalar_rejection_produce_same_results(self) -> None:
+        ledger = _make_ledger(30)
+        policy = RejectionPolicy(
+            min_score_threshold=0.5,
+            min_liquidity_quality=0.3,
+            min_entry_price=1.0,
+            max_staleness_days=3.0,
+            max_price_jump_share=0.2,
+            exclude_event_regime=True,
+            min_row_coverage=0.5,
+            reject_bear_without_alpha=True,
+        )
+
+        vectorized = apply_rejection_policy(ledger, policy)
+        scalar_reasons = ledger.apply(
+            lambda row: rejection_reason_for_row(row, policy) or "",
+            axis=1,
+        )
+
+        assert (
+            vectorized["rejection_reason"].fillna("").reset_index(drop=True)
+            == scalar_reasons.reset_index(drop=True)
+        ).all()
 
 
 class TestRejectionCurve:

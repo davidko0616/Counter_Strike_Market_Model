@@ -8,6 +8,7 @@ from cs_market_model.research.day24_capacity_sensitivity import (
     CapacitySensitivityScenario,
     build_capacity_summary_rows,
     build_period_attribution,
+    survives_capacity_stress,
 )
 
 
@@ -89,3 +90,26 @@ def test_capacity_sensitivity_period_attribution_groups_by_test_period() -> None
 
     assert period["test_period"].tolist() == ["2026-01", "2026-02"]
     assert period["accepted_total_pnl"].tolist() == [0.010, -0.002]
+
+
+def test_survives_capacity_stress_rejects_concentrated_pnl() -> None:
+    periods = [f"2026-{month:02d}" for month in range(1, 7)]
+    pnl_by_period = [0.45, 0.45, 0.03, 0.03, 0.02, 0.02]
+    rows = []
+    for period, pnl in zip(periods, pnl_by_period, strict=True):
+        for index in range(10):
+            rows.append(
+                {
+                    "model_name": "lightgbm_rank_blend",
+                    "market_hash_name": f"{period}-{index}",
+                    "entry_timestamp": pd.Timestamp(f"{period}-01", tz="UTC"),
+                    "test_period": period,
+                    "realized_net_return": 0.10,
+                    "pnl": pnl / 10,
+                    "notional": 0.01,
+                }
+            )
+    filled = pd.DataFrame(rows)
+    period_pnl = filled.groupby("test_period")["pnl"].sum()
+
+    assert survives_capacity_stress(filled, period_pnl, float(period_pnl.sum())) is False

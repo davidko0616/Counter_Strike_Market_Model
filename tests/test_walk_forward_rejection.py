@@ -54,6 +54,13 @@ def test_walk_forward_threshold_uses_prior_periods_only() -> None:
     assert accepted["test_period"].min() == "2026-01"
 
 
+def test_walk_forward_empty_ledger_returns_empty_outputs() -> None:
+    selection, accepted = walk_forward_score_threshold_selection(pd.DataFrame())
+
+    assert selection.empty
+    assert accepted.empty
+
+
 def test_walk_forward_summary_aggregates_accepted_test_trades() -> None:
     selection, accepted = walk_forward_score_threshold_selection(
         _ledger(),
