@@ -15,7 +15,7 @@ from cs_market_model.backtesting.portfolio import (
     DEFAULT_TRADE_LEDGER_OUTPUT,
     load_predictions,
 )
-from cs_market_model.config import PROJECT_ROOT, CONFIG_DIR, data_path, reports_path
+from cs_market_model.config import CONFIG_DIR, PROJECT_ROOT, data_path, reports_path
 
 DEFAULT_PRICE_BARS_INPUT = data_path("processed", "price_bars_day3_first_pull.parquet")
 DEFAULT_MARKET_EVENTS_INPUT = CONFIG_DIR / "market_events.yaml"
@@ -189,9 +189,7 @@ def summarize_outlier_impact(
                 "total_pnl": float(total_pnl),
                 "outlier_pnl": float(outlier_pnl),
                 "pnl_without_outliers": float(total_pnl - outlier_pnl),
-                "outlier_pnl_share": float(outlier_pnl / total_pnl)
-                if total_pnl != 0
-                else np.nan,
+                "outlier_pnl_share": float(outlier_pnl / total_pnl) if total_pnl != 0 else np.nan,
                 "max_selected_return": float(
                     pd.to_numeric(
                         model_trades["realized_net_return"],
@@ -260,13 +258,9 @@ def summarize_return_sensitivity(
                     "model_name": model_name,
                     "trade_count": int(len(model_trades)),
                     "total_pnl": float(model_trades["scenario_pnl"].sum()),
-                    "average_trade_return": float(
-                        model_trades["scenario_return"].mean()
-                    ),
+                    "average_trade_return": float(model_trades["scenario_return"].mean()),
                     "win_rate": float((model_trades["scenario_return"] > 0).mean()),
-                    "precision_at_selected": float(
-                        model_trades["is_actual_strong_buy"].mean()
-                    )
+                    "precision_at_selected": float(model_trades["is_actual_strong_buy"].mean())
                     if "is_actual_strong_buy" in model_trades.columns
                     else np.nan,
                 }
@@ -406,9 +400,9 @@ def _attach_price_bar_context(audit: pd.DataFrame, price_bars_input: Path) -> pd
         how="left",
     )
     frame["gross_close_return"] = frame["exit_close"] / frame["entry_close"] - 1.0
-    frame["price_bar_context_available"] = frame["entry_close"].notna() & frame[
-        "exit_close"
-    ].notna()
+    frame["price_bar_context_available"] = (
+        frame["entry_close"].notna() & frame["exit_close"].notna()
+    )
     return frame
 
 

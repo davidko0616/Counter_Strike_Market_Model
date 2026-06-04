@@ -11,10 +11,8 @@ import pandas as pd
 
 from cs_market_model.config import PROJECT_ROOT, data_path, reports_path
 from cs_market_model.features.build_features import (
-    DEFAULT_FEATURES_OUTPUT,
     DEFAULT_METADATA_INPUT,
     DEFAULT_PRICE_BARS_INPUT,
-    audit_feature_table,
     build_feature_table,
     feature_columns,
     load_item_metadata,
@@ -62,9 +60,7 @@ def run_day18_csfloat_ablation_setup(
     price_bars = load_price_bars(price_bars_input)
     metadata = load_item_metadata(metadata_input)
     csfloat_features = (
-        pd.read_parquet(csfloat_features_input)
-        if csfloat_features_input.exists()
-        else None
+        pd.read_parquet(csfloat_features_input) if csfloat_features_input.exists() else None
     )
 
     steamdt_only = build_feature_table(price_bars, metadata, csfloat_features=None).drop(
@@ -73,7 +69,12 @@ def run_day18_csfloat_ablation_setup(
     )
     csfloat_enabled = build_feature_table(price_bars, metadata, csfloat_features=csfloat_features)
 
-    for output in (steamdt_features_output, csfloat_enabled_features_output, ablation_output, report_output):
+    for output in (
+        steamdt_features_output,
+        csfloat_enabled_features_output,
+        ablation_output,
+        report_output,
+    ):
         output.parent.mkdir(parents=True, exist_ok=True)
     steamdt_only.to_parquet(steamdt_features_output, index=False)
     csfloat_enabled.to_parquet(csfloat_enabled_features_output, index=False)
@@ -112,7 +113,9 @@ def build_ablation_setup_table(
         if csfloat_snapshots is None or csfloat_snapshots.empty
         else int(csfloat_snapshots["market_hash_name"].nunique())
     )
-    csfloat_status = "ready_for_model_ablation" if covered_rows > 0 else "no_csfloat_snapshot_coverage"
+    csfloat_status = (
+        "ready_for_model_ablation" if covered_rows > 0 else "no_csfloat_snapshot_coverage"
+    )
     if snapshot_count > 0 and covered_rows == 0:
         csfloat_status = "snapshots_collected_no_price_bar_coverage"
 
@@ -205,7 +208,9 @@ def build_ablation_report(ablation: pd.DataFrame) -> str:
 def _markdown_table(frame: pd.DataFrame) -> str:
     display = frame.copy()
     for column in display.select_dtypes(include=[np.number]).columns:
-        display[column] = display[column].map(lambda value: f"{value:.4f}" if pd.notna(value) else "")
+        display[column] = display[column].map(
+            lambda value: f"{value:.4f}" if pd.notna(value) else ""
+        )
     columns = [str(column) for column in display.columns]
     rows = [
         "| " + " | ".join(columns) + " |",
@@ -220,7 +225,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Run Day 18 CSFloat ablation setup.")
     parser.add_argument("--price-bars-input", type=Path, default=DEFAULT_PRICE_BARS_INPUT)
     parser.add_argument("--metadata-input", type=Path, default=DEFAULT_METADATA_INPUT)
-    parser.add_argument("--csfloat-features-input", type=Path, default=DEFAULT_CSFLOAT_FEATURES_OUTPUT)
+    parser.add_argument(
+        "--csfloat-features-input", type=Path, default=DEFAULT_CSFLOAT_FEATURES_OUTPUT
+    )
     args = parser.parse_args()
 
     result = run_day18_csfloat_ablation_setup(

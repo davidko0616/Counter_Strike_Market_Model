@@ -31,4 +31,3 @@ def data_path(*parts: str) -> Path:
 def reports_path(*parts: str) -> Path:
     """Return a path inside the local reports directory."""
     return PROJECT_ROOT.joinpath("reports", *parts)
-

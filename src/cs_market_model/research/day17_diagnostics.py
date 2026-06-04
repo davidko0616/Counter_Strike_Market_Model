@@ -45,8 +45,12 @@ DEFAULT_POLICY_INPUTS = {
 }
 DEFAULT_POLICY_SELECTION_INPUTS = {
     "raw_v2_costed": reports_path("tables", "day22_raw_v2_costed_threshold_selection.csv"),
-    "min_price_1_costed": reports_path("tables", "day22_min_price_1_costed_threshold_selection.csv"),
-    "min_price_5_costed": reports_path("tables", "day22_min_price_5_costed_threshold_selection.csv"),
+    "min_price_1_costed": reports_path(
+        "tables", "day22_min_price_1_costed_threshold_selection.csv"
+    ),
+    "min_price_5_costed": reports_path(
+        "tables", "day22_min_price_5_costed_threshold_selection.csv"
+    ),
 }
 DEFAULT_POLICY_SUMMARY_OUTPUT = reports_path("tables", "day17_policy_variant_summary.csv")
 DEFAULT_POLICY_ITEM_OUTPUT = reports_path("tables", "day17_policy_variant_item_attribution.csv")
@@ -56,7 +60,9 @@ DEFAULT_POLICY_THRESHOLD_OUTPUT = reports_path(
     "tables",
     "day17_policy_variant_threshold_stability.csv",
 )
-DEFAULT_POLICY_REPORT_OUTPUT = reports_path("backtests", "day17_policy_variant_diagnostics_report.md")
+DEFAULT_POLICY_REPORT_OUTPUT = reports_path(
+    "backtests", "day17_policy_variant_diagnostics_report.md"
+)
 
 DIAGNOSTIC_FEATURES = [
     "strong_buy_score",
@@ -214,7 +220,14 @@ def run_day17_policy_variant_diagnostics(
     threshold = build_policy_variant_threshold_stability(selections)
     report = build_policy_variant_markdown_report(summary, item, period, buckets, threshold)
 
-    outputs = [summary_output, item_output, period_output, bucket_output, threshold_output, report_output]
+    outputs = [
+        summary_output,
+        item_output,
+        period_output,
+        bucket_output,
+        threshold_output,
+        report_output,
+    ]
     for output in outputs:
         output.parent.mkdir(parents=True, exist_ok=True)
     summary.to_csv(summary_output, index=False)
@@ -436,7 +449,8 @@ def build_policy_variant_markdown_report(
         "## Purpose",
         "",
         "This rerun reads the corrected Day 22 policy-variant accepted trades directly,",
-        "so diagnostics use the same gates, execution costs, and capacity sizing as test evaluation.",
+        "so diagnostics use the same gates, execution costs, and capacity sizing",
+        "as test evaluation.",
         "",
         "## LightGBM Summary",
         "",
@@ -502,11 +516,12 @@ def tag_walk_forward_acceptance(
         sel_lookup["test_period"] = sel_lookup["test_period"].astype(str)
         frame["model_name"] = frame["model_name"].astype(str)
         frame = frame.merge(
-            sel_lookup, on=["model_name", "test_period"], how="left", suffixes=("", "_sel"),
+            sel_lookup,
+            on=["model_name", "test_period"],
+            how="left",
+            suffixes=("", "_sel"),
         )
-        frame["selected_threshold"] = (
-            frame["selected_score_threshold"].fillna(0.0)
-        )
+        frame["selected_threshold"] = frame["selected_score_threshold"].fillna(0.0)
         frame = frame.drop(columns=["selected_score_threshold"], errors="ignore")
 
     tagged_frames = []
@@ -524,19 +539,21 @@ def build_item_attribution(tagged: pd.DataFrame) -> pd.DataFrame:
         return pd.DataFrame()
     for (model_name, item), group in tagged.groupby(["model_name", "market_hash_name"]):
         accepted = group[group["is_accepted"]]
-        rows.append({
-            "model_name": model_name,
-            "market_hash_name": item,
-            "base_trade_count": int(len(group)),
-            "accepted_trade_count": int(len(accepted)),
-            "rejection_rate": float(1.0 - len(accepted) / len(group)),
-            "base_pnl": float(group["pnl"].sum()),
-            "accepted_pnl": float(accepted["pnl"].sum()),
-            "base_avg_return": float(group["realized_net_return"].mean()),
-            "accepted_avg_return": _mean_or_nan(accepted, "realized_net_return"),
-            "accepted_win_rate": _win_rate_or_nan(accepted),
-            "accepted_precision": _precision_or_nan(accepted),
-        })
+        rows.append(
+            {
+                "model_name": model_name,
+                "market_hash_name": item,
+                "base_trade_count": int(len(group)),
+                "accepted_trade_count": int(len(accepted)),
+                "rejection_rate": float(1.0 - len(accepted) / len(group)),
+                "base_pnl": float(group["pnl"].sum()),
+                "accepted_pnl": float(accepted["pnl"].sum()),
+                "base_avg_return": float(group["realized_net_return"].mean()),
+                "accepted_avg_return": _mean_or_nan(accepted, "realized_net_return"),
+                "accepted_win_rate": _win_rate_or_nan(accepted),
+                "accepted_precision": _precision_or_nan(accepted),
+            }
+        )
     return pd.DataFrame(rows).sort_values(["model_name", "accepted_pnl"], ascending=[True, False])
 
 
@@ -547,19 +564,21 @@ def build_period_attribution(tagged: pd.DataFrame) -> pd.DataFrame:
         return pd.DataFrame()
     for (model_name, period), group in tagged.groupby(["model_name", "test_period"]):
         accepted = group[group["is_accepted"]]
-        rows.append({
-            "model_name": model_name,
-            "test_period": period,
-            "base_trade_count": int(len(group)),
-            "accepted_trade_count": int(len(accepted)),
-            "rejection_rate": float(1.0 - len(accepted) / len(group)),
-            "selected_threshold": float(group["selected_threshold"].iloc[0]),
-            "base_pnl": float(group["pnl"].sum()),
-            "accepted_pnl": float(accepted["pnl"].sum()),
-            "accepted_avg_return": _mean_or_nan(accepted, "realized_net_return"),
-            "accepted_win_rate": _win_rate_or_nan(accepted),
-            "accepted_precision": _precision_or_nan(accepted),
-        })
+        rows.append(
+            {
+                "model_name": model_name,
+                "test_period": period,
+                "base_trade_count": int(len(group)),
+                "accepted_trade_count": int(len(accepted)),
+                "rejection_rate": float(1.0 - len(accepted) / len(group)),
+                "selected_threshold": float(group["selected_threshold"].iloc[0]),
+                "base_pnl": float(group["pnl"].sum()),
+                "accepted_pnl": float(accepted["pnl"].sum()),
+                "accepted_avg_return": _mean_or_nan(accepted, "realized_net_return"),
+                "accepted_win_rate": _win_rate_or_nan(accepted),
+                "accepted_precision": _precision_or_nan(accepted),
+            }
+        )
     return pd.DataFrame(rows).sort_values(["model_name", "test_period"])
 
 
@@ -582,7 +601,9 @@ def build_accepted_rejected_profile(tagged: pd.DataFrame) -> pd.DataFrame:
         }
         for feature in DIAGNOSTIC_FEATURES:
             if feature in group.columns:
-                row[f"{feature}_mean"] = float(pd.to_numeric(group[feature], errors="coerce").mean())
+                row[f"{feature}_mean"] = float(
+                    pd.to_numeric(group[feature], errors="coerce").mean()
+                )
         rows.append(row)
     return pd.DataFrame(rows).sort_values(["model_name", "selection_bucket"])
 
@@ -594,22 +615,24 @@ def build_threshold_stability(selection: pd.DataFrame) -> pd.DataFrame:
     rows: list[dict[str, Any]] = []
     for model_name, group in selection.groupby("model_name"):
         thresholds = pd.to_numeric(group["selected_score_threshold"], errors="coerce")
-        rows.append({
-            "model_name": model_name,
-            "period_count": int(len(group)),
-            "threshold_mean": float(thresholds.mean()),
-            "threshold_median": float(thresholds.median()),
-            "threshold_std": float(thresholds.std(ddof=0)),
-            "threshold_min": float(thresholds.min()),
-            "threshold_max": float(thresholds.max()),
-            "threshold_changes": int(thresholds.ne(thresholds.shift()).sum() - 1),
-            "positive_test_period_share": float(
-                (pd.to_numeric(group["test_accepted_total_pnl"], errors="coerce") > 0).mean()
-            ),
-            "total_test_pnl": float(
-                pd.to_numeric(group["test_accepted_total_pnl"], errors="coerce").sum()
-            ),
-        })
+        rows.append(
+            {
+                "model_name": model_name,
+                "period_count": int(len(group)),
+                "threshold_mean": float(thresholds.mean()),
+                "threshold_median": float(thresholds.median()),
+                "threshold_std": float(thresholds.std(ddof=0)),
+                "threshold_min": float(thresholds.min()),
+                "threshold_max": float(thresholds.max()),
+                "threshold_changes": int(thresholds.ne(thresholds.shift()).sum() - 1),
+                "positive_test_period_share": float(
+                    (pd.to_numeric(group["test_accepted_total_pnl"], errors="coerce") > 0).mean()
+                ),
+                "total_test_pnl": float(
+                    pd.to_numeric(group["test_accepted_total_pnl"], errors="coerce").sum()
+                ),
+            }
+        )
     return pd.DataFrame(rows).sort_values("total_test_pnl", ascending=False)
 
 
@@ -632,17 +655,19 @@ def build_feature_return_diagnostics(tagged: pd.DataFrame) -> pd.DataFrame:
             temp = model_rows.assign(_feature_bin=bins)
             for feature_bin, group in temp.groupby("_feature_bin", observed=True):
                 accepted = group[group["is_accepted"]]
-                rows.append({
-                    "model_name": model_name,
-                    "feature": feature,
-                    "feature_bin": str(feature_bin),
-                    "trade_count": int(len(group)),
-                    "accepted_count": int(len(accepted)),
-                    "base_avg_return": float(group["realized_net_return"].mean()),
-                    "accepted_avg_return": _mean_or_nan(accepted, "realized_net_return"),
-                    "base_pnl": float(group["pnl"].sum()),
-                    "accepted_pnl": float(accepted["pnl"].sum()),
-                })
+                rows.append(
+                    {
+                        "model_name": model_name,
+                        "feature": feature,
+                        "feature_bin": str(feature_bin),
+                        "trade_count": int(len(group)),
+                        "accepted_count": int(len(accepted)),
+                        "base_avg_return": float(group["realized_net_return"].mean()),
+                        "accepted_avg_return": _mean_or_nan(accepted, "realized_net_return"),
+                        "base_pnl": float(group["pnl"].sum()),
+                        "accepted_pnl": float(accepted["pnl"].sum()),
+                    }
+                )
     return pd.DataFrame(rows)
 
 
@@ -652,33 +677,37 @@ def build_label_quality_snapshot(labels: pd.DataFrame, features: pd.DataFrame) -
     if not labels.empty:
         group_cols = ["label_market_regime", "label_class"]
         for keys, group in labels.groupby(group_cols, dropna=False):
-            rows.append({
-                "source": "labels",
-                "group": "|".join(str(key) for key in keys),
-                "row_count": int(len(group)),
-                "mean_net_return": float(group["net_return_at_label"].mean()),
-                "median_net_return": float(group["net_return_at_label"].median()),
-                "mean_row_coverage_30d": float(group["row_coverage_30d"].mean())
-                if "row_coverage_30d" in group.columns
-                else np.nan,
-                "mean_staleness_days": float(group["effective_staleness_days"].mean())
-                if "effective_staleness_days" in group.columns
-                else np.nan,
-            })
+            rows.append(
+                {
+                    "source": "labels",
+                    "group": "|".join(str(key) for key in keys),
+                    "row_count": int(len(group)),
+                    "mean_net_return": float(group["net_return_at_label"].mean()),
+                    "median_net_return": float(group["net_return_at_label"].median()),
+                    "mean_row_coverage_30d": float(group["row_coverage_30d"].mean())
+                    if "row_coverage_30d" in group.columns
+                    else np.nan,
+                    "mean_staleness_days": float(group["effective_staleness_days"].mean())
+                    if "effective_staleness_days" in group.columns
+                    else np.nan,
+                }
+            )
     if not features.empty:
-        rows.append({
-            "source": "features",
-            "group": "coverage",
-            "row_count": int(len(features)),
-            "mean_net_return": np.nan,
-            "median_net_return": np.nan,
-            "mean_row_coverage_30d": float(features["row_coverage_30d"].mean())
-            if "row_coverage_30d" in features.columns
-            else np.nan,
-            "mean_staleness_days": float(features["effective_staleness_days"].mean())
-            if "effective_staleness_days" in features.columns
-            else np.nan,
-        })
+        rows.append(
+            {
+                "source": "features",
+                "group": "coverage",
+                "row_count": int(len(features)),
+                "mean_net_return": np.nan,
+                "median_net_return": np.nan,
+                "mean_row_coverage_30d": float(features["row_coverage_30d"].mean())
+                if "row_coverage_30d" in features.columns
+                else np.nan,
+                "mean_staleness_days": float(features["effective_staleness_days"].mean())
+                if "effective_staleness_days" in features.columns
+                else np.nan,
+            }
+        )
     return pd.DataFrame(rows)
 
 
@@ -776,9 +805,7 @@ def _threshold_lookup(selection: pd.DataFrame) -> dict[tuple[str, str], float]:
     if selection.empty:
         return {}
     return {
-        (str(row["model_name"]), str(row["test_period"])): float(
-            row["selected_score_threshold"]
-        )
+        (str(row["model_name"]), str(row["test_period"])): float(row["selected_score_threshold"])
         for _, row in selection.iterrows()
     }
 
@@ -871,7 +898,9 @@ def _markdown_table(frame: pd.DataFrame) -> str:
         return "_No rows._"
     display = frame.copy()
     for column in display.select_dtypes(include=[np.number]).columns:
-        display[column] = display[column].map(lambda value: f"{value:.4f}" if pd.notna(value) else "")
+        display[column] = display[column].map(
+            lambda value: f"{value:.4f}" if pd.notna(value) else ""
+        )
     columns = [str(column) for column in display.columns]
     rows = [
         "| " + " | ".join(columns) + " |",

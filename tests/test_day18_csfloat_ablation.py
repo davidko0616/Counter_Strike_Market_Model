@@ -22,7 +22,7 @@ def test_ablation_setup_reports_not_ready_without_snapshot_coverage() -> None:
     csfloat = table[table["variant"].eq("steamdt_plus_csfloat")].iloc[0]
 
     assert csfloat["csfloat_covered_rows"] == 0
-    assert csfloat["ablation_ready"] == False
+    assert not csfloat["ablation_ready"]
     assert csfloat["status"] == "no_csfloat_snapshot_coverage"
 
 
@@ -50,7 +50,7 @@ def test_ablation_setup_distinguishes_snapshots_without_price_bar_coverage() -> 
     csfloat = table[table["variant"].eq("steamdt_plus_csfloat")].iloc[0]
 
     assert csfloat["csfloat_covered_rows"] == 0
-    assert csfloat["ablation_ready"] == False
+    assert not csfloat["ablation_ready"]
     assert csfloat["status"] == "snapshots_collected_no_price_bar_coverage"
 
 
@@ -78,5 +78,5 @@ def test_ablation_setup_reports_ready_with_snapshot_coverage() -> None:
     csfloat = table[table["variant"].eq("steamdt_plus_csfloat")].iloc[0]
 
     assert csfloat["csfloat_covered_rows"] == 1
-    assert csfloat["ablation_ready"] == True
+    assert csfloat["ablation_ready"]
     assert csfloat["status"] == "ready_for_model_ablation"

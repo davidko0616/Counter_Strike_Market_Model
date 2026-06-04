@@ -661,6 +661,57 @@ Status:
 
 The dashboard is now aligned with the corrected research position: `$5+` is the conservative default candidate for paper trading, while capacity concentration and rejected candidates remain visible.
 
+## Current Status After Stricter `$5+` Paper-Trade Gates
+
+Completed:
+
+1. Added default-off rejection policy gates for:
+   - minimum recent item excess return
+   - maximum 30-day absolute return instability
+2. Added `paper_trade_5_plus` to `configs/backtest.yaml`.
+3. Wired the new gates through scalar rejection, vectorized rejection, YAML policy loading, rejection curves, and normal-only summaries.
+4. Added Day 25 paper-trade rejection analysis:
+   - `src/cs_market_model/research/day25_paper_trade_rejection.py`
+   - `reports/tables/day25_paper_trade_rejection_summary.csv`
+   - `reports/tables/day25_paper_trade_rejection_period_attribution.csv`
+   - `reports/backtests/day25_paper_trade_rejection_report.md`
+5. Added regression tests for the new gates and Day 25 rejection-source accounting.
+
+Day 25 LightGBM comparison:
+
+| Scenario | Accepted | Base-Gate Rejected | Score Rejected | Capacity Rejected | PnL | Profit Factor | Max Drawdown | Top-2 Period Share | Positive Period Share | Survives Stress |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| current Day 24 `$5+` gates | 195 | 1083 | 347 | 2 | 0.0413 | 1.3241 | -0.0379 | 60.06% | 90.91% | Yes |
+| stricter `$5+` gates | 94 | 1532 | 0 | 1 | 0.1022 | 1.8276 | -0.0260 | 145.86% | 36.36% | No |
+| stricter `$5+` gates + strict open 10 | 93 | 1532 | 0 | 2 | 0.0349 | 1.8473 | -0.0088 | 142.49% | 36.36% | No |
+
+Interpretation:
+
+The stricter gates improve isolated PnL under current capacity, but they do not clear the paper-trade survival rules because period concentration worsens and only 36.36% of periods are positive. This means the stricter `$5+` policy is implemented as a candidate gate set, not a promoted trading decision. Keep live capital rejected and treat this as research-mode until dashboard visibility, degradation monitoring, and paper-trade A/B criteria are added.
+
+CSFloat listing-count gates are intentionally not part of this stricter policy yet because point-in-time coverage is still the Day 18 blocker.
+
+## Current Status Before Finalization
+
+Completed:
+
+1. Repo-wide Ruff now passes.
+2. The full test suite passes locally.
+3. Day 19 CSFloat coverage no longer crashes on mixed timezone values.
+4. Day 19 and Day 18 both run cleanly and produce status reports.
+5. Current local CSFloat coverage is explicitly reported as unavailable:
+   - 150 price-bar items
+   - 0 items with local CSFloat snapshot features
+   - 0 post-snapshot covered items
+   - 0 CSFloat-covered feature rows
+6. Final submission docs were added:
+   - `docs/final_submission_report.md`
+   - `SUBMISSION_CHECKLIST.md`
+
+Interpretation:
+
+CSFloat true model ablation cannot be produced from the current local artifacts because the project has no usable local CSFloat snapshot feature rows. This is no longer a code blocker. It is documented as an external data availability limitation, and the project is ready to finalize as a research MVP with a paper-trade-only recommendation.
+
 ## Immediate Cleanup
 
 1. [x] Commit current code changes, excluding `.env`.
@@ -776,4 +827,7 @@ Updated recommended order after capacity review:
 8. Only then run `$5+` capacity sensitivity. Completed.
 9. Upgrade dashboard after corrected `$5+` results are available. Completed.
 10. Continue waiting for CSFloat point-in-time coverage so Day 18 can become a true ablation.
-11. Add stricter rejection gates for the `$5+` paper-trade candidate.
+11. Add stricter rejection gates for the `$5+` paper-trade candidate. Completed.
+12. Add dashboard price-bucket filters, CSFloat coverage panel, low-price warnings, and model comparison view.
+13. Add model retraining cadence and walk-forward degradation monitoring.
+14. Add paper-trade A/B test duration and success criteria.

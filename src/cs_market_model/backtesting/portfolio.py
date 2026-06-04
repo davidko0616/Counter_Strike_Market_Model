@@ -159,6 +159,11 @@ def rejection_policy_from_yaml(policy_name: str) -> RejectionPolicy:
         exclude_event_regime=bool(params.get("exclude_event_regime", True)),
         min_row_coverage=float(params.get("min_row_coverage", 0.0)),
         reject_bear_without_alpha=bool(params.get("reject_bear_without_alpha", False)),
+        min_entry_price=float(params.get("min_entry_price", 0.0)),
+        min_item_excess_log_return_7d=float(
+            params.get("min_item_excess_log_return_7d", float("-inf"))
+        ),
+        max_abs_return_30d=float(params.get("max_abs_return_30d", float("inf"))),
     )
 
 
@@ -284,18 +289,10 @@ def summarize_backtest(
                 "max_drawdown": _max_drawdown(model_equity),
                 "sharpe_ratio": _annualized_sharpe(daily_returns),
                 "sortino_ratio": _annualized_sortino(daily_returns),
-                "average_holding_period_days": float(
-                    model_trades["holding_period_days"].mean()
-                ),
-                "turnover": float(
-                    model_trades["notional"].sum() / resolved_config.initial_capital
-                ),
-                "precision_at_selected": float(
-                    model_trades["is_actual_strong_buy"].mean()
-                ),
-                "average_strong_buy_score": float(
-                    model_trades["strong_buy_score"].mean()
-                ),
+                "average_holding_period_days": float(model_trades["holding_period_days"].mean()),
+                "turnover": float(model_trades["notional"].sum() / resolved_config.initial_capital),
+                "precision_at_selected": float(model_trades["is_actual_strong_buy"].mean()),
+                "average_strong_buy_score": float(model_trades["strong_buy_score"].mean()),
                 "peak_open_positions": int(model_equity["open_positions"].max())
                 if not model_equity.empty
                 else 0,
@@ -405,9 +402,7 @@ def _simulate_one_model(
                 ),
                 "strong_buy_score": float(row[config.score_col]),
                 "daily_rank": day_selected + 1,
-                "label_code": int(row["label_code"])
-                if pd.notna(row.get("label_code"))
-                else np.nan,
+                "label_code": int(row["label_code"]) if pd.notna(row.get("label_code")) else np.nan,
                 "label_class": row.get("label_class"),
                 "is_actual_strong_buy": bool(row.get("label_code") == 2),
                 "realized_net_return": trade_return,
@@ -528,9 +523,7 @@ def _remaining_category_capacity(
     if pd.isna(category):
         return current_equity * config.max_category_fraction
     current_category_exposure = sum(
-        position["notional"]
-        for position in open_positions
-        if position.get("category") == category
+        position["notional"] for position in open_positions if position.get("category") == category
     )
     return max(
         current_equity * config.max_category_fraction - current_category_exposure,
@@ -691,4 +684,3 @@ def _display_path(path: Path) -> str:
 
 if __name__ == "__main__":
     main()
-

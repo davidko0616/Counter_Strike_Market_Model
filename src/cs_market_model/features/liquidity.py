@@ -42,9 +42,7 @@ def add_liquidity_features(
         axis=1,
     ).max(axis=1)
 
-    features["has_volume"] = (
-        features["volume"].notna() if "volume" in features.columns else False
-    )
+    features["has_volume"] = features["volume"].notna() if "volume" in features.columns else False
     features["has_trade_count"] = (
         features["trade_count"].notna() if "trade_count" in features.columns else False
     )
@@ -69,14 +67,22 @@ def add_liquidity_features(
             features["market_hash_name"],
             group_keys=False,
         ).transform(lambda series, window=window: series.rolling(window, min_periods=1).max())
-        features[f"price_jump_50pct_count_{window}d"] = jump_50.astype(int).groupby(
-            features["market_hash_name"],
-            group_keys=False,
-        ).transform(lambda series, window=window: series.rolling(window, min_periods=1).sum())
-        features[f"price_jump_100pct_count_{window}d"] = jump_100.astype(int).groupby(
-            features["market_hash_name"],
-            group_keys=False,
-        ).transform(lambda series, window=window: series.rolling(window, min_periods=1).sum())
+        features[f"price_jump_50pct_count_{window}d"] = (
+            jump_50.astype(int)
+            .groupby(
+                features["market_hash_name"],
+                group_keys=False,
+            )
+            .transform(lambda series, window=window: series.rolling(window, min_periods=1).sum())
+        )
+        features[f"price_jump_100pct_count_{window}d"] = (
+            jump_100.astype(int)
+            .groupby(
+                features["market_hash_name"],
+                group_keys=False,
+            )
+            .transform(lambda series, window=window: series.rolling(window, min_periods=1).sum())
+        )
         features[f"price_jump_50pct_share_{window}d"] = (
             features[f"price_jump_50pct_count_{window}d"] / window
         )
@@ -87,7 +93,13 @@ def add_liquidity_features(
     features["liquidity_quality_score_30d"] = (
         pd.to_numeric(features.get("row_coverage_30d", 1.0), errors="coerce").fillna(0.0)
         * (1.0 - pd.to_numeric(features["price_jump_50pct_share_30d"], errors="coerce").fillna(1.0))
-        * (1.0 / (1.0 + pd.to_numeric(features["effective_staleness_days"], errors="coerce").fillna(0.0)))
+        * (
+            1.0
+            / (
+                1.0
+                + pd.to_numeric(features["effective_staleness_days"], errors="coerce").fillna(0.0)
+            )
+        )
     )
 
     return features

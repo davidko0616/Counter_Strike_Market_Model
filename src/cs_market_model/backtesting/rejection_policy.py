@@ -24,6 +24,8 @@ class RejectionPolicy:
     min_row_coverage: float = 0.0
     reject_bear_without_alpha: bool = False
     min_entry_price: float = 0.0
+    min_item_excess_log_return_7d: float = float("-inf")
+    max_abs_return_30d: float = float("inf")
 
     def __post_init__(self) -> None:
         if self.min_score_threshold < 0:
@@ -38,6 +40,8 @@ class RejectionPolicy:
             raise ValueError("min_row_coverage must be non-negative")
         if self.min_entry_price < 0:
             raise ValueError("min_entry_price must be non-negative")
+        if self.max_abs_return_30d < 0:
+            raise ValueError("max_abs_return_30d must be non-negative")
 
 
 def rejection_reason_for_row(
@@ -86,6 +90,19 @@ def rejection_reason_for_row(
             excess_return = _numeric_value(row, "item_excess_log_return_7d", default=0.0)
             if is_bear and excess_return <= 0:
                 return "bear_no_alpha"
+
+    if (
+        np.isfinite(policy.min_item_excess_log_return_7d)
+        and "item_excess_log_return_7d" in row.index
+    ):
+        excess_return = _numeric_value(row, "item_excess_log_return_7d", default=0.0)
+        if excess_return < policy.min_item_excess_log_return_7d:
+            return "low_item_alpha"
+
+    if np.isfinite(policy.max_abs_return_30d) and "abs_return_max_30d" in row.index:
+        abs_return = _numeric_value(row, "abs_return_max_30d", default=0.0)
+        if abs_return > policy.max_abs_return_30d:
+            return "unstable_price"
 
     return None
 

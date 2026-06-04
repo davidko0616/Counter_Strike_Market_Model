@@ -35,3 +35,13 @@ rejection_policies:
     exclude_event_regime: true
     min_row_coverage: 0.5
     reject_bear_without_alpha: true
+  paper_trade_5_plus:
+    min_entry_price: 5.0
+    min_liquidity_quality: 0.7
+    max_staleness_days: 2.0
+    max_price_jump_share: 0.05
+    exclude_event_regime: true
+    min_row_coverage: 0.8
+    reject_bear_without_alpha: true
+    min_item_excess_log_return_7d: 0.0
+    max_abs_return_30d: 0.35

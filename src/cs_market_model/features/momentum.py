@@ -29,22 +29,16 @@ def add_momentum_features(
 
     for window in moving_average_windows:
         rolling_mean = group["close"].transform(
-            lambda series, window=window: series.rolling(
-                window, min_periods=window
-            ).mean()
+            lambda series, window=window: series.rolling(window, min_periods=window).mean()
         )
         features[f"close_to_ma_{window}d"] = (features["close"] / rolling_mean) - 1.0
 
     for window in position_windows:
         rolling_high = group["high"].transform(
-            lambda series, window=window: series.rolling(
-                window, min_periods=window
-            ).max()
+            lambda series, window=window: series.rolling(window, min_periods=window).max()
         )
         rolling_low = group["low"].transform(
-            lambda series, window=window: series.rolling(
-                window, min_periods=window
-            ).min()
+            lambda series, window=window: series.rolling(window, min_periods=window).min()
         )
         price_range = rolling_high - rolling_low
         position = (features["close"] - rolling_low) / price_range

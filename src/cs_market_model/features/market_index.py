@@ -5,7 +5,6 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-
 INDEX_RETURN_WINDOWS = (1, 7, 14, 30, 90)
 EXCESS_RETURN_WINDOWS = (1, 7, 14, 30)
 BETA_WINDOWS = (30, 90)
@@ -32,10 +31,9 @@ def add_market_index_features(feature_frame: pd.DataFrame) -> pd.DataFrame:
         item_return_col = f"log_return_{window}d"
         index_return_col = f"cs2_index_log_return_{window}d"
         if item_return_col in features.columns and index_return_col in features.columns:
-            features[f"item_excess_log_return_{window}d"] = (
-                pd.to_numeric(features[item_return_col], errors="coerce")
-                - pd.to_numeric(features[index_return_col], errors="coerce")
-            )
+            features[f"item_excess_log_return_{window}d"] = pd.to_numeric(
+                features[item_return_col], errors="coerce"
+            ) - pd.to_numeric(features[index_return_col], errors="coerce")
 
     features = _add_item_beta_features(features)
     return features
@@ -52,35 +50,43 @@ def build_equal_weight_index(features: pd.DataFrame) -> pd.DataFrame:
     )
     index["cs2_index_log_level"] = np.log(index["cs2_mvp_equal_weight_index"])
     for window in INDEX_RETURN_WINDOWS:
-        index[f"cs2_index_return_{window}d"] = (
-            index["cs2_mvp_equal_weight_index"].pct_change(window)
+        index[f"cs2_index_return_{window}d"] = index["cs2_mvp_equal_weight_index"].pct_change(
+            window
         )
         index[f"cs2_index_log_return_{window}d"] = index["cs2_index_log_level"].diff(window)
 
-    index["cs2_index_volatility_14d"] = index["cs2_index_log_return_1d"].rolling(
-        14,
-        min_periods=14,
-    ).std()
-    index["cs2_index_volatility_30d"] = index["cs2_index_log_return_1d"].rolling(
-        30,
-        min_periods=30,
-    ).std()
+    index["cs2_index_volatility_14d"] = (
+        index["cs2_index_log_return_1d"]
+        .rolling(
+            14,
+            min_periods=14,
+        )
+        .std()
+    )
+    index["cs2_index_volatility_30d"] = (
+        index["cs2_index_log_return_1d"]
+        .rolling(
+            30,
+            min_periods=30,
+        )
+        .std()
+    )
     for window in (30, 90):
-        rolling_high = index["cs2_mvp_equal_weight_index"].rolling(
-            window,
-            min_periods=window,
-        ).max()
+        rolling_high = (
+            index["cs2_mvp_equal_weight_index"]
+            .rolling(
+                window,
+                min_periods=window,
+            )
+            .max()
+        )
         index[f"cs2_index_drawdown_{window}d"] = (
             index["cs2_mvp_equal_weight_index"] / rolling_high
         ) - 1.0
 
     ma_30 = index["cs2_mvp_equal_weight_index"].rolling(30, min_periods=30).mean()
-    index["cs2_index_ma_distance_30d"] = (
-        index["cs2_mvp_equal_weight_index"] / ma_30
-    ) - 1.0
-    index["cs2_index_trend_slope_30d"] = (
-        index["cs2_mvp_equal_weight_index"].diff(30) / ma_30 / 30.0
-    )
+    index["cs2_index_ma_distance_30d"] = (index["cs2_mvp_equal_weight_index"] / ma_30) - 1.0
+    index["cs2_index_trend_slope_30d"] = index["cs2_mvp_equal_weight_index"].diff(30) / ma_30 / 30.0
     index = _classify_market_regime(index)
     return index
 
@@ -97,8 +103,7 @@ def _classify_market_regime(index: pd.DataFrame) -> pd.DataFrame:
         & frame["cs2_index_drawdown_30d"].gt(-0.05)
     )
     bear = (
-        frame["cs2_index_ma_distance_30d"].lt(0)
-        & frame["cs2_index_trend_slope_30d"].lt(0)
+        frame["cs2_index_ma_distance_30d"].lt(0) & frame["cs2_index_trend_slope_30d"].lt(0)
     ) | frame["cs2_index_drawdown_30d"].le(-0.10)
     frame.loc[bull, "cs2_index_regime_bull"] = True
     frame.loc[bear, "cs2_index_regime_bear"] = True
@@ -117,14 +122,22 @@ def _add_item_beta_features(features: pd.DataFrame) -> pd.DataFrame:
     for _, item_rows in frame.groupby("market_hash_name", sort=False):
         item_rows = item_rows.copy()
         for window in BETA_WINDOWS:
-            covariance = item_rows["_item_return_for_beta"].rolling(
-                window,
-                min_periods=window,
-            ).cov(item_rows["_index_return_for_beta"])
-            variance = item_rows["_index_return_for_beta"].rolling(
-                window,
-                min_periods=window,
-            ).var()
+            covariance = (
+                item_rows["_item_return_for_beta"]
+                .rolling(
+                    window,
+                    min_periods=window,
+                )
+                .cov(item_rows["_index_return_for_beta"])
+            )
+            variance = (
+                item_rows["_index_return_for_beta"]
+                .rolling(
+                    window,
+                    min_periods=window,
+                )
+                .var()
+            )
             item_rows[f"item_beta_to_cs2_index_{window}d"] = covariance / variance.replace(
                 0,
                 np.nan,

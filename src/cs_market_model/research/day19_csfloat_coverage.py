@@ -51,7 +51,9 @@ def run_day19_csfloat_coverage(
         coverage_output=coverage_output,
         report_output=report_output,
         item_count=int(len(coverage)),
-        items_with_snapshots=int(coverage["has_csfloat_snapshot"].sum()) if not coverage.empty else 0,
+        items_with_snapshots=int(coverage["has_csfloat_snapshot"].sum())
+        if not coverage.empty
+        else 0,
         items_with_post_snapshot_bars=int(coverage["has_post_snapshot_bar"].sum())
         if not coverage.empty
         else 0,
@@ -95,17 +97,20 @@ def build_csfloat_coverage_table(
             bar_summary["csfloat_snapshot_count"].fillna(0).astype(int)
         )
 
+    for column in (
+        "first_price_bar_timestamp",
+        "latest_price_bar_timestamp",
+        "first_csfloat_snapshot_timestamp",
+        "latest_csfloat_snapshot_timestamp",
+    ):
+        bar_summary[column] = pd.to_datetime(bar_summary[column], utc=True)
+
     bar_summary["has_csfloat_snapshot"] = bar_summary["csfloat_snapshot_count"] > 0
-    bar_summary["has_post_snapshot_bar"] = (
-        bar_summary["has_csfloat_snapshot"]
-        & (
-            bar_summary["latest_price_bar_timestamp"]
-            >= bar_summary["first_csfloat_snapshot_timestamp"]
-        )
+    bar_summary["has_post_snapshot_bar"] = bar_summary["has_csfloat_snapshot"] & (
+        bar_summary["latest_price_bar_timestamp"] >= bar_summary["first_csfloat_snapshot_timestamp"]
     )
     bar_summary["days_until_coverage"] = (
-        bar_summary["first_csfloat_snapshot_timestamp"]
-        - bar_summary["latest_price_bar_timestamp"]
+        bar_summary["first_csfloat_snapshot_timestamp"] - bar_summary["latest_price_bar_timestamp"]
     ).dt.total_seconds() / 86400.0
     bar_summary.loc[bar_summary["has_post_snapshot_bar"], "days_until_coverage"] = 0.0
     return bar_summary.sort_values("market_hash_name").reset_index(drop=True)
@@ -153,7 +158,9 @@ def build_coverage_report(coverage: pd.DataFrame) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run Day 19 CSFloat coverage monitor.")
     parser.add_argument("--price-bars-input", type=Path, default=DEFAULT_PRICE_BARS_INPUT)
-    parser.add_argument("--csfloat-features-input", type=Path, default=DEFAULT_CSFLOAT_FEATURES_OUTPUT)
+    parser.add_argument(
+        "--csfloat-features-input", type=Path, default=DEFAULT_CSFLOAT_FEATURES_OUTPUT
+    )
     parser.add_argument("--coverage-output", type=Path, default=DEFAULT_COVERAGE_OUTPUT)
     parser.add_argument("--report-output", type=Path, default=DEFAULT_REPORT_OUTPUT)
     args = parser.parse_args()

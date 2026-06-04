@@ -30,25 +30,19 @@ def add_volatility_features(
 
     for window in volatility_windows:
         rolling_std = group["log_return_1d"].transform(
-            lambda series, window=window: series.rolling(
-                window, min_periods=window
-            ).std()
+            lambda series, window=window: series.rolling(window, min_periods=window).std()
         )
         features[f"return_volatility_{window}d"] = rolling_std
         features[f"realized_volatility_{window}d"] = rolling_std * np.sqrt(window)
 
     for span in ewm_spans:
         features[f"ewm_volatility_{span}d"] = group["log_return_1d"].transform(
-            lambda series, span=span: series.ewm(
-                span=span, adjust=False, min_periods=span
-            ).std()
+            lambda series, span=span: series.ewm(span=span, adjust=False, min_periods=span).std()
         )
 
     for window in drawdown_windows:
         rolling_high = group["close"].transform(
-            lambda series, window=window: series.rolling(
-                window, min_periods=window
-            ).max()
+            lambda series, window=window: series.rolling(window, min_periods=window).max()
         )
         features[f"drawdown_from_{window}d_high"] = (features["close"] / rolling_high) - 1.0
 

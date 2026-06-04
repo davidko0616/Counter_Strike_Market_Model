@@ -14,7 +14,13 @@ import pandas as pd
 import yaml
 
 from cs_market_model.collectors.steamdt import SteamDTClient
-from cs_market_model.config import CONFIG_DIR, PROJECT_ROOT, data_path, load_yaml_config, reports_path
+from cs_market_model.config import (
+    CONFIG_DIR,
+    PROJECT_ROOT,
+    data_path,
+    load_yaml_config,
+    reports_path,
+)
 
 DEFAULT_CANDIDATE_CONFIG = CONFIG_DIR / "universe_gun_skins_candidate.yaml"
 DEFAULT_CANDIDATE_BARS = data_path("processed", "price_bars_day19_candidates.parquet")
@@ -117,7 +123,13 @@ def build_day19_universe(
     eligible = metrics[metrics["is_day19_eligible"]].copy()
     selected = (
         eligible.sort_values(
-            ["liquidity_score", "row_coverage_30d", "history_days", "selection_score", "market_hash_name"],
+            [
+                "liquidity_score",
+                "row_coverage_30d",
+                "history_days",
+                "selection_score",
+                "market_hash_name",
+            ],
             ascending=[False, False, False, False, True],
         )
         .head(base_count)
@@ -131,7 +143,9 @@ def build_day19_universe(
     ]
     base_items = sorted(
         base_items,
-        key=lambda item: selected.set_index("market_hash_name").loc[item["market_hash_name"], "liquidity_score"],
+        key=lambda item: selected.set_index("market_hash_name").loc[
+            item["market_hash_name"], "liquidity_score"
+        ],
         reverse=True,
     )
 
@@ -143,7 +157,12 @@ def build_day19_universe(
     audit_output.parent.mkdir(parents=True, exist_ok=True)
     excluded_variants_output.parent.mkdir(parents=True, exist_ok=True)
     audit = metrics.merge(
-        pd.DataFrame({"market_hash_name": [item["market_hash_name"] for item in all_items], "selected_v2": True}),
+        pd.DataFrame(
+            {
+                "market_hash_name": [item["market_hash_name"] for item in all_items],
+                "selected_v2": True,
+            }
+        ),
         on="market_hash_name",
         how="left",
     )
@@ -191,9 +210,7 @@ def build_candidate_metrics(
     )
     metrics = metrics.merge(recent_counts, on="market_hash_name", how="left")
     metrics["recent_30d_bar_count"] = metrics["recent_30d_bar_count"].fillna(0).astype(int)
-    metrics["history_days"] = (
-        metrics["latest_timestamp"] - metrics["first_timestamp"]
-    ).dt.days + 1
+    metrics["history_days"] = (metrics["latest_timestamp"] - metrics["first_timestamp"]).dt.days + 1
     metrics["row_coverage_30d"] = metrics["recent_30d_bar_count"] / 30.0
 
     volume = pd.to_numeric(frame.get("volume"), errors="coerce")
@@ -217,7 +234,9 @@ def build_candidate_metrics(
         )
         liquidity_source = "avg_daily_trade_count"
     else:
-        volume_metrics = pd.DataFrame({"market_hash_name": metrics["market_hash_name"], "avg_daily_volume": np.nan})
+        volume_metrics = pd.DataFrame(
+            {"market_hash_name": metrics["market_hash_name"], "avg_daily_volume": np.nan}
+        )
         liquidity_source = "current_steam_sell_count"
     metrics = metrics.merge(volume_metrics, on="market_hash_name", how="left")
 
@@ -241,7 +260,9 @@ def build_candidate_metrics(
         metrics[column] = pd.to_numeric(metrics[column], errors="coerce")
 
     metrics = item_frame.merge(metrics, on="market_hash_name", how="left")
-    metrics["selection_score"] = pd.to_numeric(metrics.get("selection_score"), errors="coerce").fillna(0.0)
+    metrics["selection_score"] = pd.to_numeric(
+        metrics.get("selection_score"), errors="coerce"
+    ).fillna(0.0)
     metrics["liquidity_filter_source"] = liquidity_source
     metrics["liquidity_score"] = pd.to_numeric(metrics["avg_daily_volume"], errors="coerce")
     missing_liquidity = metrics["liquidity_score"].isna()
@@ -401,7 +422,10 @@ def _dedupe_items(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def _write_universe(path: Path, items: list[dict[str, Any]]) -> None:
     payload = {
-        "description": "Day 19 expanded MVP v2 universe: liquid Field-Tested base plus MW/WW variants for top liquidity parents.",
+        "description": (
+            "Day 19 expanded MVP v2 universe: liquid Field-Tested base plus "
+            "MW/WW variants for top liquidity parents."
+        ),
         "items": items,
     }
     path.write_text(yaml.safe_dump(payload, sort_keys=False, allow_unicode=True), encoding="utf-8")
@@ -415,7 +439,9 @@ def main() -> None:
     parser.add_argument("--liquidity-output", type=Path, default=DEFAULT_LIQUIDITY_OUTPUT)
     parser.add_argument("--universe-output", type=Path, default=DEFAULT_UNIVERSE_OUTPUT)
     parser.add_argument("--audit-output", type=Path, default=DEFAULT_AUDIT_OUTPUT)
-    parser.add_argument("--excluded-variants-output", type=Path, default=DEFAULT_EXCLUDED_VARIANTS_OUTPUT)
+    parser.add_argument(
+        "--excluded-variants-output", type=Path, default=DEFAULT_EXCLUDED_VARIANTS_OUTPUT
+    )
     parser.add_argument("--base-count", type=int, default=110)
     parser.add_argument("--variant-parent-count", type=int, default=20)
     parser.add_argument("--collect-liquidity", action="store_true")

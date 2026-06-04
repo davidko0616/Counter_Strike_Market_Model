@@ -173,7 +173,9 @@ def summarize_walk_forward_selection(
             if not accepted.empty and "model_name" in accepted.columns
             else pd.DataFrame()
         )
-        total_test_count = int(model_periods["test_accepted_count"].sum() + model_periods["test_rejected_count"].sum())
+        total_test_count = int(
+            model_periods["test_accepted_count"].sum() + model_periods["test_rejected_count"].sum()
+        )
         metrics = _accepted_trade_metrics(model_accepted, total_test_count)
         rows.append(
             {
@@ -231,11 +233,7 @@ def _select_threshold_from_training(
     )
     best = ranked.iloc[0]
     threshold = float(best["threshold"])
-    return threshold, {
-        key: best[key]
-        for key in best.index
-        if key != "threshold"
-    }
+    return threshold, {key: best[key] for key in best.index if key != "threshold"}
 
 
 def _apply_base_policy_gates(
@@ -247,10 +245,14 @@ def _apply_base_policy_gates(
         return ledger.copy()
     non_score_policy = replace(base_policy, min_score_threshold=0.0)
     tagged = apply_rejection_policy(ledger, non_score_policy)
-    return tagged[tagged["is_accepted"]].drop(
-        columns=["rejection_reason", "is_accepted"],
-        errors="ignore",
-    ).copy()
+    return (
+        tagged[tagged["is_accepted"]]
+        .drop(
+            columns=["rejection_reason", "is_accepted"],
+            errors="ignore",
+        )
+        .copy()
+    )
 
 
 def main() -> None:

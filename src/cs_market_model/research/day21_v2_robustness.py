@@ -113,12 +113,11 @@ def enrich_trades_with_features(
     feature_join, duplicate_diagnostics = dedupe_features_for_trade_join(
         features_at_entry[feature_columns],
     )
-    if strict_duplicate_conflicts and duplicate_diagnostics[
-        "feature_join_duplicate_conflict"
-    ].any():
-        conflicts = duplicate_diagnostics[
-            duplicate_diagnostics["feature_join_duplicate_conflict"]
-        ]
+    if (
+        strict_duplicate_conflicts
+        and duplicate_diagnostics["feature_join_duplicate_conflict"].any()
+    ):
+        conflicts = duplicate_diagnostics[duplicate_diagnostics["feature_join_duplicate_conflict"]]
         examples = conflicts.head(5)[FEATURE_JOIN_KEYS].to_dict("records")
         raise ValueError(f"Conflicting duplicate feature rows detected: {examples}")
 
@@ -140,9 +139,9 @@ def enrich_trades_with_features(
         .fillna(1)
         .astype(int)
     )
-    enriched["feature_join_duplicate_conflict"] = enriched[
-        "feature_join_duplicate_conflict"
-    ].fillna(False).astype(bool)
+    enriched["feature_join_duplicate_conflict"] = (
+        enriched["feature_join_duplicate_conflict"].fillna(False).astype(bool)
+    )
     enriched["feature_join_conflicting_columns"] = enriched[
         "feature_join_conflicting_columns"
     ].fillna("")
@@ -202,9 +201,7 @@ def dedupe_features_for_trade_join(
         if not isinstance(keys, tuple):
             keys = (keys,)
         conflicting_columns = [
-            column
-            for column in value_columns
-            if _normalized_nunique(group[column]) > 1
+            column for column in value_columns if _normalized_nunique(group[column]) > 1
         ]
         row = dict(zip(FEATURE_JOIN_KEYS, keys, strict=True))
         row.update(
@@ -269,9 +266,9 @@ def build_scenario_robustness(enriched: pd.DataFrame) -> pd.DataFrame:
                 lower=-cap,
                 upper=cap,
             )
-        scenario_trades["scenario_pnl"] = scenario_trades["notional"] * scenario_trades[
-            "scenario_return"
-        ]
+        scenario_trades["scenario_pnl"] = (
+            scenario_trades["notional"] * scenario_trades["scenario_return"]
+        )
         for model_name, group in scenario_trades.groupby("model_name", sort=False):
             rows.append(_summary_row(group, scenario_name, model_name))
     return pd.DataFrame(rows).sort_values(["model_name", "scenario"]).reset_index(drop=True)
@@ -400,7 +397,9 @@ def _summary_row(group: pd.DataFrame, scenario_name: str, model_name: str) -> di
         "profit_factor": float(gross_profit / gross_loss) if gross_loss > 0 else np.inf,
         "max_trade_return": float(group["scenario_return"].max()),
         "min_trade_return": float(group["scenario_return"].min()),
-        "positive_item_count": int(group.loc[group["scenario_pnl"].gt(0), "market_hash_name"].nunique()),
+        "positive_item_count": int(
+            group.loc[group["scenario_pnl"].gt(0), "market_hash_name"].nunique()
+        ),
         "item_count": int(group["market_hash_name"].nunique()),
         "period_count": int(group["entry_month"].nunique()),
     }
@@ -468,7 +467,9 @@ def _markdown_table(frame: pd.DataFrame) -> str:
         return "_No rows._"
     display = frame.copy()
     for column in display.select_dtypes(include=[np.number]).columns:
-        display[column] = display[column].map(lambda value: f"{value:.4f}" if pd.notna(value) else "")
+        display[column] = display[column].map(
+            lambda value: f"{value:.4f}" if pd.notna(value) else ""
+        )
     columns = [str(column) for column in display.columns]
     rows = [
         "| " + " | ".join(columns) + " |",
@@ -492,11 +493,17 @@ def _interpret(
     exclude_top5_period = _scenario(lightgbm, "exclude_top_5_pnl_trades_per_period")
     normal = _scenario(lightgbm, "normal_only")
     notes = [
-        f"Raw LightGBM accepted PnL is {raw['total_pnl']:.4f} across {int(raw['trade_count'])} trades.",
+        (
+            f"Raw LightGBM accepted PnL is {raw['total_pnl']:.4f} across "
+            f"{int(raw['trade_count'])} trades."
+        ),
         f"Normal-only PnL is {normal['total_pnl']:.4f}.",
         f"With returns capped at 50%, PnL is {cap50['total_pnl']:.4f}.",
         f"After removing the top 5 trades, PnL is {exclude_top5['total_pnl']:.4f}.",
-        f"After removing the top 5 trades in each period, PnL is {exclude_top5_period['total_pnl']:.4f}.",
+        (
+            "After removing the top 5 trades in each period, PnL is "
+            f"{exclude_top5_period['total_pnl']:.4f}."
+        ),
     ]
     flagged = top_trades[
         top_trades["model_name"].eq("lightgbm_rank_blend")
@@ -507,8 +514,7 @@ def _interpret(
             f"{len(flagged.head(25))} of the top 25 LightGBM winners have at least one audit flag."
         )
     price_bucket = buckets[
-        buckets["model_name"].eq("lightgbm_rank_blend")
-        & buckets["bucket_type"].eq("price_bucket")
+        buckets["model_name"].eq("lightgbm_rank_blend") & buckets["bucket_type"].eq("price_bucket")
     ].sort_values("total_pnl", ascending=False)
     if not price_bucket.empty:
         best = price_bucket.iloc[0]

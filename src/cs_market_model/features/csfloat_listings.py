@@ -98,7 +98,9 @@ def parse_csfloat_envelope(path: Path) -> dict[str, Any] | None:
     if not market_hash_name or not timestamp_ingested:
         return None
     listings = _extract_listing_rows(payload.get("raw_json"))
-    prices = [_extract_numeric(listing, ["price", "price_cents", "lowest_price"]) for listing in listings]
+    prices = [
+        _extract_numeric(listing, ["price", "price_cents", "lowest_price"]) for listing in listings
+    ]
     prices = [price for price in prices if price is not None and np.isfinite(price)]
     floats = [_extract_float_value(listing) for listing in listings]
     floats = [value for value in floats if value is not None and np.isfinite(value)]
@@ -107,7 +109,9 @@ def parse_csfloat_envelope(path: Path) -> dict[str, Any] | None:
     min_price = float(np.min(prices)) if prices else np.nan
     median_price = float(np.median(prices)) if prices else np.nan
     mean_price = float(np.mean(prices)) if prices else np.nan
-    spread_proxy = float((np.max(prices) - min_price) / min_price) if prices and min_price > 0 else np.nan
+    spread_proxy = (
+        float((np.max(prices) - min_price) / min_price) if prices and min_price > 0 else np.nan
+    )
 
     return {
         "market_hash_name": str(market_hash_name),

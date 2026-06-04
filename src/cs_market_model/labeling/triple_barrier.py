@@ -94,8 +94,8 @@ def apply_triple_barrier_labels(
         _label_one_event(event, item_groups, resolved_fee_model, resolved_config)
         for event in event_frame.to_dict("records")
     ]
-    return pd.DataFrame(labels).sort_values(["market_hash_name", "timestamp"]).reset_index(
-        drop=True
+    return (
+        pd.DataFrame(labels).sort_values(["market_hash_name", "timestamp"]).reset_index(drop=True)
     )
 
 
@@ -119,10 +119,7 @@ def _label_one_event(
 
     item_timestamps = item_rows["timestamp"]
     event_position = int(item_timestamps.searchsorted(event_timestamp))
-    if (
-        event_position >= len(item_rows)
-        or item_timestamps.iloc[event_position] != event_timestamp
-    ):
+    if event_position >= len(item_rows) or item_timestamps.iloc[event_position] != event_timestamp:
         return _incomplete_label_row(
             event,
             event_timestamp,
@@ -212,9 +209,7 @@ def _label_one_event(
             "first_touch": first_touch,
             "touch_timestamp": label_timestamp,
             "exit_timestamp": label_timestamp,
-            "holding_period_days": (
-                pd.Timestamp(label_timestamp) - event_timestamp
-            ).days,
+            "holding_period_days": (pd.Timestamp(label_timestamp) - event_timestamp).days,
             "net_return_at_label": net_return_at_label,
             "vertical_net_return": vertical_net_return,
             "max_net_return": float(future_net_returns.max()),
@@ -236,9 +231,7 @@ def _base_label_row(
     config: TripleBarrierConfig,
 ) -> dict[str, object]:
     row_coverage = _finite_or_default(event_row.get("row_coverage_30d"), default=np.nan)
-    staleness_days = _finite_or_default(
-        event_row.get("effective_staleness_days"), default=np.nan
-    )
+    staleness_days = _finite_or_default(event_row.get("effective_staleness_days"), default=np.nan)
     return {
         "event_id": event["event_id"],
         "market_hash_name": event["market_hash_name"],
@@ -338,13 +331,8 @@ def _first_barrier_touch(
 
 def _passes_liquidity_filter(event_row: pd.Series, config: TripleBarrierConfig) -> bool:
     row_coverage = _finite_or_default(event_row.get("row_coverage_30d"), default=1.0)
-    staleness_days = _finite_or_default(
-        event_row.get("effective_staleness_days"), default=0.0
-    )
-    return (
-        row_coverage >= config.min_row_coverage
-        and staleness_days <= config.max_staleness_days
-    )
+    staleness_days = _finite_or_default(event_row.get("effective_staleness_days"), default=0.0)
+    return row_coverage >= config.min_row_coverage and staleness_days <= config.max_staleness_days
 
 
 def _finite_or_default(value: object, default: float) -> float:

@@ -46,9 +46,7 @@ class SteamDTKlineParseResult:
 def stable_item_id(market_hash_name: str) -> str:
     """Create a stable internal item id from the market hash name."""
     digest = hashlib.sha1(market_hash_name.encode("utf-8")).hexdigest()[:12]
-    readable = "".join(
-        char.lower() if char.isalnum() else "_" for char in market_hash_name
-    )
+    readable = "".join(char.lower() if char.isalnum() else "_" for char in market_hash_name)
     readable = "_".join(part for part in readable.split("_") if part)
     return f"{readable[:48]}_{digest}"
 
@@ -233,4 +231,3 @@ def _empty_price_bars() -> pd.DataFrame:
             "source",
         ]
     )
-

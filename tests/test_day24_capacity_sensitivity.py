@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import pytest
 import pandas as pd
+import pytest
 
 from cs_market_model.research.day22_low_price_policy import CapacitySizingConfig
 from cs_market_model.research.day24_capacity_sensitivity import (

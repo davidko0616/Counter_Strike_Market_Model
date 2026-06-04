@@ -11,11 +11,7 @@ from cs_market_model.config import PROJECT_ROOT
 from cs_market_model.normalization.prices import parse_and_audit_steamdt_kline
 
 DEFAULT_SAMPLE_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "raw"
-    / "kline"
-    / "day2_sample_ak47_slate_field_tested_type2.json"
+    PROJECT_ROOT / "data" / "raw" / "kline" / "day2_sample_ak47_slate_field_tested_type2.json"
 )
 DEFAULT_MARKET_HASH_NAME = "AK-47 | Slate (Field-Tested)"
 

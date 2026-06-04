@@ -121,7 +121,10 @@ def build_modeling_dataset(
     features["timestamp"] = pd.to_datetime(features["timestamp"], utc=True)
     candidate_features = _numeric_feature_columns(features)
 
-    label_columns = [*LABEL_COLUMNS, *[column for column in OPTIONAL_LABEL_COLUMNS if column in labels]]
+    label_columns = [
+        *LABEL_COLUMNS,
+        *[column for column in OPTIONAL_LABEL_COLUMNS if column in labels],
+    ]
     dataset = labels[label_columns].merge(
         features[["market_hash_name", "timestamp", *candidate_features]],
         on=["market_hash_name", "timestamp"],
@@ -136,9 +139,7 @@ def build_modeling_dataset(
         if column in dataset.columns
         and pd.to_numeric(dataset[column], errors="coerce").notna().any()
     ]
-    dataset[retained_features] = dataset[retained_features].replace(
-        [np.inf, -np.inf], np.nan
-    )
+    dataset[retained_features] = dataset[retained_features].replace([np.inf, -np.inf], np.nan)
     return dataset.sort_values(["timestamp", "market_hash_name"]).reset_index(
         drop=True
     ), retained_features
@@ -187,9 +188,7 @@ def train_day8_9_baselines(
             test_rows,
             model_features,
         ):
-            prediction_frames.append(
-                _attach_split_metadata(prediction_frame, split_index, split)
-            )
+            prediction_frames.append(_attach_split_metadata(prediction_frame, split_index, split))
 
         if train_rows["label_code"].nunique() >= 2:
             for model_name, prediction_frame in _sklearn_predictions(
@@ -216,9 +215,7 @@ def train_day8_9_baselines(
                 )
 
     predictions = (
-        pd.concat(prediction_frames, ignore_index=True)
-        if prediction_frames
-        else pd.DataFrame()
+        pd.concat(prediction_frames, ignore_index=True) if prediction_frames else pd.DataFrame()
     )
     predictions = _append_rank_ensembles(predictions)
     if not predictions.empty:

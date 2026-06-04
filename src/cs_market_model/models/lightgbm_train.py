@@ -118,13 +118,16 @@ def train_day10_11_lightgbm(
                 for feature, importance in importances.items()
             )
 
-        for model_name, prediction_frame, importances, calibration_metric in (
-            _calibrated_lightgbm_predictions(
-                train_rows,
-                test_rows,
-                active_features,
-                random_state=random_state + split_index,
-            )
+        for (
+            model_name,
+            prediction_frame,
+            importances,
+            calibration_metric,
+        ) in _calibrated_lightgbm_predictions(
+            train_rows,
+            test_rows,
+            active_features,
+            random_state=random_state + split_index,
         ):
             attached = _attach_split_metadata(prediction_frame, split_index, split)
             attached["model_name"] = model_name
@@ -149,9 +152,7 @@ def train_day10_11_lightgbm(
             )
 
     predictions = (
-        pd.concat(prediction_frames, ignore_index=True)
-        if prediction_frames
-        else pd.DataFrame()
+        pd.concat(prediction_frames, ignore_index=True) if prediction_frames else pd.DataFrame()
     )
     predictions = _append_lightgbm_rank_blend(predictions)
     metrics = _evaluate_predictions(predictions, splits, top_k=resolved_top_k)
@@ -245,9 +246,9 @@ def _calibrated_lightgbm_predictions(
 
     fit_rows, calibration_rows = time_ordered_calibration_split(train_rows)
     fit_target = (fit_rows["label_code"].astype(int) == LABEL_STRONG_BUY).astype(int)
-    calibration_target = (
-        calibration_rows["label_code"].astype(int) == LABEL_STRONG_BUY
-    ).astype(int)
+    calibration_target = (calibration_rows["label_code"].astype(int) == LABEL_STRONG_BUY).astype(
+        int
+    )
     if fit_target.nunique() < 2:
         return []
 

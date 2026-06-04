@@ -36,8 +36,8 @@ def test_candidate_metrics_use_current_steam_sell_count_when_volume_missing() ->
 
     assert metrics.loc[0, "liquidity_filter_source"] == "current_steam_sell_count"
     assert metrics.loc[0, "liquidity_score"] == 12
-    assert metrics.loc[0, "passes_liquidity_filter"] == True
-    assert metrics.loc[0, "passes_history_filter"] == True
+    assert metrics.loc[0, "passes_liquidity_filter"]
+    assert metrics.loc[0, "passes_history_filter"]
 
 
 def test_build_wear_variants_rewrites_name_and_float_ranges() -> None:

@@ -95,9 +95,7 @@ def evaluate_classification_predictions(
         "accuracy": float(accuracy_score(y_true, y_pred)),
         "balanced_accuracy": _balanced_accuracy_without_warnings(y_true, y_pred),
         "macro_f1": float(f1_score(y_true, y_pred, average="macro", zero_division=0)),
-        "weighted_f1": float(
-            f1_score(y_true, y_pred, average="weighted", zero_division=0)
-        ),
+        "weighted_f1": float(f1_score(y_true, y_pred, average="weighted", zero_division=0)),
         "strong_buy_precision": float(
             precision_score(
                 actual_strong,
@@ -105,14 +103,10 @@ def evaluate_classification_predictions(
                 zero_division=0,
             )
         ),
-        "strong_buy_recall": float(
-            recall_score(actual_strong, predicted_strong, zero_division=0)
-        ),
+        "strong_buy_recall": float(recall_score(actual_strong, predicted_strong, zero_division=0)),
         "precision_at_k": float(top_k_true.mean()) if len(ranked) else np.nan,
         "top_k_mean_net_return": float(top_k_returns.mean()) if len(ranked) else np.nan,
-        "cooldown_precision_at_k": float(cooldown_true.mean())
-        if len(cooldown_ranked)
-        else np.nan,
+        "cooldown_precision_at_k": float(cooldown_true.mean()) if len(cooldown_ranked) else np.nan,
         "cooldown_top_k_mean_net_return": float(cooldown_returns.mean())
         if len(cooldown_ranked)
         else np.nan,
@@ -232,9 +226,7 @@ def summarize_metrics(metrics: pd.DataFrame) -> pd.DataFrame:
         .reset_index()
     )
     summary.columns = [
-        "_".join(part for part in column if part)
-        if isinstance(column, tuple)
-        else column
+        "_".join(part for part in column if part) if isinstance(column, tuple) else column
         for column in summary.columns
     ]
     return summary

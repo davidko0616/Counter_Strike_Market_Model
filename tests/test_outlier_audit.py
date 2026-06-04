@@ -6,9 +6,9 @@ from cs_market_model.backtesting.audit_outliers import (
     build_event_outcomes,
     build_outlier_audit,
     summarize_index_regime_performance,
+    summarize_outlier_impact,
     summarize_regime_performance,
     summarize_return_sensitivity,
-    summarize_outlier_impact,
 )
 
 

@@ -10,11 +10,11 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from cs_market_model.backtesting.rejection_policy import RejectionPolicy
 from cs_market_model.backtesting.walk_forward_rejection import (
     summarize_walk_forward_selection,
     walk_forward_score_threshold_selection,
 )
-from cs_market_model.backtesting.rejection_policy import RejectionPolicy
 from cs_market_model.config import PROJECT_ROOT, data_path, reports_path
 from cs_market_model.research.day21_v2_robustness import enrich_trades_with_features
 
@@ -279,10 +279,7 @@ def apply_capacity_adjusted_sizing(
         ]
         if column in frame.columns
     ]
-    ascending = [
-        False if column == "strong_buy_score" else True
-        for column in sort_columns
-    ]
+    ascending = [False if column == "strong_buy_score" else True for column in sort_columns]
     ordered = (
         frame.sort_values(sort_columns, ascending=ascending, kind="mergesort")
         if sort_columns
@@ -353,7 +350,9 @@ def apply_capacity_adjusted_sizing(
             open_position_capacity_available,
         )
         output["notional"] = float(capacity_notional)
-        output["pnl"] = float(capacity_notional * _finite_float(row.get("realized_net_return"), 0.0))
+        output["pnl"] = float(
+            capacity_notional * _finite_float(row.get("realized_net_return"), 0.0)
+        )
         sized_rows.append(output)
 
         if capacity_filled:
@@ -420,7 +419,9 @@ def _markdown_table(frame: pd.DataFrame) -> str:
         return "_No rows._"
     display = frame.copy()
     for column in display.select_dtypes(include=[np.number]).columns:
-        display[column] = display[column].map(lambda value: f"{value:.4f}" if pd.notna(value) else "")
+        display[column] = display[column].map(
+            lambda value: f"{value:.4f}" if pd.notna(value) else ""
+        )
     columns = [str(column) for column in display.columns]
     rows = [
         "| " + " | ".join(columns) + " |",
@@ -431,7 +432,9 @@ def _markdown_table(frame: pd.DataFrame) -> str:
     return "\n".join(rows)
 
 
-def _liquidity_notional_cap(row: pd.Series, config: CapacitySizingConfig, original_notional: float) -> float:
+def _liquidity_notional_cap(
+    row: pd.Series, config: CapacitySizingConfig, original_notional: float
+) -> float:
     entry_close = _finite_float(row.get("entry_close"), np.nan)
     if not np.isfinite(entry_close) or entry_close <= 0:
         return original_notional * config.fallback_liquidity_multiplier
@@ -439,7 +442,12 @@ def _liquidity_notional_cap(row: pd.Series, config: CapacitySizingConfig, origin
     caps: list[float] = []
     sell_count = _first_finite(row, ["steam_sell_count", "max_sell_count"])
     if sell_count is not None and sell_count > 0:
-        caps.append(entry_close * sell_count * config.max_sell_count_participation / config.portfolio_capital_usd)
+        caps.append(
+            entry_close
+            * sell_count
+            * config.max_sell_count_participation
+            / config.portfolio_capital_usd
+        )
 
     csfloat_listing_count = _finite_float(row.get("csfloat_listing_count"), np.nan)
     if np.isfinite(csfloat_listing_count) and csfloat_listing_count > 0:
@@ -508,7 +516,9 @@ def _validate_capital_normalized_units(
     if "original_notional" not in frame.columns or frame["original_notional"].empty:
         return
     max_abs = pd.to_numeric(frame["original_notional"], errors="coerce").abs().max()
-    dollar_like_limit = max(20.0, config.portfolio_capital_usd * config.max_notional_per_trade_fraction)
+    dollar_like_limit = max(
+        20.0, config.portfolio_capital_usd * config.max_notional_per_trade_fraction
+    )
     if pd.notna(max_abs) and max_abs > dollar_like_limit:
         raise ValueError(
             f"original_notional appears to be in dollar terms (max_abs={max_abs:.2f}). "

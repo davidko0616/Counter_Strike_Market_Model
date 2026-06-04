@@ -55,12 +55,14 @@ def sample_cusum_events(
         )
     else:
         frame["event_sample_volatility"] = group["event_sample_return"].transform(
-            lambda series: series.rolling(
-                resolved_config.volatility_lookback_days,
-                min_periods=resolved_config.volatility_lookback_days,
+            lambda series: (
+                series.rolling(
+                    resolved_config.volatility_lookback_days,
+                    min_periods=resolved_config.volatility_lookback_days,
+                )
+                .std()
+                .shift(1)
             )
-            .std()
-            .shift(1)
         )
 
     thresholds = (
@@ -95,8 +97,7 @@ def sample_cusum_events(
 
             if (
                 last_event_timestamp is not None
-                and (timestamp - last_event_timestamp).days
-                < resolved_config.min_gap_days
+                and (timestamp - last_event_timestamp).days < resolved_config.min_gap_days
             ):
                 continue
 
@@ -128,8 +129,6 @@ def sample_cusum_events(
             ]
         )
 
-    event_frame = event_frame.sort_values(["market_hash_name", "timestamp"]).reset_index(
-        drop=True
-    )
+    event_frame = event_frame.sort_values(["market_hash_name", "timestamp"]).reset_index(drop=True)
     event_frame.insert(0, "event_id", [f"event_{index:06d}" for index in event_frame.index])
     return event_frame

@@ -104,8 +104,7 @@ def coverage_rows(paths: set[str], listings: list[dict[str, Any]]) -> list[dict[
             "required_data": "sell listing count",
             "status": "partial",
             "evidence": (
-                "Docs expose `limit` max 50 and `cursor`; "
-                "no total-count field is documented."
+                "Docs expose `limit` max 50 and `cursor`; no total-count field is documented."
             ),
             "mvp_implication": (
                 "Can count fetched/paginated listings, but exact full depth requires "

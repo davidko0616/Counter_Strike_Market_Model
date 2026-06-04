@@ -22,9 +22,7 @@ from cs_market_model.config import PROJECT_ROOT, load_yaml_config, reports_path
 
 DEFAULT_REJECTION_CURVE_OUTPUT = reports_path("tables", "day15_rejection_curve.csv")
 DEFAULT_POLICY_SUMMARY_OUTPUT = reports_path("tables", "day15_threshold_policy_summary.csv")
-DEFAULT_NORMAL_ACCEPTED_OUTPUT = reports_path(
-    "tables", "day15_normal_accepted_trade_summary.csv"
-)
+DEFAULT_NORMAL_ACCEPTED_OUTPUT = reports_path("tables", "day15_normal_accepted_trade_summary.csv")
 
 
 # ---------------------------------------------------------------------------
@@ -109,12 +107,26 @@ def apply_rejection_policy(
         bear_col = "cs2_index_regime_bear"
         excess_col = "item_excess_log_return_7d"
         if bear_col in frame.columns and excess_col in frame.columns:
-            is_bear = pd.to_numeric(
-                frame[bear_col], errors="coerce"
-            ).fillna(0).astype(bool)
+            is_bear = pd.to_numeric(frame[bear_col], errors="coerce").fillna(0).astype(bool)
             excess = pd.to_numeric(frame[excess_col], errors="coerce").fillna(0.0)
             mask = is_bear & excess.le(0)
             reasons = reasons.where(reasons.notna() | ~mask, "bear_no_alpha")
+
+    # Gate 8: recent item alpha
+    if np.isfinite(resolved_policy.min_item_excess_log_return_7d):
+        excess_col = "item_excess_log_return_7d"
+        if excess_col in frame.columns:
+            excess = pd.to_numeric(frame[excess_col], errors="coerce").fillna(0.0)
+            mask = excess.lt(resolved_policy.min_item_excess_log_return_7d)
+            reasons = reasons.where(reasons.notna() | ~mask, "low_item_alpha")
+
+    # Gate 9: recent price-path instability
+    if np.isfinite(resolved_policy.max_abs_return_30d):
+        abs_return_col = "abs_return_max_30d"
+        if abs_return_col in frame.columns:
+            abs_return = pd.to_numeric(frame[abs_return_col], errors="coerce").fillna(0.0)
+            mask = abs_return.gt(resolved_policy.max_abs_return_30d)
+            reasons = reasons.where(reasons.notna() | ~mask, "unstable_price")
 
     frame["rejection_reason"] = reasons
     frame["is_accepted"] = frame["rejection_reason"].isna()
@@ -230,6 +242,10 @@ def build_rejection_curve(
                 "max_price_jump_share": resolved_base.max_price_jump_share,
                 "exclude_event_regime": resolved_base.exclude_event_regime,
                 "min_row_coverage": resolved_base.min_row_coverage,
+                "reject_bear_without_alpha": resolved_base.reject_bear_without_alpha,
+                "min_entry_price": resolved_base.min_entry_price,
+                "min_item_excess_log_return_7d": resolved_base.min_item_excess_log_return_7d,
+                "max_abs_return_30d": resolved_base.max_abs_return_30d,
             }
             policy_kwargs[dimension] = threshold
             policy = RejectionPolicy(**policy_kwargs)
@@ -284,18 +300,25 @@ def policies_from_config() -> list[tuple[str, RejectionPolicy]]:
     for name, params in raw_policies.items():
         if not isinstance(params, dict):
             continue
-        policies.append((
-            str(name),
-            RejectionPolicy(
-                min_score_threshold=float(params.get("min_score_threshold", 0.0)),
-                min_liquidity_quality=float(params.get("min_liquidity_quality", 0.0)),
-                max_staleness_days=float(params.get("max_staleness_days", float("inf"))),
-                max_price_jump_share=float(params.get("max_price_jump_share", 1.0)),
-                exclude_event_regime=bool(params.get("exclude_event_regime", True)),
-                min_row_coverage=float(params.get("min_row_coverage", 0.0)),
-                reject_bear_without_alpha=bool(params.get("reject_bear_without_alpha", False)),
-            ),
-        ))
+        policies.append(
+            (
+                str(name),
+                RejectionPolicy(
+                    min_score_threshold=float(params.get("min_score_threshold", 0.0)),
+                    min_liquidity_quality=float(params.get("min_liquidity_quality", 0.0)),
+                    max_staleness_days=float(params.get("max_staleness_days", float("inf"))),
+                    max_price_jump_share=float(params.get("max_price_jump_share", 1.0)),
+                    exclude_event_regime=bool(params.get("exclude_event_regime", True)),
+                    min_row_coverage=float(params.get("min_row_coverage", 0.0)),
+                    reject_bear_without_alpha=bool(params.get("reject_bear_without_alpha", False)),
+                    min_entry_price=float(params.get("min_entry_price", 0.0)),
+                    min_item_excess_log_return_7d=float(
+                        params.get("min_item_excess_log_return_7d", float("-inf"))
+                    ),
+                    max_abs_return_30d=float(params.get("max_abs_return_30d", float("inf"))),
+                ),
+            )
+        )
     return policies
 
 
@@ -335,34 +358,46 @@ def _default_policies() -> list[tuple[str, RejectionPolicy]]:
     return [
         ("no_filter", RejectionPolicy(exclude_event_regime=False)),
         ("normal_only", RejectionPolicy(exclude_event_regime=True)),
-        ("conservative", RejectionPolicy(
-            min_score_threshold=0.6,
-            min_liquidity_quality=0.5,
-            max_staleness_days=3.0,
-            max_price_jump_share=0.1,
-            exclude_event_regime=True,
-            min_row_coverage=0.5,
-        )),
-        ("aggressive", RejectionPolicy(
-            min_score_threshold=0.3,
-            min_liquidity_quality=0.3,
-            exclude_event_regime=True,
-        )),
-        ("quality_gate", RejectionPolicy(
-            min_row_coverage=0.5,
-            max_staleness_days=2.0,
-            max_price_jump_share=0.05,
-            exclude_event_regime=True,
-        )),
-        ("bear_regime_aware", RejectionPolicy(
-            min_score_threshold=0.6,
-            min_liquidity_quality=0.5,
-            max_staleness_days=3.0,
-            max_price_jump_share=0.1,
-            exclude_event_regime=True,
-            min_row_coverage=0.5,
-            reject_bear_without_alpha=True,
-        )),
+        (
+            "conservative",
+            RejectionPolicy(
+                min_score_threshold=0.6,
+                min_liquidity_quality=0.5,
+                max_staleness_days=3.0,
+                max_price_jump_share=0.1,
+                exclude_event_regime=True,
+                min_row_coverage=0.5,
+            ),
+        ),
+        (
+            "aggressive",
+            RejectionPolicy(
+                min_score_threshold=0.3,
+                min_liquidity_quality=0.3,
+                exclude_event_regime=True,
+            ),
+        ),
+        (
+            "quality_gate",
+            RejectionPolicy(
+                min_row_coverage=0.5,
+                max_staleness_days=2.0,
+                max_price_jump_share=0.05,
+                exclude_event_regime=True,
+            ),
+        ),
+        (
+            "bear_regime_aware",
+            RejectionPolicy(
+                min_score_threshold=0.6,
+                min_liquidity_quality=0.5,
+                max_staleness_days=3.0,
+                max_price_jump_share=0.1,
+                exclude_event_regime=True,
+                min_row_coverage=0.5,
+                reject_bear_without_alpha=True,
+            ),
+        ),
     ]
 
 
@@ -384,9 +419,7 @@ def summarize_normal_accepted_trades(
 
     # Pre-filter to normal-regime only
     if "label_market_regime" in ledger.columns:
-        normal_ledger = ledger[
-            ledger["label_market_regime"].astype(str).ne("known_event")
-        ].copy()
+        normal_ledger = ledger[ledger["label_market_regime"].astype(str).ne("known_event")].copy()
     else:
         normal_ledger = ledger.copy()
 
@@ -403,6 +436,9 @@ def summarize_normal_accepted_trades(
                 exclude_event_regime=False,
                 min_row_coverage=policy.min_row_coverage,
                 reject_bear_without_alpha=policy.reject_bear_without_alpha,
+                min_entry_price=policy.min_entry_price,
+                min_item_excess_log_return_7d=policy.min_item_excess_log_return_7d,
+                max_abs_return_30d=policy.max_abs_return_30d,
             )
             tagged = apply_rejection_policy(model_trades, normal_policy)
             accepted = tagged[tagged["is_accepted"]]

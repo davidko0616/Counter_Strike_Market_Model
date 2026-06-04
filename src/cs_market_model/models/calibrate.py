@@ -99,8 +99,8 @@ def time_ordered_calibration_split(
 
 
 def _clean_score_array(scores: pd.Series | np.ndarray) -> np.ndarray:
-    score_array = pd.to_numeric(pd.Series(scores), errors="coerce").fillna(0.0).to_numpy(
-        dtype=float
+    score_array = (
+        pd.to_numeric(pd.Series(scores), errors="coerce").fillna(0.0).to_numpy(dtype=float)
     )
     return np.clip(score_array, 1e-6, 1.0 - 1e-6)
 

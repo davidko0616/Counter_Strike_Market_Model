@@ -16,14 +16,13 @@ DEFAULT_MIN_ENTRY_PRICE = 5.0
 PREDICTIONS_PATH = PROJECT_ROOT / "data" / "processed" / "day10_11_lightgbm_predictions.parquet"
 FEATURES_PATH = PROJECT_ROOT / "data" / "features" / "features_day5_v1.parquet"
 ACCEPTED_TRADES_PATH = (
-    PROJECT_ROOT
-    / "reports"
-    / "backtests"
-    / "day24_min_price_5_current_day22_accepted_trades.csv"
+    PROJECT_ROOT / "reports" / "backtests" / "day24_min_price_5_current_day22_accepted_trades.csv"
 )
 EQUITY_PATH = PROJECT_ROOT / "reports" / "backtests" / "day12_13_daily_equity.csv"
 SUMMARY_PATH = PROJECT_ROOT / "reports" / "tables" / "day17_policy_variant_summary.csv"
-ITEM_ATTRIBUTION_PATH = PROJECT_ROOT / "reports" / "tables" / "day17_policy_variant_item_attribution.csv"
+ITEM_ATTRIBUTION_PATH = (
+    PROJECT_ROOT / "reports" / "tables" / "day17_policy_variant_item_attribution.csv"
+)
 CAPACITY_SENSITIVITY_PATH = (
     PROJECT_ROOT / "reports" / "tables" / "day24_min_price_5_capacity_sensitivity.csv"
 )
@@ -51,7 +50,9 @@ def main() -> None:
         return
 
     model_names = sorted(artifacts["predictions"]["model_name"].dropna().unique())
-    default_model = "lightgbm_rank_blend" if "lightgbm_rank_blend" in model_names else model_names[0]
+    default_model = (
+        "lightgbm_rank_blend" if "lightgbm_rank_blend" in model_names else model_names[0]
+    )
     default_threshold = selected_policy_threshold(artifacts["summary"], default_model)
     with st.sidebar:
         st.caption("Policy: $5+ conservative candidate")
@@ -86,7 +87,7 @@ def main() -> None:
     )
     accepted_signals = signal_table[signal_table["candidate_status"].eq("accepted")].copy()
     rejected_signals = signal_table[signal_table["candidate_status"].eq("rejected")].copy()
-    model_summary = policy_summary_for_model(artifacts["summary"], model_name)
+    policy_summary_for_model(artifacts["summary"], model_name)
     capacity_status = capacity_summary_for_model(artifacts["capacity_sensitivity"], model_name)
     default_capacity = capacity_status[capacity_status["scenario"].eq(DEFAULT_SCENARIO)]
     latest_regime = latest_market_regime(artifacts["features"])
@@ -95,7 +96,9 @@ def main() -> None:
     metric_cols = st.columns(6)
     metric_cols[0].metric("Policy", "$5+")
     metric_cols[1].metric("Candidate Status", policy_decision)
-    metric_cols[2].metric("Accepted Trades", _metric_value(default_capacity, "accepted_count", integer=True))
+    metric_cols[2].metric(
+        "Accepted Trades", _metric_value(default_capacity, "accepted_count", integer=True)
+    )
     metric_cols[3].metric("PnL", _metric_value(default_capacity, "accepted_total_pnl"))
     metric_cols[4].metric("Profit Factor", _metric_value(default_capacity, "profit_factor"))
     metric_cols[5].metric("Regime", latest_regime)
@@ -126,7 +129,9 @@ def main() -> None:
         )
 
     with tab_capacity:
-        render_capacity_status(artifacts["capacity_sensitivity"], artifacts["capacity_period"], model_name)
+        render_capacity_status(
+            artifacts["capacity_sensitivity"], artifacts["capacity_period"], model_name
+        )
 
     with tab_freshness:
         render_freshness(POLICY_ARTIFACT_PATHS)
@@ -269,10 +274,14 @@ def build_signal_table(
     for column in columns:
         if column not in latest.columns:
             latest[column] = np.nan
-    return latest[columns].sort_values(
-        ["candidate_status", "strong_buy_score"],
-        ascending=[True, False],
-    ).reset_index(drop=True)
+    return (
+        latest[columns]
+        .sort_values(
+            ["candidate_status", "strong_buy_score"],
+            ascending=[True, False],
+        )
+        .reset_index(drop=True)
+    )
 
 
 def render_item_detail(
@@ -283,7 +292,9 @@ def render_item_detail(
     """Render price history and accepted-trade markers for one item."""
     features = artifacts["features"].copy()
     features["timestamp"] = pd.to_datetime(features["timestamp"], utc=True)
-    item_features = features[features["market_hash_name"].eq(market_hash_name)].sort_values("timestamp")
+    item_features = features[features["market_hash_name"].eq(market_hash_name)].sort_values(
+        "timestamp"
+    )
     if item_features.empty:
         st.warning("No feature rows found for this item.")
         return
@@ -368,7 +379,9 @@ def render_freshness(paths: dict[str, Path]) -> None:
     rows = []
     for label, path in paths.items():
         exists = path.exists()
-        modified = pd.Timestamp(path.stat().st_mtime, unit="s").tz_localize("UTC") if exists else pd.NaT
+        modified = (
+            pd.Timestamp(path.stat().st_mtime, unit="s").tz_localize("UTC") if exists else pd.NaT
+        )
         rows.append(
             {
                 "artifact": label,
@@ -418,7 +431,9 @@ def render_regime(features: pd.DataFrame) -> None:
     ]
     regime_counts = {
         "bull": int(latest.get("cs2_index_regime_bull", pd.Series(False)).fillna(False).sum()),
-        "neutral": int(latest.get("cs2_index_regime_neutral", pd.Series(False)).fillna(False).sum()),
+        "neutral": int(
+            latest.get("cs2_index_regime_neutral", pd.Series(False)).fillna(False).sum()
+        ),
         "bear": int(latest.get("cs2_index_regime_bear", pd.Series(False)).fillna(False).sum()),
     }
     cols = st.columns(3)
@@ -426,7 +441,9 @@ def render_regime(features: pd.DataFrame) -> None:
     cols[1].metric("Neutral Rows", regime_counts["neutral"])
     cols[2].metric("Bear Rows", regime_counts["bear"])
     available = [column for column in numeric_cols if column in latest.columns]
-    st.dataframe(latest[["market_hash_name", *available]], use_container_width=True, hide_index=True)
+    st.dataframe(
+        latest[["market_hash_name", *available]], use_container_width=True, hide_index=True
+    )
 
 
 def latest_market_regime(features: pd.DataFrame) -> str:
@@ -436,7 +453,9 @@ def latest_market_regime(features: pd.DataFrame) -> str:
         return "unknown"
     counts = {
         "bull": int(latest.get("cs2_index_regime_bull", pd.Series(False)).fillna(False).sum()),
-        "neutral": int(latest.get("cs2_index_regime_neutral", pd.Series(False)).fillna(False).sum()),
+        "neutral": int(
+            latest.get("cs2_index_regime_neutral", pd.Series(False)).fillna(False).sum()
+        ),
         "bear": int(latest.get("cs2_index_regime_bear", pd.Series(False)).fillna(False).sum()),
     }
     return max(counts, key=counts.get)

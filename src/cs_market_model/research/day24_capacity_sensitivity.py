@@ -17,7 +17,9 @@ import numpy as np
 import pandas as pd
 
 from cs_market_model.backtesting.rejection_policy import RejectionPolicy
-from cs_market_model.backtesting.walk_forward_rejection import walk_forward_score_threshold_selection
+from cs_market_model.backtesting.walk_forward_rejection import (
+    walk_forward_score_threshold_selection,
+)
 from cs_market_model.config import PROJECT_ROOT, data_path, reports_path
 from cs_market_model.research.day21_v2_robustness import enrich_trades_with_features
 from cs_market_model.research.day22_low_price_policy import (
@@ -155,8 +157,7 @@ def run_day24_capacity_sensitivity(
             else sized.copy()
         )
         filled.to_csv(
-            backtest_output_dir
-            / f"day24_min_price_5_{scenario.name}_accepted_trades.csv",
+            backtest_output_dir / f"day24_min_price_5_{scenario.name}_accepted_trades.csv",
             index=False,
         )
         scenario_rows.extend(
@@ -168,9 +169,7 @@ def run_day24_capacity_sensitivity(
 
     summary = pd.DataFrame(scenario_rows).sort_values(["model_name", "scenario"])
     period_summary = (
-        pd.concat(period_frames, ignore_index=True, sort=False)
-        if period_frames
-        else pd.DataFrame()
+        pd.concat(period_frames, ignore_index=True, sort=False) if period_frames else pd.DataFrame()
     )
     report = build_markdown_report(summary, period_summary, resolved_scenarios)
 
@@ -203,9 +202,7 @@ def build_capacity_summary_rows(
         model_selection = selection[selection["model_name"].astype(str).eq(model_name)]
         rejected_by_capacity = int(len(model_sized) - len(model_filled))
         base_rejected = int(
-            pd.to_numeric(model_selection["test_rejected_count"], errors="coerce")
-            .fillna(0.0)
-            .sum()
+            pd.to_numeric(model_selection["test_rejected_count"], errors="coerce").fillna(0.0).sum()
         )
         total_candidates = int(len(model_sized) + base_rejected)
         period_pnl = _period_pnl(model_filled)
@@ -256,7 +253,9 @@ def build_period_attribution(filled: pd.DataFrame, scenario_name: str) -> pd.Dat
     frame = filled.copy()
     if "test_period" not in frame.columns:
         frame["entry_timestamp"] = pd.to_datetime(frame["entry_timestamp"], utc=True)
-        frame["test_period"] = frame["entry_timestamp"].dt.tz_convert(None).dt.to_period("M").astype(str)
+        frame["test_period"] = (
+            frame["entry_timestamp"].dt.tz_convert(None).dt.to_period("M").astype(str)
+        )
     rows = []
     for (model_name, period), group in frame.groupby(["model_name", "test_period"], sort=False):
         rows.append(
@@ -294,7 +293,11 @@ def build_markdown_report(
         _markdown_table(
             pd.DataFrame(
                 [
-                    {"scenario": scenario.name, "description": scenario.description, **_config_fields(scenario.config)}
+                    {
+                        "scenario": scenario.name,
+                        "description": scenario.description,
+                        **_config_fields(scenario.config),
+                    }
                     for scenario in scenarios
                 ]
             )
@@ -310,7 +313,10 @@ def build_markdown_report(
             f"{MAX_ACCEPTED_DRAWDOWN:.0%}."
         ),
         "",
-        "Note: threshold selection does not integrate capacity constraints; capacity is applied after threshold selection.",
+        (
+            "Note: threshold selection does not integrate capacity constraints; "
+            "capacity is applied after threshold selection."
+        ),
         "",
         "## Weakest LightGBM Periods",
         "",
@@ -335,7 +341,8 @@ def _decision(lightgbm: pd.DataFrame) -> str:
     if not lightgbm["survives_capacity_stress"].fillna(False).all():
         return (
             "The $5+ policy does not survive the configured capacity stress suite. "
-            "Use paper-trade-only status and strengthen rejection gates before treating it as a default."
+            "Use paper-trade-only status and strengthen rejection gates before "
+            "treating it as a default."
         )
     weakest = lightgbm.sort_values("accepted_total_pnl").iloc[0]
     return (
@@ -355,7 +362,9 @@ def _period_pnl(frame: pd.DataFrame) -> pd.Series:
         temp["_period"] = temp["entry_timestamp"].dt.tz_convert(None).dt.to_period("M").astype(str)
         period_column = "_period"
         frame = temp
-    return pd.to_numeric(frame["pnl"], errors="coerce").groupby(frame[period_column].astype(str)).sum()
+    return (
+        pd.to_numeric(frame["pnl"], errors="coerce").groupby(frame[period_column].astype(str)).sum()
+    )
 
 
 def survives_capacity_stress(
@@ -462,14 +471,18 @@ def _markdown_table(frame: pd.DataFrame) -> str:
         return "_No rows._"
     display = frame.copy()
     for column in display.select_dtypes(include=[np.number]).columns:
-        display[column] = display[column].map(lambda value: f"{value:.4f}" if pd.notna(value) else "")
+        display[column] = display[column].map(
+            lambda value: f"{value:.4f}" if pd.notna(value) else ""
+        )
     columns = [str(column) for column in display.columns]
     rows = [
         "| " + " | ".join(columns) + " |",
         "| " + " | ".join("---" for _ in columns) + " |",
     ]
     for _, row in display.iterrows():
-        rows.append("| " + " | ".join(_markdown_cell(row[column]) for column in display.columns) + " |")
+        rows.append(
+            "| " + " | ".join(_markdown_cell(row[column]) for column in display.columns) + " |"
+        )
     return "\n".join(rows)
 
 

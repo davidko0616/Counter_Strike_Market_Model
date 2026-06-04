@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import pytest
 import pandas as pd
+import pytest
 
 from cs_market_model.research.day22_low_price_policy import (
     CapacitySizingConfig,
@@ -26,9 +26,7 @@ def test_price_bucket_execution_costs_apply_entry_exit_price_multipliers() -> No
 
     assert result["execution_price_bucket"].tolist() == ["<1", "1-5", "5-20", ">20"]
     assert result["extra_execution_cost_bps"].tolist() == [500.0, 250.0, 150.0, 100.0]
-    assert result["execution_cost_method"].unique().tolist() == [
-        "entry_exit_price_multiplier"
-    ]
+    assert result["execution_cost_method"].unique().tolist() == ["entry_exit_price_multiplier"]
     assert result["realized_net_return"].tolist() == pytest.approx(
         [
             (1.10 * 0.95 / 1.05) - 1.0,
@@ -58,9 +56,7 @@ def test_negative_return_price_bucket_cost_amplifies_loss() -> None:
 
     result = apply_price_bucket_execution_costs(trades)
 
-    assert result.loc[0, "realized_net_return"] == pytest.approx(
-        (0.90 * 0.985 / 1.015) - 1.0
-    )
+    assert result.loc[0, "realized_net_return"] == pytest.approx((0.90 * 0.985 / 1.015) - 1.0)
     assert result.loc[0, "realized_net_return"] < -0.10
 
 
@@ -109,9 +105,7 @@ def test_capacity_adjusted_sizing_caps_item_bucket_and_liquidity() -> None:
         ),
     )
 
-    assert result["capacity_adjusted_notional"].tolist() == pytest.approx(
-        [0.005, 0.001, 0.003]
-    )
+    assert result["capacity_adjusted_notional"].tolist() == pytest.approx([0.005, 0.001, 0.003])
     assert result["pnl"].tolist() == pytest.approx([0.0005, 0.0001, 0.0003])
 
 
@@ -178,9 +172,7 @@ def test_capacity_adjusted_sizing_uses_market_hash_name_tiebreaker() -> None:
     )
 
     assert result["market_hash_name"].tolist() == ["A", "B", "C"]
-    assert result["capacity_adjusted_notional"].tolist() == pytest.approx(
-        [0.05, 0.025, 0.0]
-    )
+    assert result["capacity_adjusted_notional"].tolist() == pytest.approx([0.05, 0.025, 0.0])
     assert result["capacity_filled"].tolist() == [True, True, False]
 
 

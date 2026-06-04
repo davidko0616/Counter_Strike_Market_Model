@@ -78,8 +78,8 @@ def test_asof_join_only_uses_past_snapshots() -> None:
 
     joined = add_csfloat_listing_features(features, snapshots)
 
-    assert joined.loc[0, "csfloat_snapshot_available"] == False
-    assert joined.loc[1, "csfloat_snapshot_available"] == True
+    assert not joined.loc[0, "csfloat_snapshot_available"]
+    assert joined.loc[1, "csfloat_snapshot_available"]
     assert joined.loc[1, "csfloat_min_price_to_close"] == 0.05
 
 

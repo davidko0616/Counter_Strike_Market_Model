@@ -21,8 +21,8 @@ def test_coverage_detects_missing_post_snapshot_bars() -> None:
 
     coverage = build_csfloat_coverage_table(bars, csfloat)
 
-    assert coverage.loc[0, "has_csfloat_snapshot"] == True
-    assert coverage.loc[0, "has_post_snapshot_bar"] == False
+    assert coverage.loc[0, "has_csfloat_snapshot"]
+    assert not coverage.loc[0, "has_post_snapshot_bar"]
     assert coverage.loc[0, "days_until_coverage"] == 1.0
 
 
@@ -42,5 +42,5 @@ def test_coverage_detects_available_post_snapshot_bars() -> None:
 
     coverage = build_csfloat_coverage_table(bars, csfloat)
 
-    assert coverage.loc[0, "has_post_snapshot_bar"] == True
+    assert coverage.loc[0, "has_post_snapshot_bar"]
     assert coverage.loc[0, "days_until_coverage"] == 0.0

@@ -39,4 +39,3 @@ def realized_trade_return(
     if not np.isfinite(raw_return):
         return np.nan
     return float(raw_return) * resolved.execution_probability
-

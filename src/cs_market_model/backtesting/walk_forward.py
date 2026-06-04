@@ -73,10 +73,7 @@ def make_monthly_walk_forward_splits(
             continue
 
         embargo_start = test_start - pd.Timedelta(days=embargo_days)
-        train_mask = (
-            (frame[timestamp_col] <= embargo_start)
-            & (frame[label_end_col] < test_start)
-        )
+        train_mask = (frame[timestamp_col] <= embargo_start) & (frame[label_end_col] < test_start)
         test_mask = (frame[timestamp_col] >= test_start) & (frame[timestamp_col] <= test_end)
 
         train_rows = frame[train_mask]

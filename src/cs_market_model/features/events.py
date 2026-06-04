@@ -121,4 +121,3 @@ def _affected_item_mask(features: pd.DataFrame, event: dict[str, Any]) -> pd.Ser
         ).any(axis=1)
 
     return mask
-

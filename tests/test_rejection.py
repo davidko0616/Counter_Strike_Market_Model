@@ -8,11 +8,11 @@ import pytest
 
 from cs_market_model.backtesting.rejection import (
     RejectionPolicy,
+    _accepted_trade_metrics,
     apply_rejection_policy,
     build_rejection_curve,
-    summarize_threshold_policies,
     summarize_normal_accepted_trades,
-    _accepted_trade_metrics,
+    summarize_threshold_policies,
 )
 from cs_market_model.backtesting.rejection_policy import rejection_reason_for_row
 
@@ -20,31 +20,34 @@ from cs_market_model.backtesting.rejection_policy import rejection_reason_for_ro
 def _make_ledger(n: int = 20) -> pd.DataFrame:
     """Create a synthetic trade ledger with all columns used by rejection."""
     rng = np.random.RandomState(42)
-    return pd.DataFrame({
-        "model_name": ["test_model"] * n,
-        "event_id": [f"e{i}" for i in range(n)],
-        "market_hash_name": [f"AK-47 | Skin {i % 5}" for i in range(n)],
-        "category": ["rifle"] * n,
-        "entry_timestamp": pd.date_range("2025-06-01", periods=n, freq="D", tz="UTC"),
-        "exit_timestamp": pd.date_range("2025-06-15", periods=n, freq="D", tz="UTC"),
-        "holding_period_days": [14.0] * n,
-        "strong_buy_score": np.linspace(0.1, 0.9, n),
-        "daily_rank": list(range(1, n + 1)),
-        "label_code": rng.choice([0, 1, 2], size=n),
-        "label_class": rng.choice(["Bad Time", "Good Time", "Strong Buy"], size=n),
-        "is_actual_strong_buy": rng.choice([True, False], size=n),
-        "realized_net_return": rng.uniform(-0.05, 0.08, size=n),
-        "notional": [0.05] * n,
-        "pnl": rng.uniform(-0.003, 0.004, size=n),
-        "label_market_regime": ["normal"] * (n - 2) + ["known_event"] * 2,
-        "liquidity_quality_score_30d": np.linspace(0.2, 0.9, n),
-        "entry_close": np.linspace(0.25, 10.0, n),
-        "effective_staleness_days": np.linspace(0.0, 5.0, n),
-        "row_coverage_30d": np.linspace(0.3, 1.0, n),
-        "price_jump_50pct_share_30d": np.linspace(0.0, 0.3, n),
-        "cs2_index_regime_bear": [True] * (n // 2) + [False] * (n - n // 2),
-        "item_excess_log_return_7d": np.linspace(-0.05, 0.05, n),
-    })
+    return pd.DataFrame(
+        {
+            "model_name": ["test_model"] * n,
+            "event_id": [f"e{i}" for i in range(n)],
+            "market_hash_name": [f"AK-47 | Skin {i % 5}" for i in range(n)],
+            "category": ["rifle"] * n,
+            "entry_timestamp": pd.date_range("2025-06-01", periods=n, freq="D", tz="UTC"),
+            "exit_timestamp": pd.date_range("2025-06-15", periods=n, freq="D", tz="UTC"),
+            "holding_period_days": [14.0] * n,
+            "strong_buy_score": np.linspace(0.1, 0.9, n),
+            "daily_rank": list(range(1, n + 1)),
+            "label_code": rng.choice([0, 1, 2], size=n),
+            "label_class": rng.choice(["Bad Time", "Good Time", "Strong Buy"], size=n),
+            "is_actual_strong_buy": rng.choice([True, False], size=n),
+            "realized_net_return": rng.uniform(-0.05, 0.08, size=n),
+            "notional": [0.05] * n,
+            "pnl": rng.uniform(-0.003, 0.004, size=n),
+            "label_market_regime": ["normal"] * (n - 2) + ["known_event"] * 2,
+            "liquidity_quality_score_30d": np.linspace(0.2, 0.9, n),
+            "entry_close": np.linspace(0.25, 10.0, n),
+            "effective_staleness_days": np.linspace(0.0, 5.0, n),
+            "row_coverage_30d": np.linspace(0.3, 1.0, n),
+            "price_jump_50pct_share_30d": np.linspace(0.0, 0.3, n),
+            "abs_return_max_30d": np.linspace(0.0, 0.4, n),
+            "cs2_index_regime_bear": [True] * (n // 2) + [False] * (n - n // 2),
+            "item_excess_log_return_7d": np.linspace(-0.05, 0.05, n),
+        }
+    )
 
 
 class TestApplyRejectionPolicy:
@@ -133,6 +136,28 @@ class TestApplyRejectionPolicy:
         assert not low_cov.empty
         assert low_cov["rejection_reason"].notna().all()
 
+    def test_min_item_excess_log_return_threshold(self) -> None:
+        ledger = _make_ledger()
+        policy = RejectionPolicy(
+            min_item_excess_log_return_7d=0.0,
+            exclude_event_regime=False,
+        )
+        result = apply_rejection_policy(ledger, policy)
+        low_alpha = result[result["item_excess_log_return_7d"] < 0.0]
+        assert not low_alpha.empty
+        assert (low_alpha["rejection_reason"] == "low_item_alpha").all()
+
+    def test_abs_return_instability_threshold(self) -> None:
+        ledger = _make_ledger()
+        policy = RejectionPolicy(
+            max_abs_return_30d=0.2,
+            exclude_event_regime=False,
+        )
+        result = apply_rejection_policy(ledger, policy)
+        unstable = result[result["abs_return_max_30d"] > 0.2]
+        assert not unstable.empty
+        assert (unstable["rejection_reason"] == "unstable_price").all()
+
     def test_priority_order_event_regime_first(self) -> None:
         """Event regime gate should take priority over score gate."""
         ledger = _make_ledger()
@@ -173,6 +198,8 @@ class TestApplyRejectionPolicy:
             exclude_event_regime=True,
             min_row_coverage=0.5,
             reject_bear_without_alpha=True,
+            min_item_excess_log_return_7d=0.0,
+            max_abs_return_30d=0.35,
         )
 
         vectorized = apply_rejection_policy(ledger, policy)
@@ -216,7 +243,7 @@ class TestRejectionCurve:
         # Accepted count should never increase as threshold rises
         for i in range(1, len(accepted_counts)):
             assert accepted_counts[i] <= accepted_counts[i - 1], (
-                f"accepted_count increased from {accepted_counts[i-1]} to "
+                f"accepted_count increased from {accepted_counts[i - 1]} to "
                 f"{accepted_counts[i]} at threshold index {i}"
             )
 
@@ -327,6 +354,10 @@ class TestRejectionPolicyValidation:
     def test_negative_liquidity_raises(self) -> None:
         with pytest.raises(ValueError, match="min_liquidity_quality"):
             RejectionPolicy(min_liquidity_quality=-0.5)
+
+    def test_negative_max_abs_return_raises(self) -> None:
+        with pytest.raises(ValueError, match="max_abs_return_30d"):
+            RejectionPolicy(max_abs_return_30d=-0.1)
 
 
 class TestBearRegimeGate:

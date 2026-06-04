@@ -35,9 +35,7 @@ def require_env(name: str) -> str:
     load_local_env()
     value = os.getenv(name)
     if not value:
-        raise RuntimeError(
-            f"{name} is required. Set it in your shell or in the local .env file."
-        )
+        raise RuntimeError(f"{name} is required. Set it in your shell or in the local .env file.")
     return value
 
 
@@ -48,4 +46,3 @@ def redact_secret(value: str | None, visible_prefix: int = 4, visible_suffix: in
     if len(value) <= visible_prefix + visible_suffix:
         return "<redacted>"
     return f"{value[:visible_prefix]}...{value[-visible_suffix:]}"
-

@@ -98,7 +98,9 @@ def load_policy_trades(policy_inputs: dict[str, Path]) -> pd.DataFrame:
     trades = pd.concat(frames, ignore_index=True, sort=False)
     trades["entry_timestamp"] = pd.to_datetime(trades["entry_timestamp"], utc=True)
     if "entry_month" not in trades.columns:
-        trades["entry_month"] = trades["entry_timestamp"].dt.tz_convert(None).dt.to_period("M").astype(str)
+        trades["entry_month"] = (
+            trades["entry_timestamp"].dt.tz_convert(None).dt.to_period("M").astype(str)
+        )
     for column in [
         "realized_net_return",
         "pnl",
@@ -117,18 +119,12 @@ def load_policy_trades(policy_inputs: dict[str, Path]) -> pd.DataFrame:
 def build_policy_summary(trades: pd.DataFrame) -> pd.DataFrame:
     """Summarize concentration and robustness by policy/model."""
     rows: list[dict[str, Any]] = []
-    for (policy_variant, model_name), group in trades.groupby(["policy_variant", "model_name"], sort=False):
+    for (policy_variant, model_name), group in trades.groupby(
+        ["policy_variant", "model_name"], sort=False
+    ):
         total_pnl = float(group["pnl"].sum())
-        top_items = (
-            group.groupby("market_hash_name")["pnl"]
-            .sum()
-            .sort_values(ascending=False)
-        )
-        top_periods = (
-            group.groupby("entry_month")["pnl"]
-            .sum()
-            .sort_values(ascending=False)
-        )
+        top_items = group.groupby("market_hash_name")["pnl"].sum().sort_values(ascending=False)
+        top_periods = group.groupby("entry_month")["pnl"].sum().sort_values(ascending=False)
         rows.append(
             {
                 "policy_variant": policy_variant,
@@ -304,7 +300,9 @@ def _markdown_table(frame: pd.DataFrame) -> str:
         return "_No rows._"
     display = frame.copy()
     for column in display.select_dtypes(include=[np.number]).columns:
-        display[column] = display[column].map(lambda value: f"{value:.4f}" if pd.notna(value) else "")
+        display[column] = display[column].map(
+            lambda value: f"{value:.4f}" if pd.notna(value) else ""
+        )
     columns = [str(column) for column in display.columns]
     rows = [
         "| " + " | ".join(columns) + " |",
@@ -312,9 +310,7 @@ def _markdown_table(frame: pd.DataFrame) -> str:
     ]
     for _, row in display.iterrows():
         rows.append(
-            "| "
-            + " | ".join(_markdown_cell(row[column]) for column in display.columns)
-            + " |"
+            "| " + " | ".join(_markdown_cell(row[column]) for column in display.columns) + " |"
         )
     return "\n".join(rows)
 

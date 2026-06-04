@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import pytest
 import pandas as pd
+import pytest
 
 from cs_market_model.research.day21_v2_robustness import (
     build_bucket_attribution,
@@ -82,7 +82,7 @@ def test_v2_enrichment_dedupes_duplicate_feature_rows_with_diagnostics() -> None
     duplicate = enriched[enriched["market_hash_name"].eq("A")].iloc[0]
     assert duplicate["entry_close"] == 0.5
     assert duplicate["feature_join_duplicate_count"] == 2
-    assert duplicate["feature_join_duplicate_conflict"] == False
+    assert not duplicate["feature_join_duplicate_conflict"]
     assert duplicate["feature_join_conflicting_columns"] == ""
 
 
@@ -97,7 +97,7 @@ def test_v2_enrichment_reports_conflicting_duplicate_feature_rows() -> None:
 
     assert duplicate["entry_close"] == 0.5
     assert duplicate["feature_join_duplicate_count"] == 2
-    assert duplicate["feature_join_duplicate_conflict"] == True
+    assert duplicate["feature_join_duplicate_conflict"]
     assert duplicate["feature_join_conflicting_columns"] == "close"
 
 
@@ -111,7 +111,7 @@ def test_v2_enrichment_replaces_existing_feature_join_diagnostics() -> None:
 
     duplicate = enriched[enriched["market_hash_name"].eq("A")].iloc[0]
     assert duplicate["feature_join_duplicate_count"] == 1
-    assert duplicate["feature_join_duplicate_conflict"] == False
+    assert not duplicate["feature_join_duplicate_conflict"]
     assert duplicate["feature_join_conflicting_columns"] == ""
 
 

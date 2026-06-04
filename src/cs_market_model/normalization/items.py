@@ -56,9 +56,7 @@ def enrich_item_metadata(metadata: pd.DataFrame | None) -> pd.DataFrame | None:
     frame["souvenir_tradeup_input_eligible"] = (
         frame["tradeup_input_eligible"] & frame["souvenir_flag"]
     )
-    frame["souvenir_attributes_removed_on_tradeup"] = frame[
-        "souvenir_tradeup_input_eligible"
-    ]
+    frame["souvenir_attributes_removed_on_tradeup"] = frame["souvenir_tradeup_input_eligible"]
 
     return frame
 
@@ -72,4 +70,3 @@ def _bool_or_name_contains(frame: pd.DataFrame, column: str, token: str) -> pd.S
         return values
     name_match = frame["market_hash_name"].fillna("").str.contains(token, case=False, regex=False)
     return values | name_match
-

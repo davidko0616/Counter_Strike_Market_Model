@@ -1,54 +1,60 @@
 # Counter-Strike Market Model
 
-Research-grade MVP for net-return-aware Counter-Strike skin buy-signal
-prediction.
-
-The project ranks item-date opportunities by expected after-cost value rather
-than raw price direction. The initial scope is a small liquid universe, SteamDT
-historical bars, and later CSFloat listing snapshots for point-in-time
-microstructure features.
+Research MVP for Counter-Strike skin buy-signal modeling after fees, liquidity, execution costs, market regime, and rejection gates.
 
 ## Current Status
 
-Completed through Day 16 implementation:
+The project is complete enough for submission as an honest research MVP.
 
-- The MVP universe is gun skins only: no knives, gloves, cases, stickers, or
-  sticker price data in the tradable set.
-- The first-pull universe has 48 Field-Tested skins across rifles, snipers,
-  pistols, and SMGs.
-- Feature Factory V1 builds 177 feature columns: momentum, volatility,
-  liquidity/staleness, relative index features, cross-sectional ranks, CS2
-  market-index features, and known-event features.
-- Labeling V1 builds CUSUM-sampled events and net-return Triple Barrier labels.
-- Baseline and LightGBM models use purged walk-forward splits.
-- Backtest V1 converts ranked prediction outputs into cash-constrained top-k
-  trade simulations with cooldowns, position sizing, trade ledgers, equity
-  curves, drawdown, turnover, and selected-trade precision.
-- Day 14 separates event-regime trades from normal-regime performance. Normal
-  trading is negative across all models and all CS2 index regimes.
-- Day 15 adds post-hoc rejection curves and named no-trade policies.
-- Day 16 integrates rejection into the portfolio simulator before entries and
-  adds walk-forward score-threshold validation.
+Final recommendation:
 
-Generated data and report outputs are intentionally ignored by git.
+> Paper trade only. Do not use live capital yet.
 
-## Key Local Artifacts
+The pipeline works end to end, and the corrected `$5+` gun-skin policy remains positive in several tests. However, stricter paper-trade gates still fail period-stability criteria because gains are too concentrated. The correct conclusion is that the system is useful for research and paper trading, not live trading.
 
-- `data/processed/price_bars_day3_first_pull.parquet`
-- `data/processed/item_metadata_day3_first_pull.parquet`
-- `data/features/features_day5_v1.parquet`
-- `data/labels/labels_day7_v1.parquet`
-- `reports/tables/day12_13_backtest_summary.csv`
-- `reports/backtests/day12_13_trade_ledger.csv`
-- `reports/tables/day14_backtest_regime_summary.csv`
-- `reports/tables/day15_rejection_curve.csv`
-- `reports/tables/day15_threshold_policy_summary.csv`
-- `reports/tables/day15_normal_accepted_trade_summary.csv`
-- `reports/backtests/day16_conservative_trade_ledger.csv`
-- `reports/tables/day16_conservative_backtest_summary.csv`
-- `reports/tables/day16_walk_forward_threshold_selection.csv`
-- `reports/tables/day16_walk_forward_threshold_summary.csv`
-- `reports/backtests/day16_walk_forward_accepted_trades.csv`
+See the final report:
+
+- `docs/final_submission_report.md`
+
+## Scope
+
+Current tradable universe:
+
+- gun skins only
+- no knives
+- no gloves
+- no cases
+- no sticker price data
+
+Data sources:
+
+- SteamDT: historical price bars and liquidity proxies
+- CSFloat: listing snapshots and future microstructure features
+
+CSFloat point-in-time coverage is unavailable in the current local artifact set.
+Day 18 and Day 19 run successfully and report this explicitly, so CSFloat is
+not used as a hard trading gate in the final recommendation.
+
+## What Is Implemented
+
+- SteamDT collectors and batch ingestion
+- normalized price bars
+- item metadata and gun-skin universe configs
+- point-in-time feature factory
+- net-return-aware triple-barrier labels
+- baseline models
+- LightGBM model
+- walk-forward validation
+- execution-realistic backtests
+- rejection policies
+- low-price execution-cost stress tests
+- capacity sizing and open-position limits
+- wear-variant validity audit
+- Day 25 stricter `$5+` paper-trade gate analysis
+- Streamlit dashboard MVP
+- secret scanner
+
+Generated data/report artifacts are intentionally ignored by Git.
 
 ## Setup
 
@@ -59,94 +65,104 @@ python -m pip install -e ".[dev]"
 Copy-Item .env.example .env
 ```
 
-Fill in `.env` locally:
+Fill `.env` locally:
 
 ```text
 STEAMDT_API_KEY=...
 CSFLOAT_API_KEY=...
 ```
 
-Run the secret scanner before committing:
+Never commit `.env`.
+
+Run the secret scanner before pushing:
 
 ```powershell
-python -m cs_market_model.security.scan_secrets
+.\.venv\Scripts\python.exe -m cs_market_model.security.scan_secrets
 ```
 
-## Main Commands
+## Validation
 
-SteamDT Day 3 batch collection:
+Run tests:
 
 ```powershell
-python -m cs_market_model.collectors.steamdt_batch --config universe_day3_first_pull.yaml
+.\.venv\Scripts\python.exe -m pytest
 ```
 
-Day 5 feature build:
+Run repo-wide lint:
 
 ```powershell
-python -m cs_market_model.features.build_features
+.\.venv\Scripts\python.exe -m ruff check .
 ```
 
-Day 7 label build:
+Repo-wide Ruff passes in the final local validation.
+
+## Final Research Commands
+
+Day 22 low-price policy comparison:
 
 ```powershell
-python -m cs_market_model.labeling.build_labels
+.\.venv\Scripts\python.exe -m cs_market_model.research.day22_low_price_policy
 ```
 
-Days 8-9 baseline training:
+Day 23 policy attribution:
 
 ```powershell
-python -m cs_market_model.models.train
+.\.venv\Scripts\python.exe -m cs_market_model.research.day23_policy_attribution
 ```
 
-Days 10-11 LightGBM comparison:
+Day 24 `$5+` capacity sensitivity:
 
 ```powershell
-python -m cs_market_model.models.lightgbm_train
+.\.venv\Scripts\python.exe -m cs_market_model.research.day24_capacity_sensitivity
 ```
 
-Days 12-13 Backtest V1:
+Day 25 stricter paper-trade rejection gates:
 
 ```powershell
-python -m cs_market_model.backtesting.portfolio
+.\.venv\Scripts\python.exe -m cs_market_model.research.day25_paper_trade_rejection
 ```
 
-Day 14 outlier audit:
+Day 18/19 CSFloat coverage status:
 
 ```powershell
-python -m cs_market_model.backtesting.audit_outliers
+.\.venv\Scripts\python.exe -m cs_market_model.research.day19_csfloat_coverage
+.\.venv\Scripts\python.exe -m cs_market_model.research.day18_csfloat_ablation
 ```
 
-Day 15 rejection analysis:
+Dashboard:
 
 ```powershell
-python -m cs_market_model.backtesting.rejection
+.\.venv\Scripts\streamlit.exe run src/cs_market_model/dashboard/app.py
 ```
 
-Day 16 integrated conservative-policy backtest:
+## Final Headline Results
 
-```powershell
-python -m cs_market_model.backtesting.portfolio --rejection-policy conservative
-```
+Corrected LightGBM Day 22 results:
 
-Day 16 walk-forward rejection validation:
+| Policy | Accepted Trades | PnL | Profit Factor | Win Rate |
+| --- | ---: | ---: | ---: | ---: |
+| raw v2 costed | 704 | 0.6950 | 2.4118 | 66.76% |
+| `$1+` costed | 416 | 0.1789 | 1.6882 | 71.15% |
+| `$5+` costed | 195 | 0.0413 | 1.3241 | 77.44% |
 
-```powershell
-python -m cs_market_model.backtesting.walk_forward_rejection
-```
+Day 25 stricter `$5+` result:
 
-CSFloat listings probe:
+| Scenario | Accepted | PnL | Profit Factor | Positive Period Share | Stress Pass |
+| --- | ---: | ---: | ---: | ---: | --- |
+| current Day 24 `$5+` gates | 195 | 0.0413 | 1.3241 | 90.91% | Yes |
+| stricter `$5+` gates | 94 | 0.1022 | 1.8276 | 36.36% | No |
+| stricter `$5+` gates + strict open 10 | 93 | 0.0349 | 1.8473 | 36.36% | No |
 
-```powershell
-python -m cs_market_model.collectors.csfloat "AK-47 | Redline (Field-Tested)"
-```
+## Submission Files
 
-## Next Steps
+- `docs/final_submission_report.md`
+- `SUBMISSION_CHECKLIST.md`
+- `STARTUP_PLAN.md`
+- `Reviews and implementation plans/todo_before_proceeding.md`
+- `src/cs_market_model/dashboard/app.py`
+- `src/cs_market_model/research/day25_paper_trade_rejection.py`
+- `configs/backtest.yaml`
 
-Priority 1: Finish validating the Day 16 rejection system on regenerated
-prediction artifacts and make threshold selection stricter if needed.
+## Bottom Line
 
-Priority 2: Add CSFloat listing features and run a `SteamDT only` versus
-`SteamDT + CSFloat` ablation.
-
-Priority 3: Expand the tradable universe only after the rejection-aware normal
-model remains positive under walk-forward validation.
+The project demonstrates a working, validated research pipeline and reaches a defensible recommendation: use the conservative `$5+` policy only for paper trading until CSFloat point-in-time coverage and live degradation monitoring are available.

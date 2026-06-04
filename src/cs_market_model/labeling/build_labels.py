@@ -134,8 +134,10 @@ def add_label_regime_columns(labels: pd.DataFrame, feature_table: pd.DataFrame) 
             continue
         start = pd.Timestamp(label["timestamp"])
         raw_end = label.get("exit_timestamp")
-        end = pd.Timestamp(raw_end) if pd.notna(raw_end) else pd.Timestamp(
-            label["vertical_barrier_timestamp"]
+        end = (
+            pd.Timestamp(raw_end)
+            if pd.notna(raw_end)
+            else pd.Timestamp(label["vertical_barrier_timestamp"])
         )
         window = item_rows[(item_rows["timestamp"] >= start) & (item_rows["timestamp"] <= end)]
         event_window = window[window["is_known_market_event_window"].fillna(False).astype(bool)]

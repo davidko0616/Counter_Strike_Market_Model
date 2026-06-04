@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import pandas as pd
 
+from cs_market_model.backtesting.rejection_policy import RejectionPolicy
 from cs_market_model.backtesting.walk_forward_rejection import (
     summarize_walk_forward_selection,
     walk_forward_score_threshold_selection,
 )
-from cs_market_model.backtesting.rejection_policy import RejectionPolicy
 
 
 def _ledger() -> pd.DataFrame:
