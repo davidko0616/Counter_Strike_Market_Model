@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 
 from cs_market_model.config import PROJECT_ROOT, data_path
+from cs_market_model.normalization.order_books import summarize_listing_depth
 
 DEFAULT_RAW_CSFLOAT_DIR = data_path("raw", "csfloat")
 DEFAULT_CSFLOAT_FEATURES_OUTPUT = data_path("features", "csfloat_listing_features.parquet")
@@ -23,6 +24,9 @@ CSFLOAT_FEATURE_COLUMNS = [
     "csfloat_median_price",
     "csfloat_mean_price",
     "csfloat_price_spread_proxy",
+    "csfloat_depth_1pct",
+    "csfloat_depth_3pct",
+    "csfloat_depth_5pct",
     "csfloat_min_float",
     "csfloat_median_float",
     "csfloat_max_float",
@@ -97,34 +101,12 @@ def parse_csfloat_envelope(path: Path) -> dict[str, Any] | None:
     timestamp_ingested = payload.get("timestamp_ingested")
     if not market_hash_name or not timestamp_ingested:
         return None
-    listings = _extract_listing_rows(payload.get("raw_json"))
-    prices = [
-        _extract_numeric(listing, ["price", "price_cents", "lowest_price"]) for listing in listings
-    ]
-    prices = [price for price in prices if price is not None and np.isfinite(price)]
-    floats = [_extract_float_value(listing) for listing in listings]
-    floats = [value for value in floats if value is not None and np.isfinite(value)]
-    sticker_counts = [_extract_sticker_count(listing) for listing in listings]
-
-    min_price = float(np.min(prices)) if prices else np.nan
-    median_price = float(np.median(prices)) if prices else np.nan
-    mean_price = float(np.mean(prices)) if prices else np.nan
-    spread_proxy = (
-        float((np.max(prices) - min_price) / min_price) if prices and min_price > 0 else np.nan
-    )
+    depth_summary = summarize_listing_depth(payload.get("raw_json"))
 
     return {
         "market_hash_name": str(market_hash_name),
         "timestamp_ingested": timestamp_ingested,
-        "csfloat_listing_count": int(len(listings)),
-        "csfloat_min_price": min_price,
-        "csfloat_median_price": median_price,
-        "csfloat_mean_price": mean_price,
-        "csfloat_price_spread_proxy": spread_proxy,
-        "csfloat_min_float": float(np.min(floats)) if floats else np.nan,
-        "csfloat_median_float": float(np.median(floats)) if floats else np.nan,
-        "csfloat_max_float": float(np.max(floats)) if floats else np.nan,
-        "csfloat_mean_sticker_count": float(np.mean(sticker_counts)) if sticker_counts else np.nan,
+        **depth_summary,
     }
 
 
@@ -190,60 +172,9 @@ def _add_missing_csfloat_columns(frame: pd.DataFrame) -> pd.DataFrame:
     return result
 
 
-def _extract_listing_rows(raw_json: Any) -> list[dict[str, Any]]:
-    if isinstance(raw_json, list):
-        return [row for row in raw_json if isinstance(row, dict)]
-    if not isinstance(raw_json, dict):
-        return []
-    for key in ("data", "listings", "items", "results"):
-        value = raw_json.get(key)
-        if isinstance(value, list):
-            return [row for row in value if isinstance(row, dict)]
-    return []
-
-
 def _as_utc_ns(values: Any) -> pd.Series:
     index = values.index if isinstance(values, pd.Series) else None
     return pd.Series(pd.to_datetime(values, utc=True), index=index).astype("datetime64[ns, UTC]")
-
-
-# CSFloat listing prices are integer cents even when the field is named
-# "price"; normalize to dollars before building cross-venue features.
-_CENTS_KEYS = frozenset({"price", "price_cents", "lowest_price"})
-
-
-def _extract_numeric(listing: dict[str, Any], keys: list[str]) -> float | None:
-    for key in keys:
-        if key in listing:
-            value = pd.to_numeric(pd.Series([listing.get(key)]), errors="coerce").iloc[0]
-            if np.isfinite(value):
-                return float(value / 100.0) if key in _CENTS_KEYS else float(value)
-    item = listing.get("item")
-    if isinstance(item, dict):
-        for key in keys:
-            if key in item:
-                value = pd.to_numeric(pd.Series([item.get(key)]), errors="coerce").iloc[0]
-                if np.isfinite(value):
-                    return float(value / 100.0) if key in _CENTS_KEYS else float(value)
-    return None
-
-
-def _extract_float_value(listing: dict[str, Any]) -> float | None:
-    direct = _extract_numeric(listing, ["float_value", "wear_float", "float"])
-    if direct is not None:
-        return direct
-    item = listing.get("item")
-    if isinstance(item, dict):
-        return _extract_numeric(item, ["float_value", "wear_float", "float"])
-    return None
-
-
-def _extract_sticker_count(listing: dict[str, Any]) -> int:
-    item = listing.get("item")
-    stickers = listing.get("stickers")
-    if stickers is None and isinstance(item, dict):
-        stickers = item.get("stickers")
-    return len(stickers) if isinstance(stickers, list) else 0
 
 
 def _empty_listing_features() -> pd.DataFrame:

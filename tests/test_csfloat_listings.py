@@ -44,6 +44,8 @@ def test_parse_csfloat_envelope_extracts_listing_features(tmp_path) -> None:
     assert row["csfloat_listing_count"] == 2
     assert row["csfloat_min_price"] == 1.0
     assert row["csfloat_median_price"] == 1.1
+    assert row["csfloat_depth_1pct"] == 1
+    assert row["csfloat_depth_5pct"] == 1
     assert row["csfloat_median_float"] == 0.26
     assert row["csfloat_mean_sticker_count"] == 1.0
 

@@ -33,6 +33,7 @@ DEFAULT_CSFLOAT_ENABLED_FEATURES_OUTPUT = data_path(
 )
 DEFAULT_ABLATION_OUTPUT = reports_path("tables", "day18_csfloat_ablation_setup.csv")
 DEFAULT_REPORT_OUTPUT = reports_path("backtests", "day18_csfloat_ablation_report.md")
+MIN_CSFLOAT_COVERED_ROWS_FOR_ABLATION = 500
 
 
 @dataclass(frozen=True)
@@ -113,9 +114,12 @@ def build_ablation_setup_table(
         if csfloat_snapshots is None or csfloat_snapshots.empty
         else int(csfloat_snapshots["market_hash_name"].nunique())
     )
+    ablation_ready = covered_rows >= MIN_CSFLOAT_COVERED_ROWS_FOR_ABLATION
     csfloat_status = (
-        "ready_for_model_ablation" if covered_rows > 0 else "no_csfloat_snapshot_coverage"
+        "ready_for_model_ablation" if ablation_ready else "csfloat_coverage_insufficient"
     )
+    if covered_rows == 0:
+        csfloat_status = "no_csfloat_snapshot_coverage"
     if snapshot_count > 0 and covered_rows == 0:
         csfloat_status = "snapshots_collected_no_price_bar_coverage"
 
@@ -143,7 +147,8 @@ def build_ablation_setup_table(
             "csfloat_snapshot_item_count": snapshot_items,
             "csfloat_covered_rows": covered_rows,
             "csfloat_coverage_rate": float(coverage_rate),
-            "ablation_ready": bool(covered_rows > 0),
+            "min_covered_rows_for_ablation": MIN_CSFLOAT_COVERED_ROWS_FOR_ABLATION,
+            "ablation_ready": bool(ablation_ready),
             "status": csfloat_status,
         },
     ]
@@ -163,6 +168,19 @@ def build_ablation_report(ablation: pd.DataFrame) -> str:
         next_plan = (
             "Train the SteamDT-only and CSFloat-enabled variants, then compare "
             "model metrics, backtest PnL, and rejection diagnostics."
+        )
+    elif int(csfloat_row["csfloat_covered_rows"]) > 0:
+        covered_rows = int(csfloat_row["csfloat_covered_rows"])
+        minimum_rows = int(csfloat_row["min_covered_rows_for_ablation"])
+        interpretation = (
+            f"CSFloat coverage exists ({covered_rows} rows), but it is below the "
+            f"conservative {minimum_rows}-row threshold for a true model ablation. "
+            "Keep the production research model SteamDT-only and use CSFloat only "
+            "for liquidity diagnostics until coverage improves."
+        )
+        next_plan = (
+            "Continue collecting CSFloat snapshots and newer SteamDT bars, rebuild "
+            "features, and rerun Day 18 once coverage reaches the minimum threshold."
         )
     elif snapshot_count > 0:
         interpretation = (

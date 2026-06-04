@@ -3,9 +3,12 @@ from __future__ import annotations
 import pandas as pd
 
 from cs_market_model.dashboard.app import (
+    artifact_freshness_table,
     build_signal_table,
     candidate_rejection_reason,
     capacity_decision,
+    daily_signal_markdown,
+    price_bucket,
     selected_policy_threshold,
 )
 
@@ -94,3 +97,33 @@ def test_dashboard_candidate_rejection_reason_lists_failed_gates() -> None:
     assert candidate_rejection_reason(row, 5.0, 0.5, 0.2) == (
         "below_min_price|low_score|low_liquidity"
     )
+
+
+def test_dashboard_price_bucket_labels_candidate_prices() -> None:
+    assert price_bucket(3.0) == "<$5"
+    assert price_bucket(10.0) == "$5-$25"
+    assert price_bucket(50.0) == "$25-$100"
+    assert price_bucket(150.0) == "$100+"
+
+
+def test_dashboard_daily_signal_markdown_exports_current_signals() -> None:
+    summary = daily_signal_markdown(
+        pd.DataFrame(
+            {
+                "market_hash_name": ["A"],
+                "close": [10.0],
+                "strong_buy_score": [0.9],
+                "rejection_reason": [""],
+            }
+        )
+    )
+
+    assert "Daily Signal Summary" in summary
+    assert "A" in summary
+
+
+def test_dashboard_freshness_table_marks_missing_artifact(tmp_path) -> None:
+    table = artifact_freshness_table({"Missing": tmp_path / "missing.csv"})
+
+    assert not bool(table.loc[0, "exists"])
+    assert table.loc[0, "status"] == "missing"

@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+import joblib
 import numpy as np
 import pandas as pd
 from lightgbm import LGBMClassifier
@@ -39,6 +40,7 @@ DEFAULT_COMPARISON_OUTPUT = reports_path("tables", "day10_11_model_comparison.cs
 DEFAULT_IMPORTANCE_OUTPUT = reports_path("tables", "day10_11_feature_importance.csv")
 DEFAULT_CALIBRATION_OUTPUT = reports_path("tables", "day10_11_calibration.csv")
 DEFAULT_BASELINE_METRICS_INPUT = reports_path("tables", "day8_9_baseline_metrics.csv")
+DEFAULT_MODEL_ARTIFACT_DIR = PROJECT_ROOT / "models" / "artifacts" / "day10_11_lightgbm"
 
 
 @dataclass(frozen=True)
@@ -50,10 +52,12 @@ class LightGBMTrainResult:
     comparison_output: Path
     importance_output: Path
     calibration_output: Path
+    model_artifact_dir: Path
     row_count: int
     split_count: int
     model_count: int
     feature_count: int
+    model_artifact_count: int
 
 
 def train_day10_11_lightgbm(
@@ -65,6 +69,7 @@ def train_day10_11_lightgbm(
     importance_output: Path = DEFAULT_IMPORTANCE_OUTPUT,
     calibration_output: Path = DEFAULT_CALIBRATION_OUTPUT,
     baseline_metrics_input: Path = DEFAULT_BASELINE_METRICS_INPUT,
+    model_artifact_dir: Path = DEFAULT_MODEL_ARTIFACT_DIR,
     top_k: int | None = None,
     min_train_days: int = 60,
     embargo_days: int | None = None,
@@ -93,12 +98,13 @@ def train_day10_11_lightgbm(
     prediction_frames: list[pd.DataFrame] = []
     importance_rows: list[dict[str, Any]] = []
     calibration_rows: list[dict[str, Any]] = []
+    artifact_rows: list[dict[str, Any]] = []
     for split_index, split in enumerate(splits):
         train_rows = dataset.loc[split.train_indices].copy()
         test_rows = dataset.loc[split.test_indices].copy()
         active_features = _active_features(train_rows, model_features)
 
-        for model_name, prediction_frame, importances in _lightgbm_predictions(
+        for model_name, prediction_frame, importances, model_payload in _lightgbm_predictions(
             train_rows,
             test_rows,
             active_features,
@@ -117,12 +123,22 @@ def train_day10_11_lightgbm(
                 }
                 for feature, importance in importances.items()
             )
+            artifact_rows.append(
+                _save_model_artifact(
+                    model_payload,
+                    active_features,
+                    model_artifact_dir,
+                    split.split_id,
+                    model_name,
+                )
+            )
 
         for (
             model_name,
             prediction_frame,
             importances,
             calibration_metric,
+            model_payload,
         ) in _calibrated_lightgbm_predictions(
             train_rows,
             test_rows,
@@ -150,6 +166,15 @@ def train_day10_11_lightgbm(
                 }
                 for feature, importance in importances.items()
             )
+            artifact_rows.append(
+                _save_model_artifact(
+                    model_payload,
+                    active_features,
+                    model_artifact_dir,
+                    split.split_id,
+                    model_name,
+                )
+            )
 
     predictions = (
         pd.concat(prediction_frames, ignore_index=True) if prediction_frames else pd.DataFrame()
@@ -165,6 +190,12 @@ def train_day10_11_lightgbm(
     comparison_output.parent.mkdir(parents=True, exist_ok=True)
     importance_output.parent.mkdir(parents=True, exist_ok=True)
     calibration_output.parent.mkdir(parents=True, exist_ok=True)
+    if artifact_rows:
+        model_artifact_dir.mkdir(parents=True, exist_ok=True)
+        pd.DataFrame(artifact_rows).to_csv(
+            model_artifact_dir / "model_artifact_metadata.csv",
+            index=False,
+        )
     predictions.to_parquet(predictions_output, index=False)
     metrics.to_csv(metrics_output, index=False)
     comparison.to_csv(comparison_output, index=False)
@@ -177,10 +208,12 @@ def train_day10_11_lightgbm(
         comparison_output=comparison_output,
         importance_output=importance_output,
         calibration_output=calibration_output,
+        model_artifact_dir=model_artifact_dir,
         row_count=len(dataset),
         split_count=len(splits),
         model_count=int(metrics["model_name"].nunique()) if not metrics.empty else 0,
         feature_count=len(model_features),
+        model_artifact_count=len(artifact_rows),
     )
 
 
@@ -190,8 +223,8 @@ def _lightgbm_predictions(
     active_features: list[str],
     *,
     random_state: int,
-) -> list[tuple[str, pd.DataFrame, dict[str, dict[str, float]]]]:
-    predictions: list[tuple[str, pd.DataFrame, dict[str, dict[str, float]]]] = []
+) -> list[tuple[str, pd.DataFrame, dict[str, dict[str, float]], Any]]:
+    predictions: list[tuple[str, pd.DataFrame, dict[str, dict[str, float]], Any]] = []
     if not active_features:
         return predictions
 
@@ -212,6 +245,7 @@ def _lightgbm_predictions(
             "lightgbm_multiclass",
             multiclass_frame,
             _feature_importances(multiclass_model, active_features),
+            multiclass_model,
         )
     )
 
@@ -228,6 +262,7 @@ def _lightgbm_predictions(
                 "lightgbm_binary",
                 binary_frame,
                 _feature_importances(binary_model, active_features),
+                binary_model,
             )
         )
 
@@ -240,7 +275,7 @@ def _calibrated_lightgbm_predictions(
     active_features: list[str],
     *,
     random_state: int,
-) -> list[tuple[str, pd.DataFrame, dict[str, dict[str, float]], dict[str, float]]]:
+) -> list[tuple[str, pd.DataFrame, dict[str, dict[str, float]], dict[str, float], Any]]:
     if not active_features:
         return []
 
@@ -288,6 +323,7 @@ def _calibrated_lightgbm_predictions(
             prediction_frame,
             _feature_importances(model, active_features),
             calibration_metric,
+            {"model": model, "calibrator": calibrator},
         )
     ]
 
@@ -508,6 +544,38 @@ def _feature_importances(
     }
 
 
+def _save_model_artifact(
+    model_payload: Any,
+    feature_names: list[str],
+    output_dir: Path,
+    split_id: str,
+    model_name: str,
+) -> dict[str, Any]:
+    safe_split = _safe_name(split_id)
+    safe_model = _safe_name(model_name)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    artifact_path = output_dir / f"{safe_split}_{safe_model}.joblib"
+    joblib.dump(
+        {
+            "model_payload": model_payload,
+            "feature_names": feature_names,
+            "split_id": split_id,
+            "model_name": model_name,
+        },
+        artifact_path,
+    )
+    return {
+        "split_id": split_id,
+        "model_name": model_name,
+        "feature_count": len(feature_names),
+        "artifact_path": _display_path(artifact_path),
+    }
+
+
+def _safe_name(value: str) -> str:
+    return "".join(character if character.isalnum() else "_" for character in str(value)).strip("_")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Train Day 10-11 LightGBM models.")
     parser.add_argument("--features-input", type=Path, default=DEFAULT_FEATURES_INPUT)
@@ -517,6 +585,7 @@ def main() -> None:
     parser.add_argument("--comparison-output", type=Path, default=DEFAULT_COMPARISON_OUTPUT)
     parser.add_argument("--importance-output", type=Path, default=DEFAULT_IMPORTANCE_OUTPUT)
     parser.add_argument("--calibration-output", type=Path, default=DEFAULT_CALIBRATION_OUTPUT)
+    parser.add_argument("--model-artifact-dir", type=Path, default=DEFAULT_MODEL_ARTIFACT_DIR)
     parser.add_argument(
         "--baseline-metrics-input",
         type=Path,
@@ -538,6 +607,7 @@ def main() -> None:
         comparison_output=args.comparison_output,
         importance_output=args.importance_output,
         calibration_output=args.calibration_output,
+        model_artifact_dir=args.model_artifact_dir,
         baseline_metrics_input=args.baseline_metrics_input,
         top_k=args.top_k,
         min_train_days=args.min_train_days,
@@ -550,11 +620,13 @@ def main() -> None:
     print(f"Walk-forward splits: {result.split_count}")
     print(f"LightGBM models evaluated: {result.model_count}")
     print(f"Feature columns: {result.feature_count}")
+    print(f"Model artifacts saved: {result.model_artifact_count}")
     print(f"Wrote predictions: {_display_path(result.predictions_output)}")
     print(f"Wrote metrics: {_display_path(result.metrics_output)}")
     print(f"Wrote comparison: {_display_path(result.comparison_output)}")
     print(f"Wrote feature importance: {_display_path(result.importance_output)}")
     print(f"Wrote calibration: {_display_path(result.calibration_output)}")
+    print(f"Wrote model artifacts: {_display_path(result.model_artifact_dir)}")
 
 
 def _display_path(path: Path) -> str:
