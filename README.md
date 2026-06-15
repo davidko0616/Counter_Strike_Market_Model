@@ -29,7 +29,7 @@ LightGBM 학습 및 워크포워드 검증
         ↓
 거절 정책 적용 → 매수 승인 또는 No Trade
         ↓
-Streamlit 대시보드와 연구 보고서
+Streamlit 대시보드
 ```
 
 ## 주요 기능
